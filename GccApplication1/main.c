@@ -14,17 +14,18 @@ void sys_init();
 
 //Marble
 struct MarbleClass{
-	volatile unsigned char color;
-	volatile unsigned short posX, posY;
+	volatile char color; //0x01:Red, 0x02:Green, 0x03:Blue, 0x04:None
+	volatile short posX, posY;
 };
 volatile struct MarbleClass marble;
 
 //Servo Motor
-static volatile unsigned char Motor_Rotate_Angle, tmp;
+static volatile unsigned short Servo_Rotate_Angle, tmp;
 void Calculate_Servo_Rotate_Angle();
 void Servo_Home();
-void Servo_Move();
+void Servo_Catch_Marble();
 void Servo_Drop_Marble();
+unsigned short Servo_pos, Servo_increment_threshold, Servo_step;
 //Servo is using Timer2 for PWM
 
 //Pressure Sensor
@@ -37,6 +38,7 @@ volatile char cds_sensor_val;
 
 //Temperature sensor
 volatile char temp_sensor_val;
+volatile char temp_en = 0x01;
 
 //Shock Sensor
 volatile char shk_sensor_val;
@@ -48,11 +50,12 @@ volatile char psd_sensor_val;
 //LED PWM Value
 volatile unsigned int led_pwm_value;
 void LED_Set();
+volatile char led_select = 0x00; //0x00: None, 0x01:Red, 0x02:Green, 0x03:Blue
 //Use Timer2 for PWM when not using Servo
 
 //MAIN
 volatile char state = 0x01;
-volatile char STOP = 0x00;
+volatile char PSD_Detected = 0x00;
 
 //블루투스 통신 RX PD3, TX PD2
 void init_serial(void);
@@ -73,12 +76,14 @@ int main(void)
 	marble.posX = -1;
 	marble.posY = -1;
 	
+	LED_Set();
+	
 	Servo_Home(); //Move Servo to Home Position
 	
 	//Need to Check Connection with Server
 	//If not connected, try for few seconds and if failed connection, do other actions
 	//Thus, there are two cases. 1, Bluetooth is connected, 2, Bluetooth is not connected
-	//This is for just in case at presentation, Bluetooth fails
+	//This is for just in case bluetooth fails at presentation
 	
 	volatile short i;
 	
@@ -88,7 +93,7 @@ int main(void)
 				if(pressure_sensor_val >= 50)	//pressure threshold is 50(just guessing)
 					state <<= 1;				//Change state
 				
-			case 0b00000010:	//Get Marble data from server
+			case 0b00000010:	//wait for Marble data to arrive from the server
 				if(marble.color != 0x00 && marble.posX >= 0 && marble.posY >= 0){
 					//Marble Data has arrived from the server
 					Calculate_Servo_Rotate_Angle();
@@ -96,28 +101,27 @@ int main(void)
 				}
 				break;
 				
-			case 0b00000100:	
-				//Rotate Servo as Servo_Rotate_Angle to catch marble
-				Servo_Move();
-				//wait untill Servo has reached destination
-				for(i=0;i<1000;i++){
+			case 0b00000100:	//Catch & Drop Marble
+				while(Servo_pos != Servo_Rotate_Angle){
+					Servo_Catch_Marble(); //Rotate Servo to Marble to catch marble
 					_delay_ms(1);
-					if(STOP){
-						//STOP Servo Rotation
-						//This can be done by disconnecting OC pin
-						
-						while(STOP);//if STOP has occured, wait until resolved
-					}
+					while(PSD_Detected);
+					//Because Servo_Pos does not change, Servo stops;
+					//PWM Value has to remain unchanged for Servo to hold position.
 				}
 				
-				
+				//Servo Reached Destination				
 				//Turn on ElectroMagnet
 				//Alter Port for this action
 				
 				//Rotate Servo to Marble Box
-				Servo_Drop_Marble();
-				//wait untill Servo has reached destination
-				
+				while(Servo_pos != Servo_Rotate_Angle){
+					Servo_Drop_Marble(); //Rotate Servo to Marble Collecting Box
+					_delay_ms(1);
+					while(PSD_Detected);
+				}
+
+				//Servo Reached Destination
 				//Turn of ElectroMagnet to drop marble
 				//Alter Port for this action
 				
@@ -130,18 +134,51 @@ int main(void)
 				//Set OCR with Timer for PWM Control
 				break;
 				
-			case 0b00001000:
+			case 0b00001000: //Marble success or retry
 				if(shk_detected == 0x01){ //Marble was succefully dropped
 					shk_detected = 0x00;
 					
 					//Move servo to home
-					Servo_Home();
-					//wait until servo has moved
+					while(Servo_pos != Servo_Rotate_Angle){
+						Servo_Home(); //Rotate Servo to Home
+						_delay_ms(1);
+						while(PSD_Detected);
+					}
 					
 					state <<= 1;
 				}
 				else{ //Marble failed
-					//Do other actions
+					//Move servo to home
+					while(Servo_pos != Servo_Rotate_Angle){
+						Servo_Home(); //Rotate Servo to Home
+						_delay_ms(1);
+						while(PSD_Detected);
+					}
+					
+					//Turn on Electro Magnet
+					
+					temp_en = 0x00; //temperature sensor does not control servo speed
+					Servo_increment_threshold = 100;
+					
+					//Move servo to Marble Collecting Box
+					while(Servo_pos != Servo_Rotate_Angle){
+						Servo_Drop_Marble();
+						_delay_ms(1);
+						while(PSD_Detected);
+					}
+					
+					//Turn off Electro Magnet <- Drop Marble
+					
+					temp_en = 0x01; //temperature sensor controls servo speed
+					
+					//Move servo home
+					while(Servo_pos != Servo_Rotate_Angle){
+						Servo_Home();
+						_delay_ms(1);
+						while(PSD_Detected);
+					}
+					
+					state <<= 1;
 				}
 				break;
 				
@@ -164,12 +201,17 @@ ISR(TIMER0_OVF_vect){ //Use Timer0 for collecting sensor value and PWM
 			//pressure_sensor_val = 포트
 		break;
 		
-		default:
+		default: //started
 			//Get CdS Value
 			//cds_sensor_val = 포트
 			
 			//Get Temperature Value
 			//temp_sensor_val = 포트
+			if(temp_en == 0x01){
+				//Set Servo_increment_threshold with respect to temp_sensor_val
+				//Servo_increment_threshold = ...
+				//Servo_increment_threshold is used to check if cnt has reached threshold and increment servo pwm value to destination
+			}
 			
 			//Get Shock Value
 			//shk_sensor_val = 포트
@@ -180,9 +222,9 @@ ISR(TIMER0_OVF_vect){ //Use Timer0 for collecting sensor value and PWM
 			//Need to Control PSD
 			//psd_sensor_val...
 			if(psd_sensor_val >= 50){ //if human detected
-				STOP = 0x01;
+				PSD_Detected = 0x01;
 			}else{
-				STOP = 0x00;
+				PSD_Detected = 0x00;
 			}
 		break;
 	}
@@ -193,27 +235,47 @@ ISR(TIMER0_OVF_vect){ //Use Timer0 for collecting sensor value and PWM
 
 //Bluetooth_ Income Interrupt
 ISR(USART1_RX_vect){
+	
+	static char key = 0;
+	static short tmp = 0;  
+	
 	rdata = UDR1;
 	
-	switch(rdata & 0xe0){
-		case 0b10000000: //Marble Color returned from server
-			marble.color = rdata & 0x07;
-			//Server ex) 0b10000001:red, 0b10000010:green, 0b10000100:blue;
-		break;
-		
-		case 0b01000000: //Marble posX returned from server
-			marble.posX = rdata & 0x01;
-			marble.posX += ((rdata & 0x02)>>1)*10;
-			marble.posX += ((rdata & 0x04)>>2)*100;
-			//Server ex) 0b01000123: posX=123
-		break;
-		
-		case 0b00100000: //Marble posY returned from server
-			marble.posY = rdata & 0x01;
-			marble.posY += ((rdata & 0x02)>>1)*10;
-			marble.posY += ((rdata & 0x04)>>2)*100;
-			//Server ex) 0b00100123: posY=123
-		break;
+	if(rdata == '*'){ //server answer (react to mcu inquiry)
+		//do something
+	}
+	else{ //Incoming Marble data ex) 1,512,908.  <- Marble Color=1, posX=512, posY=908
+		switch(key){
+			case 0: //incoming Marble Color
+				if(rdata == ','){
+					marble.color = (char)tmp;
+					tmp = 0;
+					key++;
+				}
+				else
+					tmp = tmp*10+rdata;
+			break;
+			
+			case 1: //incoming Marble posX
+				if(rdata == ','){
+					marble.posX = tmp;
+					tmp = 0;
+					key++;
+				}
+				else
+					tmp = tmp*10+rdata;
+			break;
+			
+			case 2: //incoming Marble posY
+				if(rdata == '.'){
+					marble.posY = tmp;
+					tmp = 0;
+					key = 0;
+				}
+				else
+					tmp = tmp*10+rdata;
+			break;
+		}
 	}
 }
 
@@ -250,17 +312,38 @@ void Calculate_Servo_Rotate_Angle(){
 	//Motor_Rotate_Angle = ...;
 }
 
-void Servo_Home(){
-	Motor_Rotate_Angle = 0;
-	OCR2 = (135 * Motor_Rotate_Angle)/900 + 10;
-}
 void Servo_Move(){
-	OCR2 = (135 * Motor_Rotate_Angle)/900 + 10;
+	static unsigned short tmp = 0;
+	
+	if(++tmp == Servo_increment_threshold) Servo_pos += Servo_step;
+	
+	//Set Servo PWM Value
+	//OCR2 = ...
+	
+}
+void Servo_Home(){
+	Servo_Rotate_Angle = 0;
+	
+	if(Servo_pos >= Servo_Rotate_Angle) Servo_step = -1;
+	else Servo_step = 1;
+	
+	Servo_Move();
+}
+void Servo_Catch_Marble(){
+	if(Servo_pos >= Servo_Rotate_Angle) Servo_step = -1;
+	else Servo_step = 1;
+	
+	Servo_Move();
 }
 void Servo_Drop_Marble(){
-	Motor_Rotate_Angle = 30;
-	OCR2 = (135 * Motor_Rotate_Angle)/900 + 10;
+	Servo_Rotate_Angle = 30;
+	
+	if(Servo_pos >= Servo_Rotate_Angle) Servo_step = -1;
+	else Servo_step = 1;
+	
+	Servo_Move();
 }
+
 
 void LED_Set(){
 	
@@ -268,6 +351,29 @@ void LED_Set(){
 	//Consider using demux
 	//By using demux, we can select 1 of 3 LEDs with 1 output OC2 pin
 	//need to wait for demux to set
+	//output 4 pins, R,G,B,None
+	
+	switch(marble.color){
+		case 0x00: //LED Off
+			led_select = 0x04;
+		break;
+		
+		case 0x01: //Red
+			led_select = 0x01;
+		break;
+		
+		case 0x02: //Green
+			led_select = 0x02;
+		break;
+		
+		case 0x03: //Blue
+			led_select = 0x03;
+		break;
+		
+		case 0x04: //None <- LED Off
+			led_select = 0x04;
+		break;
+	}
 	
 	OCR2 = led_pwm_value; //Set PWM Value
 }
