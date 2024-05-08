@@ -72,6 +72,8 @@ int main(void)
 	
 	init_serial();
 	
+	//hello
+	
 	marble.color = 0x00;
 	marble.posX = -1;
 	marble.posY = -1;
