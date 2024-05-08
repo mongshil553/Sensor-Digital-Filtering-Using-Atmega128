@@ -5,6 +5,9 @@
  * Author : kijun
  */ 
 
+#define DEBUG_
+#define F_CPU 16000000UL
+
 #include <avr/io.h>
 #include <stdbool.h>
 #include <avr/interrupt.h>
@@ -64,6 +67,19 @@ static volatile char rdata = 0; //read buffer from BT
 
 void pin_init();
 void init();
+
+//**** Debug **************************************************************************************************************************************************//
+#ifdef DEBUG_
+
+int main(void){
+	//debug
+}
+
+#endif
+//************************************************************************************************************************************************************//
+
+//**** Not Debug *********************************************************************************************************************************************//
+#ifndef DEBUG_
 
 int main(void)
 {
@@ -199,35 +215,35 @@ ISR(TIMER0_OVF_vect){ //Use Timer0 for collecting sensor value and PWM
 	
 	switch(state){
 		case 0x01: //if not started
-			//Get Pressure Value
-			//pressure_sensor_val = 포트
+		//Get Pressure Value
+		//pressure_sensor_val = 포트
 		break;
 		
 		default: //started
-			//Get CdS Value
-			//cds_sensor_val = 포트
-			
-			//Get Temperature Value
-			//temp_sensor_val = 포트
-			if(temp_en == 0x01){
-				//Set Servo_increment_threshold with respect to temp_sensor_val
-				//Servo_increment_threshold = ...
-				//Servo_increment_threshold is used to check if cnt has reached threshold and increment servo pwm value to destination
-			}
-			
-			//Get Shock Value
-			//shk_sensor_val = 포트
-			if(shk_sensor_val >= 50)
-				shk_detected = 0x01;
-			
-			//Get PSD Value
-			//Need to Control PSD
-			//psd_sensor_val...
-			if(psd_sensor_val >= 50){ //if human detected
-				PSD_Detected = 0x01;
+		//Get CdS Value
+		//cds_sensor_val = 포트
+		
+		//Get Temperature Value
+		//temp_sensor_val = 포트
+		if(temp_en == 0x01){
+			//Set Servo_increment_threshold with respect to temp_sensor_val
+			//Servo_increment_threshold = ...
+			//Servo_increment_threshold is used to check if cnt has reached threshold and increment servo pwm value to destination
+		}
+		
+		//Get Shock Value
+		//shk_sensor_val = 포트
+		if(shk_sensor_val >= 50)
+		shk_detected = 0x01;
+		
+		//Get PSD Value
+		//Need to Control PSD
+		//psd_sensor_val...
+		if(psd_sensor_val >= 50){ //if human detected
+			PSD_Detected = 0x01;
 			}else{
-				PSD_Detected = 0x00;
-			}
+			PSD_Detected = 0x00;
+		}
 		break;
 	}
 	
@@ -239,7 +255,7 @@ ISR(TIMER0_OVF_vect){ //Use Timer0 for collecting sensor value and PWM
 ISR(USART1_RX_vect){
 	
 	static char key = 0;
-	static short tmp = 0;  
+	static short tmp = 0;
 	
 	rdata = UDR1;
 	
@@ -249,33 +265,33 @@ ISR(USART1_RX_vect){
 	else{ //Incoming Marble data ex) 1,512,908.  <- Marble Color=1, posX=512, posY=908
 		switch(key){
 			case 0: //incoming Marble Color
-				if(rdata == ','){
-					marble.color = (char)tmp;
-					tmp = 0;
-					key++;
-				}
-				else
-					tmp = tmp*10+rdata;
+			if(rdata == ','){
+				marble.color = (char)tmp;
+				tmp = 0;
+				key++;
+			}
+			else
+			tmp = tmp*10+rdata;
 			break;
 			
 			case 1: //incoming Marble posX
-				if(rdata == ','){
-					marble.posX = tmp;
-					tmp = 0;
-					key++;
-				}
-				else
-					tmp = tmp*10+rdata;
+			if(rdata == ','){
+				marble.posX = tmp;
+				tmp = 0;
+				key++;
+			}
+			else
+			tmp = tmp*10+rdata;
 			break;
 			
 			case 2: //incoming Marble posY
-				if(rdata == '.'){
-					marble.posY = tmp;
-					tmp = 0;
-					key = 0;
-				}
-				else
-					tmp = tmp*10+rdata;
+			if(rdata == '.'){
+				marble.posY = tmp;
+				tmp = 0;
+				key = 0;
+			}
+			else
+			tmp = tmp*10+rdata;
 			break;
 		}
 	}
@@ -301,6 +317,9 @@ void init_serial(void){
 	
 	
 }
+
+#endif
+//************************************************************************************************************************************************************//
 
 bool BT_send(char msg){
 	//send msg
@@ -349,8 +368,6 @@ void Servo_Drop_Marble(){
 
 void LED_Set(){
 	
-	//Need to find way to control 3 Led
-	//Consider using demux
 	//By using demux, we can select 1 of 3 LEDs with 1 output OC2 pin
 	//need to wait for demux to set
 	//output 4 pins, R,G,B,None
