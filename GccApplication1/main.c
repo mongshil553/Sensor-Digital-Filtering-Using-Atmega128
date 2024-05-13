@@ -10,15 +10,13 @@
 //#define USE_BLUETOOTH_INTERRUPT
 
 #define ElectroMagnet 7
-#define Servo_MAX 520
-#define Servo_MIN 230
-#define SERVO_HOME 620
-#define SERVO_BOX 130
 
 #include <avr/io.h>
 #include <stdbool.h>
 #include <avr/interrupt.h>
 #include <util/delay.h>
+#include "Overall.h"
+#include "Servo.h"
 
 void sys_init();
 void timer_setup();
@@ -30,8 +28,7 @@ struct MarbleClass{
 	short posX, posY;
 };
 struct MarbleClass marble;
-unsigned short Marble_pos;
-void Calculate_Marble_pos();
+
 
 //Demux
 #define ITEM_NONE 0x00;
@@ -42,18 +39,9 @@ void Calculate_Marble_pos();
 #define ITEM_SPEARK 0x05;
 void Select_Item(char item);
 
-//Servo Motor
-volatile unsigned short Servo_target, tmp;
-//void Servo_Set_Target(unsigned short val);
-void Servo_Quick_Move(unsigned short val);
-void Servo_Go_Home();
-void Servo_Go_Box();
-void Servo_Go_Marble();
-void Servo_Act();
-void Servo_Set_Target(unsigned short val);
-unsigned short Servo_pos, Servo_increment_threshold, Servo_step;
-//Servo invrement_threshold: 0:Super Fast, 50:Very Slow
-//Servo is using Timer1 for PWM
+//MAIN
+volatile char state = 0x01;
+volatile char PSD_Detected = 0x00;
 
 //Pressure Sensor
 volatile char pressure_sensor_val;
@@ -84,11 +72,6 @@ volatile char led_select = 0x00; //0x00: None, 0x01:Red, 0x02:Green, 0x03:Blue
 void ElectroMagnet_On();
 void ElectroMagnet_Off();
 
-//MAIN
-volatile char state = 0x01;
-volatile char PSD_Detected = 0x00;
-volatile char Action_Allowed = 0x01;
-
 //블루투스 통신
 void init_serial(void);
 void BT_send(char msg);
@@ -116,7 +99,7 @@ int main(void){
 	ElectroMagnet_Off();
 	
 	Servo_increment_threshold = 20;
-	Action_Allowed = 0x01;
+	Servo_Allowed = 0x01;
 	
 	Servo_Quick_Move(375);
 	
@@ -585,50 +568,7 @@ void BT_send(char msg){
 	UDR1 = msg; //send msg
 }
 
-void Calculate_Servo_Rotate_Angle(){
-	//Marble_pos = ...
-}
 
-void Servo_Quick_Move(unsigned short val){
-	Servo_pos = val;
-	OCR1A = Servo_pos;
-}
-
-inline void Servo_Set_Target(unsigned short val){
-	Servo_target = val;
-	
-	if(Servo_pos >= Servo_target) Servo_step = -1;
-	else Servo_step = 1;
-}
-
-void Servo_Go_Home(){
-	Servo_Set_Target(SERVO_HOME);
-	Servo_Act();
-}
-void Servo_Go_Box(){
-	Servo_Set_Target(SERVO_BOX);
-	Servo_Act();
-}
-void Servo_Go_Marble(){
-	Servo_Set_Target(Marble_pos);
-	Servo_Act();
-}
-
-void Servo_Act(){
-	//static unsigned short tmp = 0;
-	
-	unsigned short tmp = 0;
-	
-	while((Servo_pos != Servo_target) && Action_Allowed){
-		if(++tmp == Servo_increment_threshold){
-			Servo_pos += Servo_step;
-			OCR1A = Servo_pos;
-			tmp = 0;
-		}
-		_delay_us(100);
-	}
-	
-}
 
 void LED_Set(){
 	
