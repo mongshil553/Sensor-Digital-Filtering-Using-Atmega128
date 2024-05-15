@@ -42,6 +42,68 @@ void Select_Item(char item);
 //MAIN
 volatile char state = 0x01;
 volatile char PSD_Detected = 0x00;
+volatile uint16_t adc_value =0; //ADC값 저장
+
+ISR(ADC_vect){//인터럽트 사용해서 ADC값 읽어옴
+	adc_value=ADC; //ADC값 저장
+}
+
+//ADC 입력
+//ADC 초기화
+void adc_init(void){
+	ADMUX=(1<<REFS0); //외부 레퍼런스 접압을 기준 전압으로 선택, 우측정렬, 초기 입력핀은 0번
+	ADCSRA=(1<<ADEN)|(7<<ADPS0)|(1<<ADIE); //ADC enable, ADC interrupt enable 분주비 128
+}
+
+void start_adc_conversion(void){//인터럽트 사용할때 ADC 변화
+	ADCSRA |=(1<<ADSC); //ADC 변화 시작
+}
+
+//uint16_t adc_read(uint8_t ch){ 인터럽트 사용 안할때 ADC 변환
+	//ch &= 0b00000111;
+	//ADMUX = (ADMUX & 0xF8) | ch; // ADMUX의 하위 3비트를 선택한 채널로 설정
+	//// ADC 변환 시작
+	//ADCSRA |= (1 << ADSC);
+	//// 변환 완료 대기
+	//while (ADCSRA & (1 << ADSC));
+	//// 결과 반환
+	//return ADC;
+//}
+
+uint16_t read_adc_channel(uint8_t ch) {
+	
+	ADMUX = (ADMUX & 0xF8) | (ch & 0x07);// ADC 채널 선택
+	start_adc_conversion();
+	while (ADCSRA & (1 << ADSC)); // 변환 완료 대기
+	_delay_ms(10); // 약간의 시간 대기
+	return adc_value; // ADC 값 반환
+}
+
+void adc_read(){
+	
+	adc_init();//ADC 초기화
+	sei();
+		
+	uint16_t pressure_sensor_value = 0;
+	uint16_t vibration_sensor_value = 0;
+	uint16_t psd_sensor_value = 0;
+	uint16_t fire_sensor_value = 0;	
+	
+	while (1) {
+		// ADC 채널 4 (압력 센서) 값 읽기
+		pressure_sensor_value = read_adc_channel(4);
+		
+		// ADC 채널 5 (진동 감지 센서) 값 읽기
+		vibration_sensor_value = read_adc_channel(5);
+		
+		// ADC 채널 6 (불꽃 감지 센서) 값 읽기
+		fire_sensor_value = read_adc_channel(6);
+		
+		// ADC 채널 7 (PSD 센서) 값 읽기
+		psd_sensor_value = read_adc_channel(7);
+		
+	}
+}
 
 //Pressure Sensor
 volatile char pressure_sensor_val;
@@ -90,10 +152,14 @@ void bt_init();
 int main(void){
 	//debug
 	
+	adc_read();
+	delay_ms(10);
+	
 	cli();
 	port_setup();
 	timer_setup();
 	bt_init();
+
 	sei();
 	
 	ElectroMagnet_Off();
