@@ -5,7 +5,7 @@
  * Author : kijun
  */ 
 
-#define DEBUG_ 0
+#define DEBUG_ 1
 #define F_CPU 16000000UL
 //#define USE_BLUETOOTH_INTERRUPT
 
@@ -147,7 +147,7 @@ void port_setup();
 void bt_init();
 
 //**** Debug **************************************************************************************************************************************************//
-#ifdef DEBUG_
+
 #if DEBUG_ == 0
 //현준이 일하는 곳
 int main(void){
@@ -159,13 +159,13 @@ int main(void){
 int main(void){
 	//debug
 	
-	adc_read();
-	delay_ms(10);
-	
 	cli();
 	port_setup();
 	timer_setup();
 	bt_init();
+	
+	EIMSK = 0x03;
+	EICRA = 0x0F;
 
 	sei();
 	
@@ -181,8 +181,8 @@ int main(void){
 		
 #ifndef USE_BLUETOOTH_INTERRUPT
 		if(BT_Receive()){
-			if(marble.posX == 123) Servo_Quick_Move(200);
-			else if(marble.posX == 321) Servo_Quick_Move(500);
+			if(marble.color == 1) Servo_Quick_Move(200);
+			else if(marble.color == 2) Servo_Quick_Move(500);
 			else Servo_Quick_Move(375);
 		}
 #endif
@@ -190,13 +190,12 @@ int main(void){
 		switch(PIND & 0x03){
 			case 0x01:
 				ElectroMagnet_On();
-				BT_send('1');
 				//Servo_Go_Home();
 			break;
 			
 			case 0x02:
 				ElectroMagnet_Off();
-				Servo_Go_Box();
+				//Servo_Go_Box();
 			break;
 			
 			default:
@@ -205,6 +204,16 @@ int main(void){
 	
 	}
 	
+}
+
+ISR(INT1_vect)
+{
+	BT_send('1');
+}
+
+ISR(INT0_vect)
+{
+	BT_send('0');
 }
 
 ISR(TIMER0_OVF_vect){ //Use Timer0 for collecting sensor value and PWM
@@ -300,12 +309,10 @@ ISR(USART1_RX_vect){
 #endif // BLUETOOTH_INTERRUPT
 
 #endif
-
-#endif
 //************************************************************************************************************************************************************//
 
 //**** Not Debug *********************************************************************************************************************************************//
-#ifndef DEBUG_
+#if DEBUG_ == 3
 
 int main(void)
 {
@@ -596,7 +603,7 @@ char BT_Receive(){
 			//ElectroMagnet_On();
 			return 0x00;
 		}
-		else marble.color = rdata;
+		else marble.color = rdata - '0';
 		break;
 		
 		case 2:

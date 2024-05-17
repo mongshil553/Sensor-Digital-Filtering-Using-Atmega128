@@ -3,29 +3,31 @@ GccApplication1.elf:     file format elf32-avr
 
 Sections:
 Idx Name          Size      VMA       LMA       File off  Algn
-  0 .data         00000000  00800100  00800100  00000126  2**0
+  0 .data         00000000  00800100  00800100  0000042a  2**0
                   CONTENTS, ALLOC, LOAD, DATA
-  1 .text         000000d2  00000000  00000000  00000054  2**1
+  1 .text         000003b6  00000000  00000000  00000074  2**1
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  2 .comment      00000030  00000000  00000000  00000126  2**0
+  2 .bss          0000002b  00800100  00800100  0000042a  2**0
+                  ALLOC
+  3 .comment      00000030  00000000  00000000  0000042a  2**0
                   CONTENTS, READONLY
-  3 .note.gnu.avr.deviceinfo 0000003c  00000000  00000000  00000158  2**2
+  4 .note.gnu.avr.deviceinfo 0000003c  00000000  00000000  0000045c  2**2
                   CONTENTS, READONLY
-  4 .debug_aranges 00000068  00000000  00000000  00000194  2**0
+  5 .debug_aranges 000000f8  00000000  00000000  00000498  2**0
                   CONTENTS, READONLY, DEBUGGING
-  5 .debug_info   00000bc3  00000000  00000000  000001fc  2**0
+  6 .debug_info   00001203  00000000  00000000  00000590  2**0
                   CONTENTS, READONLY, DEBUGGING
-  6 .debug_abbrev 000008bb  00000000  00000000  00000dbf  2**0
+  7 .debug_abbrev 00000b7d  00000000  00000000  00001793  2**0
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_line   00000491  00000000  00000000  0000167a  2**0
+  8 .debug_line   00000879  00000000  00000000  00002310  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_frame  000000b4  00000000  00000000  00001b0c  2**2
+  9 .debug_frame  0000026c  00000000  00000000  00002b8c  2**2
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_str    000005cc  00000000  00000000  00001bc0  2**0
+ 10 .debug_str    0000071c  00000000  00000000  00002df8  2**0
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_loc    00000067  00000000  00000000  0000218c  2**0
+ 11 .debug_loc    00000482  00000000  00000000  00003514  2**0
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_ranges 00000058  00000000  00000000  000021f3  2**0
+ 12 .debug_ranges 000000d8  00000000  00000000  00003996  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -33,9 +35,9 @@ Disassembly of section .text:
 00000000 <__vectors>:
    0:	45 c0       	rjmp	.+138    	; 0x8c <__ctors_end>
    2:	00 00       	nop
-   4:	60 c0       	rjmp	.+192    	; 0xc6 <__bad_interrupt>
+   4:	d8 c0       	rjmp	.+432    	; 0x1b6 <__vector_1>
    6:	00 00       	nop
-   8:	5e c0       	rjmp	.+188    	; 0xc6 <__bad_interrupt>
+   8:	ae c0       	rjmp	.+348    	; 0x166 <__vector_2>
    a:	00 00       	nop
    c:	5c c0       	rjmp	.+184    	; 0xc6 <__bad_interrupt>
    e:	00 00       	nop
@@ -63,7 +65,7 @@ Disassembly of section .text:
   3a:	00 00       	nop
   3c:	44 c0       	rjmp	.+136    	; 0xc6 <__bad_interrupt>
   3e:	00 00       	nop
-  40:	42 c0       	rjmp	.+132    	; 0xc6 <__bad_interrupt>
+  40:	57 c0       	rjmp	.+174    	; 0xf0 <__vector_16>
   42:	00 00       	nop
   44:	40 c0       	rjmp	.+128    	; 0xc6 <__bad_interrupt>
   46:	00 00       	nop
@@ -73,7 +75,7 @@ Disassembly of section .text:
   4e:	00 00       	nop
   50:	3a c0       	rjmp	.+116    	; 0xc6 <__bad_interrupt>
   52:	00 00       	nop
-  54:	38 c0       	rjmp	.+112    	; 0xc6 <__bad_interrupt>
+  54:	39 c0       	rjmp	.+114    	; 0xc8 <__vector_21>
   56:	00 00       	nop
   58:	36 c0       	rjmp	.+108    	; 0xc6 <__bad_interrupt>
   5a:	00 00       	nop
@@ -114,8 +116,8 @@ Disassembly of section .text:
   98:	11 e0       	ldi	r17, 0x01	; 1
   9a:	a0 e0       	ldi	r26, 0x00	; 0
   9c:	b1 e0       	ldi	r27, 0x01	; 1
-  9e:	e2 ed       	ldi	r30, 0xD2	; 210
-  a0:	f0 e0       	ldi	r31, 0x00	; 0
+  9e:	e6 eb       	ldi	r30, 0xB6	; 182
+  a0:	f3 e0       	ldi	r31, 0x03	; 3
   a2:	00 e0       	ldi	r16, 0x00	; 0
   a4:	0b bf       	out	0x3b, r16	; 59
   a6:	02 c0       	rjmp	.+4      	; 0xac <__do_copy_data+0x14>
@@ -135,28 +137,527 @@ Disassembly of section .text:
   ba:	1d 92       	st	X+, r1
 
 000000bc <.do_clear_bss_start>:
-  bc:	a0 30       	cpi	r26, 0x00	; 0
+  bc:	ab 32       	cpi	r26, 0x2B	; 43
   be:	b2 07       	cpc	r27, r18
   c0:	e1 f7       	brne	.-8      	; 0xba <.do_clear_bss_loop>
-  c2:	02 d0       	rcall	.+4      	; 0xc8 <main>
-  c4:	04 c0       	rjmp	.+8      	; 0xce <_exit>
+  c2:	2f d1       	rcall	.+606    	; 0x322 <main>
+  c4:	76 c1       	rjmp	.+748    	; 0x3b2 <_exit>
 
 000000c6 <__bad_interrupt>:
   c6:	9c cf       	rjmp	.-200    	; 0x0 <__vectors>
 
-000000c8 <main>:
-#ifdef DEBUG_
-#if DEBUG_ == 0
-//현준이 일하는 곳
-int main(void){
+000000c8 <__vector_21>:
+	#else
+		//round up by default
+		__ticks_dc = (uint32_t)(ceil(fabs(__tmp)));
+	#endif
+
+	__builtin_avr_delay_cycles(__ticks_dc);
+  c8:	1f 92       	push	r1
+  ca:	0f 92       	push	r0
+  cc:	0f b6       	in	r0, 0x3f	; 63
+  ce:	0f 92       	push	r0
+  d0:	11 24       	eor	r1, r1
+  d2:	8f 93       	push	r24
+  d4:	9f 93       	push	r25
+  d6:	84 b1       	in	r24, 0x04	; 4
+  d8:	95 b1       	in	r25, 0x05	; 5
+  da:	90 93 04 01 	sts	0x0104, r25	; 0x800104 <adc_value+0x1>
+  de:	80 93 03 01 	sts	0x0103, r24	; 0x800103 <adc_value>
+  e2:	9f 91       	pop	r25
+  e4:	8f 91       	pop	r24
+  e6:	0f 90       	pop	r0
+  e8:	0f be       	out	0x3f, r0	; 63
+  ea:	0f 90       	pop	r0
+  ec:	1f 90       	pop	r1
+  ee:	18 95       	reti
+
+000000f0 <__vector_16>:
+  f0:	1f 92       	push	r1
+  f2:	0f 92       	push	r0
+  f4:	0f b6       	in	r0, 0x3f	; 63
+  f6:	0f 92       	push	r0
+  f8:	11 24       	eor	r1, r1
+  fa:	8f 93       	push	r24
+  fc:	80 91 01 01 	lds	r24, 0x0101	; 0x800101 <key.1826>
+ 100:	81 11       	cpse	r24, r1
+ 102:	03 c0       	rjmp	.+6      	; 0x10a <__vector_16+0x1a>
+ 104:	85 b3       	in	r24, 0x15	; 21
+ 106:	15 ba       	out	0x15, r1	; 21
+ 108:	03 c0       	rjmp	.+6      	; 0x110 <__vector_16+0x20>
+ 10a:	85 b3       	in	r24, 0x15	; 21
+ 10c:	80 68       	ori	r24, 0x80	; 128
+ 10e:	85 bb       	out	0x15, r24	; 21
+ 110:	8f 91       	pop	r24
+ 112:	0f 90       	pop	r0
+ 114:	0f be       	out	0x3f, r0	; 63
+ 116:	0f 90       	pop	r0
+ 118:	1f 90       	pop	r1
+ 11a:	18 95       	reti
+
+0000011c <bt_init>:
+ 11c:	10 92 9b 00 	sts	0x009B, r1	; 0x80009b <__TEXT_REGION_LENGTH__+0x7e009b>
+ 120:	88 e1       	ldi	r24, 0x18	; 24
+ 122:	80 93 9a 00 	sts	0x009A, r24	; 0x80009a <__TEXT_REGION_LENGTH__+0x7e009a>
+ 126:	86 e0       	ldi	r24, 0x06	; 6
+ 128:	80 93 9d 00 	sts	0x009D, r24	; 0x80009d <__TEXT_REGION_LENGTH__+0x7e009d>
+ 12c:	10 92 98 00 	sts	0x0098, r1	; 0x800098 <__TEXT_REGION_LENGTH__+0x7e0098>
+ 130:	87 e6       	ldi	r24, 0x67	; 103
+ 132:	80 93 99 00 	sts	0x0099, r24	; 0x800099 <__TEXT_REGION_LENGTH__+0x7e0099>
+ 136:	08 95       	ret
+
+00000138 <timer_setup>:
+ 138:	82 e8       	ldi	r24, 0x82	; 130
+ 13a:	8f bd       	out	0x2f, r24	; 47
+ 13c:	8b e1       	ldi	r24, 0x1B	; 27
+ 13e:	8e bd       	out	0x2e, r24	; 46
+ 140:	87 e8       	ldi	r24, 0x87	; 135
+ 142:	93 e1       	ldi	r25, 0x13	; 19
+ 144:	97 bd       	out	0x27, r25	; 39
+ 146:	86 bd       	out	0x26, r24	; 38
+ 148:	08 95       	ret
+
+0000014a <port_setup>:
+ 14a:	8f ef       	ldi	r24, 0xFF	; 255
+ 14c:	8a bb       	out	0x1a, r24	; 26
+ 14e:	11 ba       	out	0x11, r1	; 17
+ 150:	87 bb       	out	0x17, r24	; 23
+ 152:	80 e8       	ldi	r24, 0x80	; 128
+ 154:	84 bb       	out	0x14, r24	; 20
+ 156:	08 95       	ret
+
+00000158 <BT_send>:
+	return 0x00;
+}
+
+void BT_send(char msg){
+	//send msg
+	while(!(UCSR1A & (1<<UDRE))); //Wait for buffer to clear
+ 158:	90 91 9b 00 	lds	r25, 0x009B	; 0x80009b <__TEXT_REGION_LENGTH__+0x7e009b>
+ 15c:	95 ff       	sbrs	r25, 5
+ 15e:	fc cf       	rjmp	.-8      	; 0x158 <BT_send>
+	UDR1 = msg; //send msg
+ 160:	80 93 9c 00 	sts	0x009C, r24	; 0x80009c <__TEXT_REGION_LENGTH__+0x7e009c>
+ 164:	08 95       	ret
+
+00000166 <__vector_2>:
+	}
 	
 }
-  c8:	80 e0       	ldi	r24, 0x00	; 0
-  ca:	90 e0       	ldi	r25, 0x00	; 0
-  cc:	08 95       	ret
 
-000000ce <_exit>:
-  ce:	f8 94       	cli
+ISR(INT1_vect)
+{
+ 166:	1f 92       	push	r1
+ 168:	0f 92       	push	r0
+ 16a:	0f b6       	in	r0, 0x3f	; 63
+ 16c:	0f 92       	push	r0
+ 16e:	11 24       	eor	r1, r1
+ 170:	0b b6       	in	r0, 0x3b	; 59
+ 172:	0f 92       	push	r0
+ 174:	2f 93       	push	r18
+ 176:	3f 93       	push	r19
+ 178:	4f 93       	push	r20
+ 17a:	5f 93       	push	r21
+ 17c:	6f 93       	push	r22
+ 17e:	7f 93       	push	r23
+ 180:	8f 93       	push	r24
+ 182:	9f 93       	push	r25
+ 184:	af 93       	push	r26
+ 186:	bf 93       	push	r27
+ 188:	ef 93       	push	r30
+ 18a:	ff 93       	push	r31
+	BT_send('1');
+ 18c:	81 e3       	ldi	r24, 0x31	; 49
+ 18e:	e4 df       	rcall	.-56     	; 0x158 <BT_send>
+}
+ 190:	ff 91       	pop	r31
+ 192:	ef 91       	pop	r30
+ 194:	bf 91       	pop	r27
+ 196:	af 91       	pop	r26
+ 198:	9f 91       	pop	r25
+ 19a:	8f 91       	pop	r24
+ 19c:	7f 91       	pop	r23
+ 19e:	6f 91       	pop	r22
+ 1a0:	5f 91       	pop	r21
+ 1a2:	4f 91       	pop	r20
+ 1a4:	3f 91       	pop	r19
+ 1a6:	2f 91       	pop	r18
+ 1a8:	0f 90       	pop	r0
+ 1aa:	0b be       	out	0x3b, r0	; 59
+ 1ac:	0f 90       	pop	r0
+ 1ae:	0f be       	out	0x3f, r0	; 63
+ 1b0:	0f 90       	pop	r0
+ 1b2:	1f 90       	pop	r1
+ 1b4:	18 95       	reti
 
-000000d0 <__stop_program>:
-  d0:	ff cf       	rjmp	.-2      	; 0xd0 <__stop_program>
+000001b6 <__vector_1>:
+
+ISR(INT0_vect)
+{
+ 1b6:	1f 92       	push	r1
+ 1b8:	0f 92       	push	r0
+ 1ba:	0f b6       	in	r0, 0x3f	; 63
+ 1bc:	0f 92       	push	r0
+ 1be:	11 24       	eor	r1, r1
+ 1c0:	0b b6       	in	r0, 0x3b	; 59
+ 1c2:	0f 92       	push	r0
+ 1c4:	2f 93       	push	r18
+ 1c6:	3f 93       	push	r19
+ 1c8:	4f 93       	push	r20
+ 1ca:	5f 93       	push	r21
+ 1cc:	6f 93       	push	r22
+ 1ce:	7f 93       	push	r23
+ 1d0:	8f 93       	push	r24
+ 1d2:	9f 93       	push	r25
+ 1d4:	af 93       	push	r26
+ 1d6:	bf 93       	push	r27
+ 1d8:	ef 93       	push	r30
+ 1da:	ff 93       	push	r31
+	BT_send('0');
+ 1dc:	80 e3       	ldi	r24, 0x30	; 48
+ 1de:	bc df       	rcall	.-136    	; 0x158 <BT_send>
+}
+ 1e0:	ff 91       	pop	r31
+ 1e2:	ef 91       	pop	r30
+ 1e4:	bf 91       	pop	r27
+ 1e6:	af 91       	pop	r26
+ 1e8:	9f 91       	pop	r25
+ 1ea:	8f 91       	pop	r24
+ 1ec:	7f 91       	pop	r23
+ 1ee:	6f 91       	pop	r22
+ 1f0:	5f 91       	pop	r21
+ 1f2:	4f 91       	pop	r20
+ 1f4:	3f 91       	pop	r19
+ 1f6:	2f 91       	pop	r18
+ 1f8:	0f 90       	pop	r0
+ 1fa:	0b be       	out	0x3b, r0	; 59
+ 1fc:	0f 90       	pop	r0
+ 1fe:	0f be       	out	0x3f, r0	; 63
+ 200:	0f 90       	pop	r0
+ 202:	1f 90       	pop	r1
+ 204:	18 95       	reti
+
+00000206 <BT_Receive>:
+char BT_Receive(){
+	
+	static char step = 0;
+	static char tmp = 0;
+	
+	if(!(UCSR1A&(1<<RXC1))) return 0x00;
+ 206:	80 91 9b 00 	lds	r24, 0x009B	; 0x80009b <__TEXT_REGION_LENGTH__+0x7e009b>
+ 20a:	88 23       	and	r24, r24
+ 20c:	0c f0       	brlt	.+2      	; 0x210 <BT_Receive+0xa>
+ 20e:	87 c0       	rjmp	.+270    	; 0x31e <BT_Receive+0x118>
+	
+	rdata = UDR1;
+ 210:	80 91 9c 00 	lds	r24, 0x009C	; 0x80009c <__TEXT_REGION_LENGTH__+0x7e009c>
+ 214:	80 93 02 01 	sts	0x0102, r24	; 0x800102 <rdata>
+	
+	switch(step){
+ 218:	80 91 00 01 	lds	r24, 0x0100	; 0x800100 <__DATA_REGION_ORIGIN__>
+ 21c:	82 30       	cpi	r24, 0x02	; 2
+ 21e:	b1 f0       	breq	.+44     	; 0x24c <BT_Receive+0x46>
+ 220:	83 30       	cpi	r24, 0x03	; 3
+ 222:	b1 f1       	breq	.+108    	; 0x290 <BT_Receive+0x8a>
+ 224:	81 30       	cpi	r24, 0x01	; 1
+ 226:	09 f0       	breq	.+2      	; 0x22a <BT_Receive+0x24>
+ 228:	54 c0       	rjmp	.+168    	; 0x2d2 <BT_Receive+0xcc>
+		case 1:
+		if(rdata == '.') {
+ 22a:	80 91 02 01 	lds	r24, 0x0102	; 0x800102 <rdata>
+ 22e:	8e 32       	cpi	r24, 0x2E	; 46
+ 230:	39 f4       	brne	.+14     	; 0x240 <BT_Receive+0x3a>
+			step = 0;
+ 232:	10 92 00 01 	sts	0x0100, r1	; 0x800100 <__DATA_REGION_ORIGIN__>
+			BT_send(rdata);
+ 236:	80 91 02 01 	lds	r24, 0x0102	; 0x800102 <rdata>
+ 23a:	8e df       	rcall	.-228    	; 0x158 <BT_send>
+			//ElectroMagnet_On();
+			return 0x00;
+ 23c:	80 e0       	ldi	r24, 0x00	; 0
+ 23e:	08 95       	ret
+		}
+		else marble.color = rdata - '0';
+ 240:	80 91 02 01 	lds	r24, 0x0102	; 0x800102 <rdata>
+ 244:	80 53       	subi	r24, 0x30	; 48
+ 246:	80 93 0b 01 	sts	0x010B, r24	; 0x80010b <marble>
+		break;
+ 24a:	43 c0       	rjmp	.+134    	; 0x2d2 <BT_Receive+0xcc>
+		
+		case 2:
+		if(rdata == '.') {
+ 24c:	80 91 02 01 	lds	r24, 0x0102	; 0x800102 <rdata>
+ 250:	8e 32       	cpi	r24, 0x2E	; 46
+ 252:	39 f4       	brne	.+14     	; 0x262 <BT_Receive+0x5c>
+			step = 0;
+ 254:	10 92 00 01 	sts	0x0100, r1	; 0x800100 <__DATA_REGION_ORIGIN__>
+			BT_send(rdata);
+ 258:	80 91 02 01 	lds	r24, 0x0102	; 0x800102 <rdata>
+ 25c:	7d df       	rcall	.-262    	; 0x158 <BT_send>
+			//ElectroMagnet_On();
+			return 0x00;
+ 25e:	80 e0       	ldi	r24, 0x00	; 0
+ 260:	08 95       	ret
+		}
+		else marble.posX = marble.posX * 10 + rdata - '0';
+ 262:	eb e0       	ldi	r30, 0x0B	; 11
+ 264:	f1 e0       	ldi	r31, 0x01	; 1
+ 266:	81 81       	ldd	r24, Z+1	; 0x01
+ 268:	92 81       	ldd	r25, Z+2	; 0x02
+ 26a:	9c 01       	movw	r18, r24
+ 26c:	22 0f       	add	r18, r18
+ 26e:	33 1f       	adc	r19, r19
+ 270:	88 0f       	add	r24, r24
+ 272:	99 1f       	adc	r25, r25
+ 274:	88 0f       	add	r24, r24
+ 276:	99 1f       	adc	r25, r25
+ 278:	88 0f       	add	r24, r24
+ 27a:	99 1f       	adc	r25, r25
+ 27c:	82 0f       	add	r24, r18
+ 27e:	93 1f       	adc	r25, r19
+ 280:	20 91 02 01 	lds	r18, 0x0102	; 0x800102 <rdata>
+ 284:	82 0f       	add	r24, r18
+ 286:	91 1d       	adc	r25, r1
+ 288:	c0 97       	sbiw	r24, 0x30	; 48
+ 28a:	92 83       	std	Z+2, r25	; 0x02
+ 28c:	81 83       	std	Z+1, r24	; 0x01
+		break;
+ 28e:	21 c0       	rjmp	.+66     	; 0x2d2 <BT_Receive+0xcc>
+		
+		case 3:
+		if(rdata == '.') {
+ 290:	80 91 02 01 	lds	r24, 0x0102	; 0x800102 <rdata>
+ 294:	8e 32       	cpi	r24, 0x2E	; 46
+ 296:	39 f4       	brne	.+14     	; 0x2a6 <BT_Receive+0xa0>
+			step = 0;
+ 298:	10 92 00 01 	sts	0x0100, r1	; 0x800100 <__DATA_REGION_ORIGIN__>
+			BT_send(rdata);
+ 29c:	80 91 02 01 	lds	r24, 0x0102	; 0x800102 <rdata>
+ 2a0:	5b df       	rcall	.-330    	; 0x158 <BT_send>
+			//ElectroMagnet_Off();
+			return 0x01;
+ 2a2:	81 e0       	ldi	r24, 0x01	; 1
+ 2a4:	08 95       	ret
+		}
+		else marble.posY = marble.posY * 10 + rdata -'0';
+ 2a6:	eb e0       	ldi	r30, 0x0B	; 11
+ 2a8:	f1 e0       	ldi	r31, 0x01	; 1
+ 2aa:	83 81       	ldd	r24, Z+3	; 0x03
+ 2ac:	94 81       	ldd	r25, Z+4	; 0x04
+ 2ae:	9c 01       	movw	r18, r24
+ 2b0:	22 0f       	add	r18, r18
+ 2b2:	33 1f       	adc	r19, r19
+ 2b4:	88 0f       	add	r24, r24
+ 2b6:	99 1f       	adc	r25, r25
+ 2b8:	88 0f       	add	r24, r24
+ 2ba:	99 1f       	adc	r25, r25
+ 2bc:	88 0f       	add	r24, r24
+ 2be:	99 1f       	adc	r25, r25
+ 2c0:	82 0f       	add	r24, r18
+ 2c2:	93 1f       	adc	r25, r19
+ 2c4:	20 91 02 01 	lds	r18, 0x0102	; 0x800102 <rdata>
+ 2c8:	82 0f       	add	r24, r18
+ 2ca:	91 1d       	adc	r25, r1
+ 2cc:	c0 97       	sbiw	r24, 0x30	; 48
+ 2ce:	94 83       	std	Z+4, r25	; 0x04
+ 2d0:	83 83       	std	Z+3, r24	; 0x03
+		break;
+	}
+	
+	if(rdata == '#') {
+ 2d2:	80 91 02 01 	lds	r24, 0x0102	; 0x800102 <rdata>
+ 2d6:	83 32       	cpi	r24, 0x23	; 35
+ 2d8:	31 f4       	brne	.+12     	; 0x2e6 <BT_Receive+0xe0>
+		marble.color = 0;
+ 2da:	10 92 0b 01 	sts	0x010B, r1	; 0x80010b <marble>
+		step = 1;
+ 2de:	81 e0       	ldi	r24, 0x01	; 1
+ 2e0:	80 93 00 01 	sts	0x0100, r24	; 0x800100 <__DATA_REGION_ORIGIN__>
+ 2e4:	17 c0       	rjmp	.+46     	; 0x314 <BT_Receive+0x10e>
+	}
+	else if(rdata == '!'){
+ 2e6:	80 91 02 01 	lds	r24, 0x0102	; 0x800102 <rdata>
+ 2ea:	81 32       	cpi	r24, 0x21	; 33
+ 2ec:	41 f4       	brne	.+16     	; 0x2fe <BT_Receive+0xf8>
+		marble.posX = 0;
+ 2ee:	10 92 0d 01 	sts	0x010D, r1	; 0x80010d <marble+0x2>
+ 2f2:	10 92 0c 01 	sts	0x010C, r1	; 0x80010c <marble+0x1>
+		step = 2;
+ 2f6:	82 e0       	ldi	r24, 0x02	; 2
+ 2f8:	80 93 00 01 	sts	0x0100, r24	; 0x800100 <__DATA_REGION_ORIGIN__>
+ 2fc:	0b c0       	rjmp	.+22     	; 0x314 <BT_Receive+0x10e>
+	}
+	else if(rdata == '*'){
+ 2fe:	80 91 02 01 	lds	r24, 0x0102	; 0x800102 <rdata>
+ 302:	8a 32       	cpi	r24, 0x2A	; 42
+ 304:	39 f4       	brne	.+14     	; 0x314 <BT_Receive+0x10e>
+		marble.posY = 0;
+ 306:	10 92 0f 01 	sts	0x010F, r1	; 0x80010f <marble+0x4>
+ 30a:	10 92 0e 01 	sts	0x010E, r1	; 0x80010e <marble+0x3>
+		step = 3;
+ 30e:	83 e0       	ldi	r24, 0x03	; 3
+ 310:	80 93 00 01 	sts	0x0100, r24	; 0x800100 <__DATA_REGION_ORIGIN__>
+	}
+	
+	BT_send(rdata);
+ 314:	80 91 02 01 	lds	r24, 0x0102	; 0x800102 <rdata>
+ 318:	1f df       	rcall	.-450    	; 0x158 <BT_send>
+
+	return 0x00;
+ 31a:	80 e0       	ldi	r24, 0x00	; 0
+ 31c:	08 95       	ret
+char BT_Receive(){
+	
+	static char step = 0;
+	static char tmp = 0;
+	
+	if(!(UCSR1A&(1<<RXC1))) return 0x00;
+ 31e:	80 e0       	ldi	r24, 0x00	; 0
+	}
+	
+	BT_send(rdata);
+
+	return 0x00;
+}
+ 320:	08 95       	ret
+
+00000322 <main>:
+#elif DEBUG_ == 1
+//기정이 일하는 곳
+int main(void){
+	//debug
+	
+	cli();
+ 322:	f8 94       	cli
+	port_setup();
+ 324:	12 df       	rcall	.-476    	; 0x14a <port_setup>
+	timer_setup();
+ 326:	08 df       	rcall	.-496    	; 0x138 <timer_setup>
+	bt_init();
+ 328:	f9 de       	rcall	.-526    	; 0x11c <bt_init>
+ 32a:	83 e0       	ldi	r24, 0x03	; 3
+	
+	EIMSK = 0x03;
+ 32c:	89 bf       	out	0x39, r24	; 57
+ 32e:	8f e0       	ldi	r24, 0x0F	; 15
+	EICRA = 0x0F;
+ 330:	80 93 6a 00 	sts	0x006A, r24	; 0x80006a <__TEXT_REGION_LENGTH__+0x7e006a>
+ 334:	78 94       	sei
+
+	sei();
+ 336:	85 b3       	in	r24, 0x15	; 21
+	PORTC &= (0 << ElectroMagnet);
+	//PORTC = 0x7F;
+}
+
+inline void ElectroMagnet_Off(){
+	PORTC |=  (1 << ElectroMagnet);
+ 338:	80 68       	ori	r24, 0x80	; 128
+ 33a:	85 bb       	out	0x15, r24	; 21
+ 33c:	84 e1       	ldi	r24, 0x14	; 20
+
+	sei();
+	
+	ElectroMagnet_Off();
+	
+	Servo_increment_threshold = 20;
+ 33e:	90 e0       	ldi	r25, 0x00	; 0
+ 340:	90 93 18 01 	sts	0x0118, r25	; 0x800118 <Servo_increment_threshold+0x1>
+ 344:	80 93 17 01 	sts	0x0117, r24	; 0x800117 <Servo_increment_threshold>
+ 348:	81 e0       	ldi	r24, 0x01	; 1
+	Servo_Allowed = 0x01;
+ 34a:	80 93 0a 01 	sts	0x010A, r24	; 0x80010a <Servo_Allowed>
+	
+	Servo_Quick_Move(375);
+ 34e:	87 e7       	ldi	r24, 0x77	; 119
+ 350:	91 e0       	ldi	r25, 0x01	; 1
+ 352:	28 d0       	rcall	.+80     	; 0x3a4 <Servo_Quick_Move>
+ 354:	8f e3       	ldi	r24, 0x3F	; 63
+	#else
+		//round up by default
+		__ticks_dc = (uint32_t)(ceil(fabs(__tmp)));
+	#endif
+
+	__builtin_avr_delay_cycles(__ticks_dc);
+ 356:	9c e9       	ldi	r25, 0x9C	; 156
+ 358:	01 97       	sbiw	r24, 0x01	; 1
+ 35a:	f1 f7       	brne	.-4      	; 0x358 <main+0x36>
+ 35c:	00 c0       	rjmp	.+0      	; 0x35e <main+0x3c>
+ 35e:	00 00       	nop
+	
+	while(1){
+		_delay_ms(10);
+		
+#ifndef USE_BLUETOOTH_INTERRUPT
+		if(BT_Receive()){
+ 360:	52 df       	rcall	.-348    	; 0x206 <BT_Receive>
+ 362:	88 23       	and	r24, r24
+ 364:	89 f0       	breq	.+34     	; 0x388 <main+0x66>
+ 366:	80 91 0b 01 	lds	r24, 0x010B	; 0x80010b <marble>
+			if(marble.color == 1) Servo_Quick_Move(200);
+ 36a:	81 30       	cpi	r24, 0x01	; 1
+ 36c:	21 f4       	brne	.+8      	; 0x376 <main+0x54>
+ 36e:	88 ec       	ldi	r24, 0xC8	; 200
+ 370:	90 e0       	ldi	r25, 0x00	; 0
+ 372:	18 d0       	rcall	.+48     	; 0x3a4 <Servo_Quick_Move>
+ 374:	09 c0       	rjmp	.+18     	; 0x388 <main+0x66>
+			else if(marble.color == 2) Servo_Quick_Move(500);
+ 376:	82 30       	cpi	r24, 0x02	; 2
+ 378:	21 f4       	brne	.+8      	; 0x382 <main+0x60>
+ 37a:	84 ef       	ldi	r24, 0xF4	; 244
+ 37c:	91 e0       	ldi	r25, 0x01	; 1
+ 37e:	12 d0       	rcall	.+36     	; 0x3a4 <Servo_Quick_Move>
+ 380:	03 c0       	rjmp	.+6      	; 0x388 <main+0x66>
+			else Servo_Quick_Move(375);
+ 382:	87 e7       	ldi	r24, 0x77	; 119
+ 384:	91 e0       	ldi	r25, 0x01	; 1
+ 386:	0e d0       	rcall	.+28     	; 0x3a4 <Servo_Quick_Move>
+ 388:	80 b3       	in	r24, 0x10	; 16
+		}
+#endif
+		
+		switch(PIND & 0x03){
+ 38a:	83 70       	andi	r24, 0x03	; 3
+ 38c:	81 30       	cpi	r24, 0x01	; 1
+ 38e:	19 f0       	breq	.+6      	; 0x396 <main+0x74>
+ 390:	82 30       	cpi	r24, 0x02	; 2
+ 392:	21 f0       	breq	.+8      	; 0x39c <main+0x7a>
+ 394:	df cf       	rjmp	.-66     	; 0x354 <main+0x32>
+ 396:	85 b3       	in	r24, 0x15	; 21
+	DDRC = (1<<ElectroMagnet);
+	//DDRC = 0xFF;
+}
+
+inline void ElectroMagnet_On(){
+	PORTC &= (0 << ElectroMagnet);
+ 398:	15 ba       	out	0x15, r1	; 21
+ 39a:	dc cf       	rjmp	.-72     	; 0x354 <main+0x32>
+ 39c:	85 b3       	in	r24, 0x15	; 21
+	//PORTC = 0x7F;
+}
+
+inline void ElectroMagnet_Off(){
+	PORTC |=  (1 << ElectroMagnet);
+ 39e:	80 68       	ori	r24, 0x80	; 128
+ 3a0:	85 bb       	out	0x15, r24	; 21
+ 3a2:	d8 cf       	rjmp	.-80     	; 0x354 <main+0x32>
+
+000003a4 <Servo_Quick_Move>:
+ 3a4:	90 93 15 01 	sts	0x0115, r25	; 0x800115 <Servo_pos+0x1>
+void Calculate_Servo_Rotate_Angle(){
+	//Marble_pos = ...
+}
+
+void Servo_Quick_Move(unsigned short val){
+	Servo_pos = val;
+ 3a8:	80 93 14 01 	sts	0x0114, r24	; 0x800114 <Servo_pos>
+	OCR1A = Servo_pos;
+ 3ac:	9b bd       	out	0x2b, r25	; 43
+ 3ae:	8a bd       	out	0x2a, r24	; 42
+ 3b0:	08 95       	ret
+
+000003b2 <_exit>:
+ 3b2:	f8 94       	cli
+
+000003b4 <__stop_program>:
+ 3b4:	ff cf       	rjmp	.-2      	; 0x3b4 <__stop_program>
