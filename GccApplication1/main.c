@@ -5,7 +5,7 @@
  * Author : kijun
  */ 
 
-#define DEBUG_
+#define DEBUG_ 0
 #define F_CPU 16000000UL
 //#define USE_BLUETOOTH_INTERRUPT
 
@@ -86,7 +86,14 @@ void bt_init();
 
 //**** Debug **************************************************************************************************************************************************//
 #ifdef DEBUG_
+#if DEBUG_ == 0
+//현준이 일하는 곳
+int main(void){
+	
+}
 
+#elif DEBUG_ == 1
+//기정이 일하는 곳
 int main(void){
 	//debug
 	
@@ -117,7 +124,8 @@ int main(void){
 		switch(PIND & 0x03){
 			case 0x01:
 				ElectroMagnet_On();
-				Servo_Go_Home();
+				BT_send('1');
+				//Servo_Go_Home();
 			break;
 			
 			case 0x02:
@@ -224,6 +232,8 @@ ISR(USART1_RX_vect){
 	}
 }
 #endif // BLUETOOTH_INTERRUPT
+
+#endif
 
 #endif
 //************************************************************************************************************************************************************//
