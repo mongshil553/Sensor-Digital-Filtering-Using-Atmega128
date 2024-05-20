@@ -5,7 +5,7 @@
  * Author : kijun
  */ 
 
-#define DEBUG_ 1
+#define DEBUG_ 0
 #define F_CPU 16000000UL
 //#define USE_BLUETOOTH_INTERRUPT
 
@@ -15,7 +15,7 @@
 #include <stdbool.h>
 #include <avr/interrupt.h>
 #include <util/delay.h>
-#include "Overall.h"
+//#include "Overall.h"
 #include "Servo.h"
 
 void sys_init();
@@ -32,11 +32,11 @@ struct MarbleClass marble;
 
 //Demux
 #define ITEM_NONE 0x00;
-#define ITEM_SERVO 0x01;
-#define ITEM_LED_RED 0x02;
-#define ITEM_LED_GREEN 0x03;
-#define ITEM_LED_BLUE 0x04;
-#define ITEM_SPEARK 0x05;
+#define ITEM_SERVO 0x04;
+#define ITEM_SPEAKER 0x05;
+#define ITEM_LED_RED 0x08;
+#define ITEM_LED_GREEN 0x09;
+#define ITEM_LED_BLUE 0x0A;
 void Select_Item(char item);
 
 //MAIN
@@ -92,7 +92,7 @@ void bt_init();
 //**** Debug **************************************************************************************************************************************************//
 
 #if DEBUG_ == 0
-//현준이 일하는 곳
+//현준이 일하는 곳 맨 위에 #define DEBUG_ 부분을 0으로 바꾸기
 int main(void){
 	
 	adc_init(); // ADC 초기화
@@ -205,6 +205,7 @@ void timer0_init(void) {
 //기정이 일하는 곳
 int main(void){
 	//debug
+	char iter = 0;
 	
 	cli();
 	port_setup();
@@ -223,6 +224,8 @@ int main(void){
 	
 	Servo_Quick_Move(375);
 	
+	shk_detected = 0x00;
+	
 	while(1){
 		_delay_ms(10);
 		
@@ -231,23 +234,37 @@ int main(void){
 			if(marble.color == 1) Servo_Quick_Move(200);
 			else if(marble.color == 2) Servo_Quick_Move(500);
 			else Servo_Quick_Move(375);
+			
+			for(iter=0; iter<50; iter++){ //2 second for shock to be detected
+				_delay_ms(100);
+				if(shk_detected==0x01){
+					Servo_Quick_Move(SERVO_BOX);
+					shk_detected = 0x00;
+				}
+				
+			}
+			
+			Servo_Quick_Move(SERVO_HOME);
 		}
 #endif
-		
 		switch(PIND & 0x03){
 			case 0x01:
 				ElectroMagnet_On();
 				//Servo_Go_Home();
+				//Servo_Quick_Move(SERVO_HOME);
 			break;
 			
 			case 0x02:
 				ElectroMagnet_Off();
 				//Servo_Go_Box();
+				//Servo_Quick_Move(SERVO_BOX);
 			break;
 			
 			default:
 			break;
 		}
+		
+		
 	
 	}
 	
@@ -255,7 +272,8 @@ int main(void){
 
 ISR(INT1_vect)
 {
-	BT_send('1');
+	//BT_send('1');
+	shk_detected = 0x01;
 }
 
 ISR(INT0_vect)
@@ -362,7 +380,7 @@ ISR(USART1_RX_vect){
 #if DEBUG_ == 3
 
 int main(void)
-{
+{	
 	pin_init(); //Pin Setup
 	init();		//Interrupt, Timer, Register
 	bt_init();	//Bluetooth Setup
@@ -413,6 +431,8 @@ int main(void)
 				//Servo Reached Destination
 				shk_detected = 0x00; //Reset Shock Flag
 				ElectroMagnet_Off(); //Drop Marble
+				
+				_delay_ms(2000); //Wait 2 seconds for Marble to drop and Shock to be detected
 
 				state <<= 1;
 				
@@ -436,7 +456,7 @@ int main(void)
 					ElectroMagnet_On();
 					
 					temp_en = 0x00; //temperature sensor does not control servo speed
-					Servo_increment_threshold = 40;
+					Servo_increment_threshold = 40; //Very slowly
 					
 					//Move servo to Marble Collecting Box
 					Servo_Go_Box();
@@ -629,7 +649,7 @@ inline void ElectroMagnet_Off(){
 }
 
 void Select_Item(char item){
-	PORTC = (PORTC & 0xF8) | item;
+	PORTC = (PORTC & 0xF0) | item;
 	_delay_us(100);
 }
 

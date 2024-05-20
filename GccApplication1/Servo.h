@@ -10,8 +10,8 @@
 
 #define Servo_MAX 520
 #define Servo_MIN 230
-#define SERVO_HOME 620
-#define SERVO_BOX 130
+#define SERVO_HOME 130
+#define SERVO_BOX 620
 
 //Servo Motor
 volatile unsigned short Servo_target, tmp;
