@@ -16,19 +16,14 @@
 #include <avr/interrupt.h>
 #include <util/delay.h>
 //#include "Overall.h"
+#include "Marble.h"
 #include "Servo.h"
+#include "Sensors.h"
+#include "Bluetooth.h"
 
 void sys_init();
 void timer_setup();
 void port_setup();
-
-//Marble
-struct MarbleClass{
-	char color; //0x01:Red, 0x02:Green, 0x03:Blue, 0x04:None
-	short posX, posY;
-};
-struct MarbleClass marble;
-
 
 //Demux
 #define ITEM_NONE 0x00;
@@ -45,27 +40,6 @@ volatile char PSD_Detected = 0x00;
 volatile uint16_t adc_value =0; //ADC값 저장
 volatile uint8_t current_channel=0;//현재 읽고있는 채널 값 저장
 
-//Pressure Sensor
-volatile char pressure_sensor_val;
-//외부 변수 써서 고주파를 차단해야되면 LPF, MAF이용
-//예를 들어, 이전 값 저장하는 변수
-
-//CdS Sensor
-volatile char cds_sensor_val;
-
-//Temperature sensor
-volatile char temp_sensor_val;
-volatile char temp_en = 0x01;
-
-//Shock Sensor
-volatile char shk_sensor_val;
-volatile char shk_detected;
-
-//PSD Sensor
-volatile char psd_sensor_val;
-
-//Fire sensor
-volatile char fire_sensor_val;
 
 //LED PWM Value
 volatile unsigned int led_pwm_value;
@@ -76,13 +50,6 @@ volatile char led_select = 0x00; //0x00: None, 0x01:Red, 0x02:Green, 0x03:Blue
 //Electromagnet
 void ElectroMagnet_On();
 void ElectroMagnet_Off();
-
-//블루투스 통신
-void init_serial(void);
-void BT_send(char msg);
-char BT_Receive(); //#x. : Color, !xxx. : posX, *xxx. : posY
-volatile char rdata = 0; //read buffer from BT
-volatile char rdatas[12];
 
 
 void pin_init();
@@ -502,6 +469,45 @@ ISR(TIMER0_OVF_vect){ //Use Timer0 for collecting sensor value and PWM
 	//These Sensor Values are not filtered
 	//Must use filtered value in future
 	
+	static char idx = 0x01;
+	
+	switch(idx){
+	case 0x01:
+		Read_CDS();
+		idx <<=1;
+		break;
+		
+	case 0x02:
+		Read_Fire();
+		//Is_Fire_Interrupt();
+		idx <<=1;
+		break;
+		
+	case 0x04:
+		Read_Pressure();
+		idx <<=1;
+		break;
+		
+	case 0x08:
+		Read_PSD();
+		//Is_PSD_Interrupt();
+		idx <<= 1;
+		break;
+		
+	case 0x10:
+		Read_Shock();
+		idx <<=1;
+		break;
+		
+	case 0x20:
+		Read_Thermister();
+		idx = 0x00;
+		break;
+	}
+	
+	//ADC Start
+	
+	/*
 	switch(state){
 		case 0x01: //if not started
 		//Get Pressure Value
@@ -538,52 +544,7 @@ ISR(TIMER0_OVF_vect){ //Use Timer0 for collecting sensor value and PWM
 	
 	//always get Fire sensor value
 	//Need to Control Fire Sensor
-}
-
-//Bluetooth_ Income Interrupt
-ISR(USART1_RX_vect){
-	
-	static char key = 0;
-	static short tmp = 0;
-	
-	rdata = UDR1;
-	
-	if(rdata == '*'){ //server answer (react to mcu inquiry)
-		//do something
-	}
-	else{ //Incoming Marble data ex) 1,512,908.  <- Marble Color=1, posX=512, posY=908
-		switch(key){
-			case 0: //incoming Marble Color
-			if(rdata == ','){
-				marble.color = (char)tmp;
-				tmp = 0;
-				key++;
-			}
-			else
-			tmp = tmp*10+rdata;
-			break;
-			
-			case 1: //incoming Marble posX
-			if(rdata == ','){
-				marble.posX = tmp;
-				tmp = 0;
-				key++;
-			}
-			else
-			tmp = tmp*10+rdata;
-			break;
-			
-			case 2: //incoming Marble posY
-			if(rdata == '.'){
-				marble.posY = tmp;
-				tmp = 0;
-				key = 0;
-			}
-			else
-			tmp = tmp*10+rdata;
-			break;
-		}
-	}
+	*/
 }
 
 void pin_init(){
@@ -595,33 +556,8 @@ void init(){
 	
 }
 
-void init_serial(void){
-	//TX PD2, RX PD3
-	UCSR0A = 0x00; //Reset
-	UCSR0B = 0x18; //Allow transfer, prohibit interrupt
-	UCSR0C = 0x06; //Data 8 bit
-	
-	UBRR0H = 0x00;
-	UBRR0L = 10; //Baud Rate 9600
-	
-	
-}
-
 #endif
 //************************************************************************************************************************************************************//
-
-void bt_init(){
-	UCSR1A = 0x00;
-	UCSR1B = 0x18;
-	UCSR1C = 0x06;
-	
-	UBRR1H = 0x00;
-	UBRR1L = 103;
-	
-#ifdef USE_BLUETOOTH_INTERRUPT
-	UCSR1B |= 0x80; //Enable Interrupt
-#endif
-}
 
 void timer_setup(){
 	TCCR1A=0x82;
@@ -652,73 +588,6 @@ void Select_Item(char item){
 	PORTC = (PORTC & 0xF0) | item;
 	_delay_us(100);
 }
-
-char BT_Receive(){
-	
-	static char step = 0;
-	static char tmp = 0;
-	
-	if(!(UCSR1A&(1<<RXC1))) return 0x00;
-	
-	rdata = UDR1;
-	
-	switch(step){
-		case 1:
-		if(rdata == '.') {
-			step = 0;
-			BT_send(rdata);
-			//ElectroMagnet_On();
-			return 0x00;
-		}
-		else marble.color = rdata - '0';
-		break;
-		
-		case 2:
-		if(rdata == '.') {
-			step = 0;
-			BT_send(rdata);
-			//ElectroMagnet_On();
-			return 0x00;
-		}
-		else marble.posX = marble.posX * 10 + rdata - '0';
-		break;
-		
-		case 3:
-		if(rdata == '.') {
-			step = 0;
-			BT_send(rdata);
-			//ElectroMagnet_Off();
-			return 0x01;
-		}
-		else marble.posY = marble.posY * 10 + rdata -'0';
-		break;
-	}
-	
-	if(rdata == '#') {
-		marble.color = 0;
-		step = 1;
-	}
-	else if(rdata == '!'){
-		marble.posX = 0;
-		step = 2;
-	}
-	else if(rdata == '*'){
-		marble.posY = 0;
-		step = 3;
-	}
-	
-	BT_send(rdata);
-
-	return 0x00;
-}
-
-void BT_send(char msg){
-	//send msg
-	while(!(UCSR1A & (1<<UDRE))); //Wait for buffer to clear
-	UDR1 = msg; //send msg
-}
-
-
 
 void LED_Set(){
 	

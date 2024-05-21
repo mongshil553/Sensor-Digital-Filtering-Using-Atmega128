@@ -3,31 +3,31 @@ GccApplication1.elf:     file format elf32-avr
 
 Sections:
 Idx Name          Size      VMA       LMA       File off  Algn
-  0 .data         00000000  00800100  00800100  00000408  2**0
+  0 .data         00000000  00800100  00800100  00000282  2**0
                   CONTENTS, ALLOC, LOAD, DATA
-  1 .text         00000394  00000000  00000000  00000074  2**1
+  1 .text         0000020e  00000000  00000000  00000074  2**1
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  2 .bss          0000002a  00800100  00800100  00000408  2**0
+  2 .bss          0000001b  00800100  00800100  00000282  2**0
                   ALLOC
-  3 .comment      00000030  00000000  00000000  00000408  2**0
+  3 .comment      00000030  00000000  00000000  00000282  2**0
                   CONTENTS, READONLY
-  4 .note.gnu.avr.deviceinfo 0000003c  00000000  00000000  00000438  2**2
+  4 .note.gnu.avr.deviceinfo 0000003c  00000000  00000000  000002b4  2**2
                   CONTENTS, READONLY
-  5 .debug_aranges 000000d0  00000000  00000000  00000474  2**0
+  5 .debug_aranges 00000088  00000000  00000000  000002f0  2**0
                   CONTENTS, READONLY, DEBUGGING
-  6 .debug_info   00001140  00000000  00000000  00000544  2**0
+  6 .debug_info   00000dcc  00000000  00000000  00000378  2**0
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_abbrev 00000b2e  00000000  00000000  00001684  2**0
+  7 .debug_abbrev 000009ad  00000000  00000000  00001144  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_line   000007ef  00000000  00000000  000021b2  2**0
+  8 .debug_line   00000513  00000000  00000000  00001af1  2**0
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_frame  000001d0  00000000  00000000  000029a4  2**2
+  9 .debug_frame  00000138  00000000  00000000  00002004  2**2
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_str    000006ad  00000000  00000000  00002b74  2**0
+ 10 .debug_str    000006ad  00000000  00000000  0000213c  2**0
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_loc    00000358  00000000  00000000  00003221  2**0
+ 11 .debug_loc    000001ff  00000000  00000000  000027e9  2**0
                   CONTENTS, READONLY, DEBUGGING
- 12 .debug_ranges 000000b0  00000000  00000000  00003579  2**0
+ 12 .debug_ranges 00000078  00000000  00000000  000029e8  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -35,9 +35,9 @@ Disassembly of section .text:
 00000000 <__vectors>:
    0:	45 c0       	rjmp	.+138    	; 0x8c <__ctors_end>
    2:	00 00       	nop
-   4:	ab c0       	rjmp	.+342    	; 0x15c <__vector_1>
+   4:	60 c0       	rjmp	.+192    	; 0xc6 <__bad_interrupt>
    6:	00 00       	nop
-   8:	5f c0       	rjmp	.+190    	; 0xc8 <__vector_2>
+   8:	5e c0       	rjmp	.+188    	; 0xc6 <__bad_interrupt>
    a:	00 00       	nop
    c:	5c c0       	rjmp	.+184    	; 0xc6 <__bad_interrupt>
    e:	00 00       	nop
@@ -65,7 +65,7 @@ Disassembly of section .text:
   3a:	00 00       	nop
   3c:	44 c0       	rjmp	.+136    	; 0xc6 <__bad_interrupt>
   3e:	00 00       	nop
-  40:	52 c0       	rjmp	.+164    	; 0xe6 <__vector_16>
+  40:	57 c0       	rjmp	.+174    	; 0xf0 <__vector_16>
   42:	00 00       	nop
   44:	40 c0       	rjmp	.+128    	; 0xc6 <__bad_interrupt>
   46:	00 00       	nop
@@ -75,7 +75,7 @@ Disassembly of section .text:
   4e:	00 00       	nop
   50:	3a c0       	rjmp	.+116    	; 0xc6 <__bad_interrupt>
   52:	00 00       	nop
-  54:	38 c0       	rjmp	.+112    	; 0xc6 <__bad_interrupt>
+  54:	39 c0       	rjmp	.+114    	; 0xc8 <__vector_21>
   56:	00 00       	nop
   58:	36 c0       	rjmp	.+108    	; 0xc6 <__bad_interrupt>
   5a:	00 00       	nop
@@ -116,8 +116,8 @@ Disassembly of section .text:
   98:	11 e0       	ldi	r17, 0x01	; 1
   9a:	a0 e0       	ldi	r26, 0x00	; 0
   9c:	b1 e0       	ldi	r27, 0x01	; 1
-  9e:	e4 e9       	ldi	r30, 0x94	; 148
-  a0:	f3 e0       	ldi	r31, 0x03	; 3
+  9e:	ee e0       	ldi	r30, 0x0E	; 14
+  a0:	f2 e0       	ldi	r31, 0x02	; 2
   a2:	00 e0       	ldi	r16, 0x00	; 0
   a4:	0b bf       	out	0x3b, r16	; 59
   a6:	02 c0       	rjmp	.+4      	; 0xac <__do_copy_data+0x14>
@@ -137,528 +137,209 @@ Disassembly of section .text:
   ba:	1d 92       	st	X+, r1
 
 000000bc <.do_clear_bss_start>:
-  bc:	aa 32       	cpi	r26, 0x2A	; 42
+  bc:	ab 31       	cpi	r26, 0x1B	; 27
   be:	b2 07       	cpc	r27, r18
   c0:	e1 f7       	brne	.-8      	; 0xba <.do_clear_bss_loop>
-  c2:	02 d1       	rcall	.+516    	; 0x2c8 <main>
-  c4:	65 c1       	rjmp	.+714    	; 0x390 <_exit>
+  c2:	69 d0       	rcall	.+210    	; 0x196 <main>
+  c4:	a2 c0       	rjmp	.+324    	; 0x20a <_exit>
 
 000000c6 <__bad_interrupt>:
   c6:	9c cf       	rjmp	.-200    	; 0x0 <__vectors>
 
-000000c8 <__vector_2>:
-	#else
-		//round up by default
-		__ticks_dc = (uint32_t)(ceil(fabs(__tmp)));
-	#endif
-
-	__builtin_avr_delay_cycles(__ticks_dc);
+000000c8 <__vector_21>:
+		
+		// ADC 채널 6 (불꽃 감지 센서) 값 읽기
+		fire_sensor_value = read_adc_channel(6);
+		
+		// ADC 채널 7 (PSD 센서) 값 읽기
+		psd_sensor_value = read_adc_channel(7);
   c8:	1f 92       	push	r1
   ca:	0f 92       	push	r0
   cc:	0f b6       	in	r0, 0x3f	; 63
   ce:	0f 92       	push	r0
   d0:	11 24       	eor	r1, r1
   d2:	8f 93       	push	r24
-  d4:	81 e0       	ldi	r24, 0x01	; 1
-  d6:	80 93 12 01 	sts	0x0112, r24	; 0x800112 <shk_detected>
-  da:	8f 91       	pop	r24
-  dc:	0f 90       	pop	r0
-  de:	0f be       	out	0x3f, r0	; 63
-  e0:	0f 90       	pop	r0
-  e2:	1f 90       	pop	r1
-  e4:	18 95       	reti
+  d4:	9f 93       	push	r25
+  d6:	84 b1       	in	r24, 0x04	; 4
+  d8:	95 b1       	in	r25, 0x05	; 5
+  da:	90 93 03 01 	sts	0x0103, r25	; 0x800103 <adc_value+0x1>
+  de:	80 93 02 01 	sts	0x0102, r24	; 0x800102 <adc_value>
+  e2:	9f 91       	pop	r25
+  e4:	8f 91       	pop	r24
+  e6:	0f 90       	pop	r0
+  e8:	0f be       	out	0x3f, r0	; 63
+  ea:	0f 90       	pop	r0
+  ec:	1f 90       	pop	r1
+  ee:	18 95       	reti
 
-000000e6 <__vector_16>:
-  e6:	1f 92       	push	r1
-  e8:	0f 92       	push	r0
-  ea:	0f b6       	in	r0, 0x3f	; 63
-  ec:	0f 92       	push	r0
-  ee:	11 24       	eor	r1, r1
-  f0:	8f 93       	push	r24
-  f2:	80 91 01 01 	lds	r24, 0x0101	; 0x800101 <key.1808>
-  f6:	81 11       	cpse	r24, r1
-  f8:	03 c0       	rjmp	.+6      	; 0x100 <__vector_16+0x1a>
-  fa:	85 b3       	in	r24, 0x15	; 21
-  fc:	15 ba       	out	0x15, r1	; 21
-  fe:	03 c0       	rjmp	.+6      	; 0x106 <__vector_16+0x20>
- 100:	85 b3       	in	r24, 0x15	; 21
- 102:	80 68       	ori	r24, 0x80	; 128
- 104:	85 bb       	out	0x15, r24	; 21
- 106:	8f 91       	pop	r24
- 108:	0f 90       	pop	r0
- 10a:	0f be       	out	0x3f, r0	; 63
- 10c:	0f 90       	pop	r0
- 10e:	1f 90       	pop	r1
- 110:	18 95       	reti
+000000f0 <__vector_16>:
+  f0:	1f 92       	push	r1
+  f2:	0f 92       	push	r0
+  f4:	0f b6       	in	r0, 0x3f	; 63
+  f6:	0f 92       	push	r0
+  f8:	11 24       	eor	r1, r1
+  fa:	0b b6       	in	r0, 0x3b	; 59
+  fc:	0f 92       	push	r0
+  fe:	8f 93       	push	r24
+ 100:	9f 93       	push	r25
+ 102:	ef 93       	push	r30
+ 104:	ff 93       	push	r31
+ 106:	cf 93       	push	r28
+ 108:	df 93       	push	r29
+ 10a:	00 d0       	rcall	.+0      	; 0x10c <__vector_16+0x1c>
+ 10c:	00 d0       	rcall	.+0      	; 0x10e <__vector_16+0x1e>
+ 10e:	cd b7       	in	r28, 0x3d	; 61
+ 110:	de b7       	in	r29, 0x3e	; 62
+ 112:	84 e0       	ldi	r24, 0x04	; 4
+ 114:	89 83       	std	Y+1, r24	; 0x01
+ 116:	85 e0       	ldi	r24, 0x05	; 5
+ 118:	8a 83       	std	Y+2, r24	; 0x02
+ 11a:	86 e0       	ldi	r24, 0x06	; 6
+ 11c:	8b 83       	std	Y+3, r24	; 0x03
+ 11e:	87 e0       	ldi	r24, 0x07	; 7
+ 120:	8c 83       	std	Y+4, r24	; 0x04
+ 122:	80 91 00 01 	lds	r24, 0x0100	; 0x800100 <__DATA_REGION_ORIGIN__>
+ 126:	e1 e0       	ldi	r30, 0x01	; 1
+ 128:	f0 e0       	ldi	r31, 0x00	; 0
+ 12a:	ec 0f       	add	r30, r28
+ 12c:	fd 1f       	adc	r31, r29
+ 12e:	e8 0f       	add	r30, r24
+ 130:	f1 1d       	adc	r31, r1
+ 132:	80 81       	ld	r24, Z
+ 134:	80 93 01 01 	sts	0x0101, r24	; 0x800101 <current_channel>
+ 138:	97 b1       	in	r25, 0x07	; 7
+ 13a:	80 91 01 01 	lds	r24, 0x0101	; 0x800101 <current_channel>
+ 13e:	98 7f       	andi	r25, 0xF8	; 248
+ 140:	87 70       	andi	r24, 0x07	; 7
+ 142:	89 2b       	or	r24, r25
+ 144:	87 b9       	out	0x07, r24	; 7
+ 146:	86 b1       	in	r24, 0x06	; 6
+ 148:	80 64       	ori	r24, 0x40	; 64
+ 14a:	86 b9       	out	0x06, r24	; 6
+ 14c:	80 91 00 01 	lds	r24, 0x0100	; 0x800100 <__DATA_REGION_ORIGIN__>
+ 150:	8f 5f       	subi	r24, 0xFF	; 255
+ 152:	80 93 00 01 	sts	0x0100, r24	; 0x800100 <__DATA_REGION_ORIGIN__>
+ 156:	84 30       	cpi	r24, 0x04	; 4
+ 158:	10 f0       	brcs	.+4      	; 0x15e <__vector_16+0x6e>
+ 15a:	10 92 00 01 	sts	0x0100, r1	; 0x800100 <__DATA_REGION_ORIGIN__>
+ 15e:	0f 90       	pop	r0
+ 160:	0f 90       	pop	r0
+ 162:	0f 90       	pop	r0
+ 164:	0f 90       	pop	r0
+ 166:	df 91       	pop	r29
+ 168:	cf 91       	pop	r28
+ 16a:	ff 91       	pop	r31
+ 16c:	ef 91       	pop	r30
+ 16e:	9f 91       	pop	r25
+ 170:	8f 91       	pop	r24
+ 172:	0f 90       	pop	r0
+ 174:	0b be       	out	0x3b, r0	; 59
+ 176:	0f 90       	pop	r0
+ 178:	0f be       	out	0x3f, r0	; 63
+ 17a:	0f 90       	pop	r0
+ 17c:	1f 90       	pop	r1
+ 17e:	18 95       	reti
 
-00000112 <bt_init>:
- 112:	10 92 9b 00 	sts	0x009B, r1	; 0x80009b <__TEXT_REGION_LENGTH__+0x7e009b>
- 116:	88 e1       	ldi	r24, 0x18	; 24
- 118:	80 93 9a 00 	sts	0x009A, r24	; 0x80009a <__TEXT_REGION_LENGTH__+0x7e009a>
- 11c:	86 e0       	ldi	r24, 0x06	; 6
- 11e:	80 93 9d 00 	sts	0x009D, r24	; 0x80009d <__TEXT_REGION_LENGTH__+0x7e009d>
- 122:	10 92 98 00 	sts	0x0098, r1	; 0x800098 <__TEXT_REGION_LENGTH__+0x7e0098>
- 126:	87 e6       	ldi	r24, 0x67	; 103
- 128:	80 93 99 00 	sts	0x0099, r24	; 0x800099 <__TEXT_REGION_LENGTH__+0x7e0099>
- 12c:	08 95       	ret
+00000180 <adc_init>:
+ 180:	80 e4       	ldi	r24, 0x40	; 64
+ 182:	87 b9       	out	0x07, r24	; 7
+ 184:	8f e8       	ldi	r24, 0x8F	; 143
+ 186:	86 b9       	out	0x06, r24	; 6
+ 188:	08 95       	ret
 
-0000012e <timer_setup>:
- 12e:	82 e8       	ldi	r24, 0x82	; 130
- 130:	8f bd       	out	0x2f, r24	; 47
- 132:	8b e1       	ldi	r24, 0x1B	; 27
- 134:	8e bd       	out	0x2e, r24	; 46
- 136:	87 e8       	ldi	r24, 0x87	; 135
- 138:	93 e1       	ldi	r25, 0x13	; 19
- 13a:	97 bd       	out	0x27, r25	; 39
- 13c:	86 bd       	out	0x26, r24	; 38
- 13e:	08 95       	ret
-
-00000140 <port_setup>:
- 140:	8f ef       	ldi	r24, 0xFF	; 255
- 142:	8a bb       	out	0x1a, r24	; 26
- 144:	11 ba       	out	0x11, r1	; 17
- 146:	87 bb       	out	0x17, r24	; 23
- 148:	80 e8       	ldi	r24, 0x80	; 128
- 14a:	84 bb       	out	0x14, r24	; 20
- 14c:	08 95       	ret
-
-0000014e <BT_send>:
-	return 0x00;
-}
-
-void BT_send(char msg){
-	//send msg
-	while(!(UCSR1A & (1<<UDRE))); //Wait for buffer to clear
- 14e:	90 91 9b 00 	lds	r25, 0x009B	; 0x80009b <__TEXT_REGION_LENGTH__+0x7e009b>
- 152:	95 ff       	sbrs	r25, 5
- 154:	fc cf       	rjmp	.-8      	; 0x14e <BT_send>
-	UDR1 = msg; //send msg
- 156:	80 93 9c 00 	sts	0x009C, r24	; 0x80009c <__TEXT_REGION_LENGTH__+0x7e009c>
- 15a:	08 95       	ret
-
-0000015c <__vector_1>:
-	//BT_send('1');
-	shk_detected = 0x01;
-}
-
-ISR(INT0_vect)
-{
- 15c:	1f 92       	push	r1
- 15e:	0f 92       	push	r0
- 160:	0f b6       	in	r0, 0x3f	; 63
- 162:	0f 92       	push	r0
- 164:	11 24       	eor	r1, r1
- 166:	0b b6       	in	r0, 0x3b	; 59
- 168:	0f 92       	push	r0
- 16a:	2f 93       	push	r18
- 16c:	3f 93       	push	r19
- 16e:	4f 93       	push	r20
- 170:	5f 93       	push	r21
- 172:	6f 93       	push	r22
- 174:	7f 93       	push	r23
- 176:	8f 93       	push	r24
- 178:	9f 93       	push	r25
- 17a:	af 93       	push	r26
- 17c:	bf 93       	push	r27
- 17e:	ef 93       	push	r30
- 180:	ff 93       	push	r31
-	BT_send('0');
- 182:	80 e3       	ldi	r24, 0x30	; 48
- 184:	e4 df       	rcall	.-56     	; 0x14e <BT_send>
-}
- 186:	ff 91       	pop	r31
- 188:	ef 91       	pop	r30
- 18a:	bf 91       	pop	r27
- 18c:	af 91       	pop	r26
- 18e:	9f 91       	pop	r25
- 190:	8f 91       	pop	r24
- 192:	7f 91       	pop	r23
- 194:	6f 91       	pop	r22
- 196:	5f 91       	pop	r21
- 198:	4f 91       	pop	r20
- 19a:	3f 91       	pop	r19
- 19c:	2f 91       	pop	r18
- 19e:	0f 90       	pop	r0
- 1a0:	0b be       	out	0x3b, r0	; 59
- 1a2:	0f 90       	pop	r0
- 1a4:	0f be       	out	0x3f, r0	; 63
- 1a6:	0f 90       	pop	r0
- 1a8:	1f 90       	pop	r1
- 1aa:	18 95       	reti
-
-000001ac <BT_Receive>:
-char BT_Receive(){
-	
-	static char step = 0;
-	static char tmp = 0;
-	
-	if(!(UCSR1A&(1<<RXC1))) return 0x00;
- 1ac:	80 91 9b 00 	lds	r24, 0x009B	; 0x80009b <__TEXT_REGION_LENGTH__+0x7e009b>
- 1b0:	88 23       	and	r24, r24
- 1b2:	0c f0       	brlt	.+2      	; 0x1b6 <BT_Receive+0xa>
- 1b4:	87 c0       	rjmp	.+270    	; 0x2c4 <BT_Receive+0x118>
-	
-	rdata = UDR1;
- 1b6:	80 91 9c 00 	lds	r24, 0x009C	; 0x80009c <__TEXT_REGION_LENGTH__+0x7e009c>
- 1ba:	80 93 02 01 	sts	0x0102, r24	; 0x800102 <rdata>
-	
-	switch(step){
- 1be:	80 91 00 01 	lds	r24, 0x0100	; 0x800100 <__DATA_REGION_ORIGIN__>
- 1c2:	82 30       	cpi	r24, 0x02	; 2
- 1c4:	b1 f0       	breq	.+44     	; 0x1f2 <BT_Receive+0x46>
- 1c6:	83 30       	cpi	r24, 0x03	; 3
- 1c8:	b1 f1       	breq	.+108    	; 0x236 <BT_Receive+0x8a>
- 1ca:	81 30       	cpi	r24, 0x01	; 1
- 1cc:	09 f0       	breq	.+2      	; 0x1d0 <BT_Receive+0x24>
- 1ce:	54 c0       	rjmp	.+168    	; 0x278 <BT_Receive+0xcc>
-		case 1:
-		if(rdata == '.') {
- 1d0:	80 91 02 01 	lds	r24, 0x0102	; 0x800102 <rdata>
- 1d4:	8e 32       	cpi	r24, 0x2E	; 46
- 1d6:	39 f4       	brne	.+14     	; 0x1e6 <BT_Receive+0x3a>
-			step = 0;
- 1d8:	10 92 00 01 	sts	0x0100, r1	; 0x800100 <__DATA_REGION_ORIGIN__>
-			BT_send(rdata);
- 1dc:	80 91 02 01 	lds	r24, 0x0102	; 0x800102 <rdata>
- 1e0:	b6 df       	rcall	.-148    	; 0x14e <BT_send>
-			//ElectroMagnet_On();
-			return 0x00;
- 1e2:	80 e0       	ldi	r24, 0x00	; 0
- 1e4:	08 95       	ret
-		}
-		else marble.color = rdata - '0';
- 1e6:	80 91 02 01 	lds	r24, 0x0102	; 0x800102 <rdata>
- 1ea:	80 53       	subi	r24, 0x30	; 48
- 1ec:	80 93 0a 01 	sts	0x010A, r24	; 0x80010a <marble>
-		break;
- 1f0:	43 c0       	rjmp	.+134    	; 0x278 <BT_Receive+0xcc>
+0000018a <timer0_init>:
 		
-		case 2:
-		if(rdata == '.') {
- 1f2:	80 91 02 01 	lds	r24, 0x0102	; 0x800102 <rdata>
- 1f6:	8e 32       	cpi	r24, 0x2E	; 46
- 1f8:	39 f4       	brne	.+14     	; 0x208 <BT_Receive+0x5c>
-			step = 0;
- 1fa:	10 92 00 01 	sts	0x0100, r1	; 0x800100 <__DATA_REGION_ORIGIN__>
-			BT_send(rdata);
- 1fe:	80 91 02 01 	lds	r24, 0x0102	; 0x800102 <rdata>
- 202:	a5 df       	rcall	.-182    	; 0x14e <BT_send>
-			//ElectroMagnet_On();
-			return 0x00;
- 204:	80 e0       	ldi	r24, 0x00	; 0
- 206:	08 95       	ret
-		}
-		else marble.posX = marble.posX * 10 + rdata - '0';
- 208:	ea e0       	ldi	r30, 0x0A	; 10
- 20a:	f1 e0       	ldi	r31, 0x01	; 1
- 20c:	81 81       	ldd	r24, Z+1	; 0x01
- 20e:	92 81       	ldd	r25, Z+2	; 0x02
- 210:	9c 01       	movw	r18, r24
- 212:	22 0f       	add	r18, r18
- 214:	33 1f       	adc	r19, r19
- 216:	88 0f       	add	r24, r24
- 218:	99 1f       	adc	r25, r25
- 21a:	88 0f       	add	r24, r24
- 21c:	99 1f       	adc	r25, r25
- 21e:	88 0f       	add	r24, r24
- 220:	99 1f       	adc	r25, r25
- 222:	82 0f       	add	r24, r18
- 224:	93 1f       	adc	r25, r19
- 226:	20 91 02 01 	lds	r18, 0x0102	; 0x800102 <rdata>
- 22a:	82 0f       	add	r24, r18
- 22c:	91 1d       	adc	r25, r1
- 22e:	c0 97       	sbiw	r24, 0x30	; 48
- 230:	92 83       	std	Z+2, r25	; 0x02
- 232:	81 83       	std	Z+1, r24	; 0x01
-		break;
- 234:	21 c0       	rjmp	.+66     	; 0x278 <BT_Receive+0xcc>
-		
-		case 3:
-		if(rdata == '.') {
- 236:	80 91 02 01 	lds	r24, 0x0102	; 0x800102 <rdata>
- 23a:	8e 32       	cpi	r24, 0x2E	; 46
- 23c:	39 f4       	brne	.+14     	; 0x24c <BT_Receive+0xa0>
-			step = 0;
- 23e:	10 92 00 01 	sts	0x0100, r1	; 0x800100 <__DATA_REGION_ORIGIN__>
-			BT_send(rdata);
- 242:	80 91 02 01 	lds	r24, 0x0102	; 0x800102 <rdata>
- 246:	83 df       	rcall	.-250    	; 0x14e <BT_send>
-			//ElectroMagnet_Off();
-			return 0x01;
- 248:	81 e0       	ldi	r24, 0x01	; 1
- 24a:	08 95       	ret
-		}
-		else marble.posY = marble.posY * 10 + rdata -'0';
- 24c:	ea e0       	ldi	r30, 0x0A	; 10
- 24e:	f1 e0       	ldi	r31, 0x01	; 1
- 250:	83 81       	ldd	r24, Z+3	; 0x03
- 252:	94 81       	ldd	r25, Z+4	; 0x04
- 254:	9c 01       	movw	r18, r24
- 256:	22 0f       	add	r18, r18
- 258:	33 1f       	adc	r19, r19
- 25a:	88 0f       	add	r24, r24
- 25c:	99 1f       	adc	r25, r25
- 25e:	88 0f       	add	r24, r24
- 260:	99 1f       	adc	r25, r25
- 262:	88 0f       	add	r24, r24
- 264:	99 1f       	adc	r25, r25
- 266:	82 0f       	add	r24, r18
- 268:	93 1f       	adc	r25, r19
- 26a:	20 91 02 01 	lds	r18, 0x0102	; 0x800102 <rdata>
- 26e:	82 0f       	add	r24, r18
- 270:	91 1d       	adc	r25, r1
- 272:	c0 97       	sbiw	r24, 0x30	; 48
- 274:	94 83       	std	Z+4, r25	; 0x04
- 276:	83 83       	std	Z+3, r24	; 0x03
-		break;
 	}
-	
-	if(rdata == '#') {
- 278:	80 91 02 01 	lds	r24, 0x0102	; 0x800102 <rdata>
- 27c:	83 32       	cpi	r24, 0x23	; 35
- 27e:	31 f4       	brne	.+12     	; 0x28c <BT_Receive+0xe0>
-		marble.color = 0;
- 280:	10 92 0a 01 	sts	0x010A, r1	; 0x80010a <marble>
-		step = 1;
- 284:	81 e0       	ldi	r24, 0x01	; 1
- 286:	80 93 00 01 	sts	0x0100, r24	; 0x800100 <__DATA_REGION_ORIGIN__>
- 28a:	17 c0       	rjmp	.+46     	; 0x2ba <BT_Receive+0x10e>
-	}
-	else if(rdata == '!'){
- 28c:	80 91 02 01 	lds	r24, 0x0102	; 0x800102 <rdata>
- 290:	81 32       	cpi	r24, 0x21	; 33
- 292:	41 f4       	brne	.+16     	; 0x2a4 <BT_Receive+0xf8>
-		marble.posX = 0;
- 294:	10 92 0c 01 	sts	0x010C, r1	; 0x80010c <marble+0x2>
- 298:	10 92 0b 01 	sts	0x010B, r1	; 0x80010b <marble+0x1>
-		step = 2;
- 29c:	82 e0       	ldi	r24, 0x02	; 2
- 29e:	80 93 00 01 	sts	0x0100, r24	; 0x800100 <__DATA_REGION_ORIGIN__>
- 2a2:	0b c0       	rjmp	.+22     	; 0x2ba <BT_Receive+0x10e>
-	}
-	else if(rdata == '*'){
- 2a4:	80 91 02 01 	lds	r24, 0x0102	; 0x800102 <rdata>
- 2a8:	8a 32       	cpi	r24, 0x2A	; 42
- 2aa:	39 f4       	brne	.+14     	; 0x2ba <BT_Receive+0x10e>
-		marble.posY = 0;
- 2ac:	10 92 0e 01 	sts	0x010E, r1	; 0x80010e <marble+0x4>
- 2b0:	10 92 0d 01 	sts	0x010D, r1	; 0x80010d <marble+0x3>
-		step = 3;
- 2b4:	83 e0       	ldi	r24, 0x03	; 3
- 2b6:	80 93 00 01 	sts	0x0100, r24	; 0x800100 <__DATA_REGION_ORIGIN__>
-	}
-	
-	BT_send(rdata);
- 2ba:	80 91 02 01 	lds	r24, 0x0102	; 0x800102 <rdata>
- 2be:	47 df       	rcall	.-370    	; 0x14e <BT_send>
-
-	return 0x00;
- 2c0:	80 e0       	ldi	r24, 0x00	; 0
- 2c2:	08 95       	ret
-char BT_Receive(){
-	
-	static char step = 0;
-	static char tmp = 0;
-	
-	if(!(UCSR1A&(1<<RXC1))) return 0x00;
- 2c4:	80 e0       	ldi	r24, 0x00	; 0
-	}
-	
-	BT_send(rdata);
-
-	return 0x00;
 }
- 2c6:	08 95       	ret
 
-000002c8 <main>:
-//기정이 일하는 곳
+void timer0_init(void) {
+	TCCR0 = (1 << CS02) | (1 << CS00); // 분주비 1024
+ 18a:	85 e0       	ldi	r24, 0x05	; 5
+ 18c:	83 bf       	out	0x33, r24	; 51
+	TIMSK = (1 << TOIE0); // 타이머0 오버플로우 인터럽트 허용
+ 18e:	81 e0       	ldi	r24, 0x01	; 1
+ 190:	87 bf       	out	0x37, r24	; 55
+	TCNT0 = 0; // 타이머 카운터 초기화
+ 192:	12 be       	out	0x32, r1	; 50
+ 194:	08 95       	ret
+
+00000196 <main>:
+
+#if DEBUG_ == 0
+//현준이 일하는 곳 맨 위에 #define DEBUG_ 부분을 0으로 바꾸기
 int main(void){
-	//debug
-	char iter = 0;
 	
-	cli();
- 2c8:	f8 94       	cli
-	port_setup();
- 2ca:	3a df       	rcall	.-396    	; 0x140 <port_setup>
-	timer_setup();
- 2cc:	30 df       	rcall	.-416    	; 0x12e <timer_setup>
-	bt_init();
- 2ce:	21 df       	rcall	.-446    	; 0x112 <bt_init>
- 2d0:	83 e0       	ldi	r24, 0x03	; 3
-	
-	EIMSK = 0x03;
- 2d2:	89 bf       	out	0x39, r24	; 57
- 2d4:	8f e0       	ldi	r24, 0x0F	; 15
-	EICRA = 0x0F;
- 2d6:	80 93 6a 00 	sts	0x006A, r24	; 0x80006a <__TEXT_REGION_LENGTH__+0x7e006a>
- 2da:	78 94       	sei
+	adc_init(); // ADC 초기화
+ 196:	f4 df       	rcall	.-24     	; 0x180 <adc_init>
+	timer0_init(); // 타이머0 초기화
+ 198:	f8 df       	rcall	.-16     	; 0x18a <timer0_init>
+ 19a:	78 94       	sei
+	sei(); // 전역 인터럽트 허용
+ 19c:	80 91 01 01 	lds	r24, 0x0101	; 0x800101 <current_channel>
 
-	sei();
- 2dc:	85 b3       	in	r24, 0x15	; 21
-	PORTC &= (0 << ElectroMagnet);
-	//PORTC = 0x7F;
-}
-
-inline void ElectroMagnet_Off(){
-	PORTC |=  (1 << ElectroMagnet);
- 2de:	80 68       	ori	r24, 0x80	; 128
- 2e0:	85 bb       	out	0x15, r24	; 21
- 2e2:	84 e1       	ldi	r24, 0x14	; 20
-
-	sei();
-	
-	ElectroMagnet_Off();
-	
-	Servo_increment_threshold = 20;
- 2e4:	90 e0       	ldi	r25, 0x00	; 0
- 2e6:	90 93 17 01 	sts	0x0117, r25	; 0x800117 <Servo_increment_threshold+0x1>
- 2ea:	80 93 16 01 	sts	0x0116, r24	; 0x800116 <Servo_increment_threshold>
- 2ee:	81 e0       	ldi	r24, 0x01	; 1
-	Servo_Allowed = 0x01;
- 2f0:	80 93 09 01 	sts	0x0109, r24	; 0x800109 <Servo_Allowed>
-	
-	Servo_Quick_Move(375);
- 2f4:	87 e7       	ldi	r24, 0x77	; 119
- 2f6:	91 e0       	ldi	r25, 0x01	; 1
- 2f8:	44 d0       	rcall	.+136    	; 0x382 <Servo_Quick_Move>
- 2fa:	10 92 12 01 	sts	0x0112, r1	; 0x800112 <shk_detected>
-	
-	shk_detected = 0x00;
- 2fe:	8f e3       	ldi	r24, 0x3F	; 63
+	while (1) {
+		// ADC 채널 값을 읽고 필요한 변수에 저장
+		switch (current_channel) {
+ 1a0:	85 30       	cpi	r24, 0x05	; 5
+ 1a2:	c1 f0       	breq	.+48     	; 0x1d4 <main+0x3e>
+ 1a4:	28 f4       	brcc	.+10     	; 0x1b0 <main+0x1a>
+ 1a6:	83 30       	cpi	r24, 0x03	; 3
+ 1a8:	41 f0       	breq	.+16     	; 0x1ba <main+0x24>
+ 1aa:	84 30       	cpi	r24, 0x04	; 4
+ 1ac:	61 f0       	breq	.+24     	; 0x1c6 <main+0x30>
+ 1ae:	26 c0       	rjmp	.+76     	; 0x1fc <main+0x66>
+ 1b0:	86 30       	cpi	r24, 0x06	; 6
+ 1b2:	b9 f0       	breq	.+46     	; 0x1e2 <main+0x4c>
+ 1b4:	87 30       	cpi	r24, 0x07	; 7
+ 1b6:	e1 f0       	breq	.+56     	; 0x1f0 <main+0x5a>
+ 1b8:	21 c0       	rjmp	.+66     	; 0x1fc <main+0x66>
+ 1ba:	80 91 02 01 	lds	r24, 0x0102	; 0x800102 <adc_value>
+			case 0x03:
+			temp_sensor_val = adc_value;
+ 1be:	90 91 03 01 	lds	r25, 0x0103	; 0x800103 <adc_value+0x1>
+ 1c2:	80 93 06 01 	sts	0x0106, r24	; 0x800106 <temp_sensor_val>
+ 1c6:	80 91 02 01 	lds	r24, 0x0102	; 0x800102 <adc_value>
+			case 0x04:
+			pressure_sensor_val = adc_value;
+ 1ca:	90 91 03 01 	lds	r25, 0x0103	; 0x800103 <adc_value+0x1>
+ 1ce:	80 93 15 01 	sts	0x0115, r24	; 0x800115 <pressure_sensor_val>
+ 1d2:	14 c0       	rjmp	.+40     	; 0x1fc <main+0x66>
+			break;
+ 1d4:	80 91 02 01 	lds	r24, 0x0102	; 0x800102 <adc_value>
+			case 0x05:
+			shk_sensor_val = adc_value;
+ 1d8:	90 91 03 01 	lds	r25, 0x0103	; 0x800103 <adc_value+0x1>
+ 1dc:	80 93 1a 01 	sts	0x011A, r24	; 0x80011a <shk_sensor_val>
+ 1e0:	0d c0       	rjmp	.+26     	; 0x1fc <main+0x66>
+			break;
+ 1e2:	80 91 02 01 	lds	r24, 0x0102	; 0x800102 <adc_value>
+			case 0x06:
+			fire_sensor_val = adc_value;
+ 1e6:	90 91 03 01 	lds	r25, 0x0103	; 0x800103 <adc_value+0x1>
+ 1ea:	80 93 07 01 	sts	0x0107, r24	; 0x800107 <fire_sensor_val>
+ 1ee:	06 c0       	rjmp	.+12     	; 0x1fc <main+0x66>
+			break;
+ 1f0:	80 91 02 01 	lds	r24, 0x0102	; 0x800102 <adc_value>
+			case 0x07:
+			psd_sensor_val = adc_value;
+ 1f4:	90 91 03 01 	lds	r25, 0x0103	; 0x800103 <adc_value+0x1>
+ 1f8:	80 93 12 01 	sts	0x0112, r24	; 0x800112 <psd_sensor_val>
+ 1fc:	8f e3       	ldi	r24, 0x3F	; 63
 	#else
 		//round up by default
 		__ticks_dc = (uint32_t)(ceil(fabs(__tmp)));
 	#endif
 
 	__builtin_avr_delay_cycles(__ticks_dc);
- 300:	9c e9       	ldi	r25, 0x9C	; 156
- 302:	01 97       	sbiw	r24, 0x01	; 1
- 304:	f1 f7       	brne	.-4      	; 0x302 <main+0x3a>
- 306:	00 c0       	rjmp	.+0      	; 0x308 <main+0x40>
- 308:	00 00       	nop
-	
-	while(1){
-		_delay_ms(10);
-		
-#ifndef USE_BLUETOOTH_INTERRUPT
-		if(BT_Receive()){
- 30a:	50 df       	rcall	.-352    	; 0x1ac <BT_Receive>
- 30c:	88 23       	and	r24, r24
- 30e:	59 f1       	breq	.+86     	; 0x366 <main+0x9e>
- 310:	80 91 0a 01 	lds	r24, 0x010A	; 0x80010a <marble>
-			if(marble.color == 1) Servo_Quick_Move(200);
- 314:	81 30       	cpi	r24, 0x01	; 1
- 316:	21 f4       	brne	.+8      	; 0x320 <main+0x58>
- 318:	88 ec       	ldi	r24, 0xC8	; 200
- 31a:	90 e0       	ldi	r25, 0x00	; 0
- 31c:	32 d0       	rcall	.+100    	; 0x382 <Servo_Quick_Move>
- 31e:	09 c0       	rjmp	.+18     	; 0x332 <main+0x6a>
-			else if(marble.color == 2) Servo_Quick_Move(500);
- 320:	82 30       	cpi	r24, 0x02	; 2
- 322:	21 f4       	brne	.+8      	; 0x32c <main+0x64>
- 324:	84 ef       	ldi	r24, 0xF4	; 244
- 326:	91 e0       	ldi	r25, 0x01	; 1
- 328:	2c d0       	rcall	.+88     	; 0x382 <Servo_Quick_Move>
- 32a:	03 c0       	rjmp	.+6      	; 0x332 <main+0x6a>
-			else Servo_Quick_Move(375);
- 32c:	87 e7       	ldi	r24, 0x77	; 119
- 32e:	91 e0       	ldi	r25, 0x01	; 1
- 330:	28 d0       	rcall	.+80     	; 0x382 <Servo_Quick_Move>
- 332:	c0 e0       	ldi	r28, 0x00	; 0
-}
+ 1fe:	9c e9       	ldi	r25, 0x9C	; 156
+ 200:	01 97       	sbiw	r24, 0x01	; 1
+ 202:	f1 f7       	brne	.-4      	; 0x200 <main+0x6a>
+ 204:	00 c0       	rjmp	.+0      	; 0x206 <main+0x70>
+ 206:	00 00       	nop
+ 208:	c9 cf       	rjmp	.-110    	; 0x19c <main+0x6>
 
+0000020a <_exit>:
+ 20a:	f8 94       	cli
 
-#elif DEBUG_ == 1
-//기정이 일하는 곳
-int main(void){
- 334:	13 c0       	rjmp	.+38     	; 0x35c <main+0x94>
- 336:	9f ef       	ldi	r25, 0xFF	; 255
- 338:	21 ee       	ldi	r18, 0xE1	; 225
- 33a:	84 e0       	ldi	r24, 0x04	; 4
- 33c:	91 50       	subi	r25, 0x01	; 1
- 33e:	20 40       	sbci	r18, 0x00	; 0
- 340:	80 40       	sbci	r24, 0x00	; 0
- 342:	e1 f7       	brne	.-8      	; 0x33c <main+0x74>
- 344:	00 c0       	rjmp	.+0      	; 0x346 <main+0x7e>
- 346:	00 00       	nop
-			else if(marble.color == 2) Servo_Quick_Move(500);
-			else Servo_Quick_Move(375);
-			
-			for(iter=0; iter<50; iter++){ //2 second for shock to be detected
-				_delay_ms(100);
-				if(shk_detected==0x01){
- 348:	80 91 12 01 	lds	r24, 0x0112	; 0x800112 <shk_detected>
- 34c:	81 30       	cpi	r24, 0x01	; 1
- 34e:	29 f4       	brne	.+10     	; 0x35a <main+0x92>
-					Servo_Quick_Move(SERVO_BOX);
- 350:	8c e6       	ldi	r24, 0x6C	; 108
- 352:	92 e0       	ldi	r25, 0x02	; 2
- 354:	16 d0       	rcall	.+44     	; 0x382 <Servo_Quick_Move>
-					shk_detected = 0x00;
- 356:	10 92 12 01 	sts	0x0112, r1	; 0x800112 <shk_detected>
-		if(BT_Receive()){
-			if(marble.color == 1) Servo_Quick_Move(200);
-			else if(marble.color == 2) Servo_Quick_Move(500);
-			else Servo_Quick_Move(375);
-			
-			for(iter=0; iter<50; iter++){ //2 second for shock to be detected
- 35a:	cf 5f       	subi	r28, 0xFF	; 255
- 35c:	c2 33       	cpi	r28, 0x32	; 50
- 35e:	58 f3       	brcs	.-42     	; 0x336 <main+0x6e>
-					shk_detected = 0x00;
-				}
-				
-			}
-			
-			Servo_Quick_Move(SERVO_HOME);
- 360:	82 e8       	ldi	r24, 0x82	; 130
- 362:	90 e0       	ldi	r25, 0x00	; 0
- 364:	0e d0       	rcall	.+28     	; 0x382 <Servo_Quick_Move>
- 366:	80 b3       	in	r24, 0x10	; 16
-		}
-#endif
-		switch(PIND & 0x03){
- 368:	83 70       	andi	r24, 0x03	; 3
- 36a:	81 30       	cpi	r24, 0x01	; 1
- 36c:	19 f0       	breq	.+6      	; 0x374 <main+0xac>
- 36e:	82 30       	cpi	r24, 0x02	; 2
- 370:	21 f0       	breq	.+8      	; 0x37a <main+0xb2>
- 372:	c5 cf       	rjmp	.-118    	; 0x2fe <main+0x36>
- 374:	85 b3       	in	r24, 0x15	; 21
-	DDRC = (1<<ElectroMagnet);
-	//DDRC = 0xFF;
-}
-
-inline void ElectroMagnet_On(){
-	PORTC &= (0 << ElectroMagnet);
- 376:	15 ba       	out	0x15, r1	; 21
- 378:	c2 cf       	rjmp	.-124    	; 0x2fe <main+0x36>
- 37a:	85 b3       	in	r24, 0x15	; 21
-	//PORTC = 0x7F;
-}
-
-inline void ElectroMagnet_Off(){
-	PORTC |=  (1 << ElectroMagnet);
- 37c:	80 68       	ori	r24, 0x80	; 128
- 37e:	85 bb       	out	0x15, r24	; 21
- 380:	be cf       	rjmp	.-132    	; 0x2fe <main+0x36>
-
-00000382 <Servo_Quick_Move>:
- 382:	90 93 14 01 	sts	0x0114, r25	; 0x800114 <Servo_pos+0x1>
-void Calculate_Servo_Rotate_Angle(){
-	//Marble_pos = ...
-}
-
-void Servo_Quick_Move(unsigned short val){
-	Servo_pos = val;
- 386:	80 93 13 01 	sts	0x0113, r24	; 0x800113 <Servo_pos>
-	OCR1A = Servo_pos;
- 38a:	9b bd       	out	0x2b, r25	; 43
- 38c:	8a bd       	out	0x2a, r24	; 42
- 38e:	08 95       	ret
-
-00000390 <_exit>:
- 390:	f8 94       	cli
-
-00000392 <__stop_program>:
- 392:	ff cf       	rjmp	.-2      	; 0x392 <__stop_program>
+0000020c <__stop_program>:
+ 20c:	ff cf       	rjmp	.-2      	; 0x20c <__stop_program>
