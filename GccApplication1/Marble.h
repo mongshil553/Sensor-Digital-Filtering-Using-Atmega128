@@ -1,12 +1,4 @@
-﻿/*
- * Marble.h
- *
- * Created: 2024-05-22 오전 1:14:25
- *  Author: kijun
- */ 
-
-
-#ifndef MARBLE_H_
+﻿#ifndef MARBLE_H_
 #define MARBLE_H_
 
 //Marble

@@ -5,9 +5,8 @@
  * Author : kijun
  */ 
 
-#define DEBUG_ 0
+#define DEBUG_ 2
 #define F_CPU 16000000UL
-//#define USE_BLUETOOTH_INTERRUPT
 
 #define ElectroMagnet 7
 
@@ -15,7 +14,7 @@
 #include <stdbool.h>
 #include <avr/interrupt.h>
 #include <util/delay.h>
-//#include "Overall.h"
+
 #include "Marble.h"
 #include "Servo.h"
 #include "Sensors.h"
@@ -26,12 +25,12 @@ void timer_setup();
 void port_setup();
 
 //Demux
-#define ITEM_NONE 0x00;
-#define ITEM_SERVO 0x04;
-#define ITEM_SPEAKER 0x05;
-#define ITEM_LED_RED 0x08;
-#define ITEM_LED_GREEN 0x09;
-#define ITEM_LED_BLUE 0x0A;
+#define ITEM_NONE		0x0E	//0000 1110
+#define ITEM_SERVO		0x02	//0000 0010
+#define ITEM_SPEAKER	0x0A	//0000 1010
+#define ITEM_LED_RED	0x01	//0000 0001
+#define ITEM_LED_GREEN	0x05	//0000 0101
+#define ITEM_LED_BLUE	0x09	//0000 1001
 void Select_Item(char item);
 
 //MAIN
@@ -54,7 +53,6 @@ void ElectroMagnet_Off();
 
 void pin_init();
 void port_setup();
-void bt_init();
 
 //**** Debug **************************************************************************************************************************************************//
 
@@ -64,10 +62,14 @@ int main(void){
 	
 	adc_init(); // ADC 초기화
 	timer0_init(); // 타이머0 초기화
+	
+	Reset_sensor_val(); //센서 변수 초기화
+	
 	sei(); // 전역 인터럽트 허용
 
 	while (1) {
 		// ADC 채널 값을 읽고 필요한 변수에 저장
+		/*
 		switch (current_channel) {
 			case 0x03:
 			temp_sensor_val = adc_value;
@@ -83,7 +85,16 @@ int main(void){
 			case 0x07:
 			psd_sensor_val = adc_value;
 			break;
+		}*/
+		
+		//가이드
+		if(psd_sensor_val >= 100){
+			//LED 켜기
 		}
+		else{
+			//LED 끄기
+		}
+		
 		_delay_ms(10); 
 	}
 
@@ -93,11 +104,70 @@ int main(void){
 
 
 
-ISR(ADC_vect){//인터럽트 사용해서 ADC값 읽어옴
+ISR(ADC_vect){//인터럽트 사용해서 ADC값 읽어옴 <- 이거 쓰지 마
 	adc_value=ADC; //ADC값 저장
 }
 
+ISR(TIMER0_OVF_vect){ //Use Timer0 for collecting sensor value and PWM
+	//Sensors.c에 있는 함수들 구현해주기
+	
+	//These Sensor Values are not filtered
+	//Must use filtered value in future
+	
+	static char idx = 0x01;
+	
+	idx = 0x08; //이 부분 주석처리 안 하면 idx에 해당하는 부분만 실행됨. 이 경우 0x08은 PSD이므로 PSD 센서값만 읽음.
+	
+	switch(idx){
+	case 0x01:
+		Read_CDS();
+		//다음 ADC Mux 선택 Fire
+		
+		idx <<=1;
+		break;
+		
+	case 0x02:
+		Read_Fire();
+		//Is_Fire_Interrupt(); //Fire Interrupt를 걸까말까
+		//다음 ADC Mux 선택 Pressure
+		
+		idx <<=1;
+		break;
+		
+	case 0x04:
+		Read_Pressure();
+		//다음 ADC Mux 선택 PSD
+		
+		idx <<=1;
+		break;
+		
+	case 0x08:
+		Read_PSD();
+		//Is_PSD_Interrupt(); //PSD Interrupt를 걸까말까
+		//다음 ADC Mux 선택 진동
+		
+		idx <<= 1;
+		break;
+		
+	case 0x10:
+		Read_Shock();
+		//다음 ADC Mux 선택 써미스터
+		
+		idx <<=1;
+		break;
+		
+	case 0x20:
+		Read_Thermister();
+		//다음 ADC Mux 선택 CDS
+		
+		idx = 0x00;
+		break;
+	}
+	
+	//ADC 시작 시키고 ISR 종료
+}
 
+/*
 ISR(TIMER0_OVF_vect){ //Use Timer0 for collecting sensor value and PWM
 	
 	static uint8_t channel_index = 0;
@@ -114,6 +184,7 @@ ISR(TIMER0_OVF_vect){ //Use Timer0 for collecting sensor value and PWM
 		channel_index = 0;
 	}
 }
+*/
 
 //ADC 입력
 //ADC 초기화
@@ -177,7 +248,7 @@ int main(void){
 	cli();
 	port_setup();
 	timer_setup();
-	bt_init();
+	init_BT();
 	
 	EIMSK = 0x03;
 	EICRA = 0x0F;
@@ -193,7 +264,45 @@ int main(void){
 	
 	shk_detected = 0x00;
 	
+	DDRC = 0xFF;
+	PORTC = 0xFE;
+	
+	//PORTC &= 0xFB; //0x1111 1110
+	//PORTC &= 0xF3; //0b1111 0010
+	PORTC = (PORTC & 0xF3) | (0x00 << 2);
+	//0x1111 0011: mask, 
+	
 	while(1){
+		_delay_ms(10);
+		
+		switch(PORTD & 0x03){
+			case 0x02: //Disbale Demux
+				//PORTC |= 0x01;
+				
+				//if((PORTC & 0x01) == 0x00){ //Enabled
+				//	PORTC |= 0x01; //Disable
+				//}else{
+				//	PORTC &= 0xFE; //Enable
+				//}
+				
+				//PORTC |= 0x01;
+			break;
+			
+			case 0x01:
+			/*
+				if((PORTC & 0x0C) == 0x08){
+					PORTC = (PORTC & 0xF3) | 0x00;
+				}
+				else{
+					PORTC = (PORTC & 0xF3) | 0x08;
+				}
+			*/
+			
+			Servo_Quick_Move(SERVO_HOME);
+			break;
+		}
+		
+		/*
 		_delay_ms(10);
 		
 #ifndef USE_BLUETOOTH_INTERRUPT
@@ -232,7 +341,7 @@ int main(void){
 		}
 		
 		
-	
+	*/
 	}
 	
 }
@@ -344,25 +453,25 @@ ISR(USART1_RX_vect){
 //************************************************************************************************************************************************************//
 
 //**** Not Debug *********************************************************************************************************************************************//
-#if DEBUG_ == 3
+#if DEBUG_ == 2
 
 int main(void)
 {	
 	pin_init(); //Pin Setup
 	init();		//Interrupt, Timer, Register
-	bt_init();	//Bluetooth Setup
+	init_BT();	//Bluetooth Setup
 	
-	Action_Allowed = 0x01;
-	
-	init_serial();
+	//Action_Allowed = 0x01;
 	
 	marble.color = 0x00;
 	marble.posX = -1;
 	marble.posY = -1;
 	
+	Reset_sensor_val();
+	
 	LED_Set();
 	
-	Select_Item(ITEM_SERVO);
+	//Select_Item(ITEM_SERVO);
 	Servo_Go_Home(); //Move Servo to Home Position
 	
 	//Need to Check Connection with Server

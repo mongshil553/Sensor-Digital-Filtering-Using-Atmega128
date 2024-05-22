@@ -38,6 +38,6 @@ void Read_Pressure();
 void Read_Thermister();
 void Read_Shock();
 
-
+void Reset_sensor_val();
 
 #endif /* SENSORS_H_ */

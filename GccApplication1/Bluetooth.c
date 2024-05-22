@@ -9,7 +9,7 @@
 #include "Marble.h"
 #include <avr/io.h>
 
-void bt_init(){
+void init_BT(){
 	UCSR1A = 0x00;
 	UCSR1B = 0x18;
 	UCSR1C = 0x06;

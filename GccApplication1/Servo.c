@@ -1,11 +1,4 @@
-﻿/*
- * Servo.c
- *
- * Created: 2024-05-13 오후 9:17:21
- *  Author: kijun
- */ 
-
-#define F_CPU 16000000UL
+﻿#define F_CPU 16000000UL
 
 #include <avr/io.h>
 #include <util/delay.h>
@@ -15,6 +8,10 @@
 void Calculate_Servo_Rotate_Angle(){
 	//Marble_pos = ...
 }
+void Calculate_Marble_pos(){
+	//.........
+}
+
 
 void Servo_Quick_Move(unsigned short val){
 	Servo_pos = val;
