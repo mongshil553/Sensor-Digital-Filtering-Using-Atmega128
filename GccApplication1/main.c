@@ -75,74 +75,64 @@ int main(void){
 	while (1) {
 		// ADC 채널 값을 읽고 필요한 변수에 저장
 		
-		//가이드
-		switch (current_channel) {
-			
-			case 0x01: // CDS 센서 처리
-				if (cds_sensor_val > 100) {
-					LED = 0xFE;
-				} 
-				else {
-					LED = 0xFF;
-				}
-			break;
-			
-			case 0x06: // Fire 센서 처리
-				if (fire_sensor_val > 200) {
-					LED = 0xFD;
-				} 
-				else {
-					LED = 0xFF;
-				}
-			break;
-			
-			case 0x04: // 압력 센서 처리
-				if (pressure_sensor_val > 200) {
-					LED = 0xFC;
-				} 
-				else {
-					LED = 0xFF;
-				}
-			break;
-			
-			case 0x07: // PSD 센서 처리
-				if (psd_sensor_val > 100) {
-					LED = 0xFB;
-				} 
-				else {
-					LED = 0xFF;
-				}
-			break;
-			
-			case 0x05: // 충격 센서 처리
-				if (shk_sensor_val > 100) {
-					LED = 0xFA;
-				} 
-				else {
-					LED = 0xFF;
-				}
-			break;
-			
-			case 0x03: // 온도 센서 처리
-				if (temp_sensor_val > 100) {
-					LED = 0x7F;
-				} 
-				else {
-					LED = 0xFF;
-				}
-			break;
-			}
-			PORTA=LED;
-			_delay_ms(50);
+		if (cds_sensor_val > 100) { //CDS
+			LED &= 0xFE; //CDS에 해당하는 LED만 켜기
 		}
+		else {
+			LED |= ~0xFE; //CDS에 해단하는 LED만 끄기
+		}
+		
+		if (fire_sensor_val > 200) {
+			LED &= 0xFD;
+		}
+		else {
+			LED |= ~0xFD;
+		}
+		
+		if (pressure_sensor_val > 200) {
+			LED &= 0xFC;
+		}
+		else {
+			LED |= ~0xFC;
+		}
+		
+		if (psd_sensor_val > 100) {
+			LED &= 0xFB;
+		}
+		else {
+			LED |= ~0xFB;
+		}
+		
+		if (shk_sensor_val > 100) {
+			LED &= 0xFA;
+		}
+		else {
+			LED |= ~0xFA;
+		}
+		
+		if (temp_sensor_val > 100) {
+			LED = 0x7F;
+		}
+		else {
+			LED = 0xFF;
+		}
+		
+		PORTA=LED;
+		_delay_ms(50);
+
+	}
+	
 	return 0;
 	
 }
 
+/*
 ISR(TIMER0_OVF_vect) { // 타이머0 오버플로우 인터럽트
-	switch (idx) {
+	switch (
+	) {
 		case 0x01:
-		current_channel = 0x01; // CDS 센서
+		//current_channel = 0x01; // CDS 센서
+		
 		idx <<=1;
 		break;
 		case 0x02:
@@ -171,8 +161,9 @@ ISR(TIMER0_OVF_vect) { // 타이머0 오버플로우 인터럽트
 	ADMUX = (ADMUX & 0xF0) | (current_channel & 0x0F);
 	ADCSRA |= (1 << ADSC); // ADC 변환 시작
 }
+*/
 
-
+/*
 ISR(ADC_vect) { // 인터럽트 사용해서 ADC 값 읽어옴
 	
 	switch (current_channel) {
@@ -208,6 +199,7 @@ ISR(ADC_vect) { // 인터럽트 사용해서 ADC 값 읽어옴
 	}
 
 }
+*/
 
 /*
 ISR(ADC_vect){//인터럽트 사용해서 ADC값 읽어옴 <- 이거 쓰지 마
@@ -250,6 +242,7 @@ ISR(ADC_vect){//인터럽트 사용해서 ADC값 읽어옴 <- 이거 쓰지 마
 		break;
 	}
 }
+*/
 
 ISR(TIMER0_OVF_vect){ //Use Timer0 for collecting sensor value and PWM
 	//Sensors.c에 있는 함수들 구현해주기
@@ -264,15 +257,14 @@ ISR(TIMER0_OVF_vect){ //Use Timer0 for collecting sensor value and PWM
 	switch(idx){
 	case 0x01:
 		Read_CDS();
-		current_channel = 0x01;
+		//current_channel = 0x01;
 		//다음 ADC Mux 선택 Fire
-		
 		idx <<=1;
 		break;
 		
 	case 0x02:
 		Read_Fire();
-		current_channel = 0x06;
+		//current_channel = 0x06;
 		//Is_Fire_Interrupt(); //Fire Interrupt를 걸까말까
 		//다음 ADC Mux 선택 Pressure
 		
@@ -281,7 +273,7 @@ ISR(TIMER0_OVF_vect){ //Use Timer0 for collecting sensor value and PWM
 		
 	case 0x04:
 		Read_Pressure();
-		current_channel = 0x04;
+		//current_channel = 0x04;
 		//다음 ADC Mux 선택 PSD
 		
 		idx <<=1;
@@ -289,7 +281,7 @@ ISR(TIMER0_OVF_vect){ //Use Timer0 for collecting sensor value and PWM
 		
 	case 0x08:
 		Read_PSD();
-		current_channel = 0x07;
+		//current_channel = 0x07;
 		//Is_PSD_Interrupt(); //PSD Interrupt를 걸까말까
 		//다음 ADC Mux 선택 진동
 		
@@ -298,7 +290,7 @@ ISR(TIMER0_OVF_vect){ //Use Timer0 for collecting sensor value and PWM
 		
 	case 0x10:
 		Read_Shock();
-		current_channel = 0x05;
+		//current_channel = 0x05;
 		//다음 ADC Mux 선택 써미스터
 		
 		idx <<=1;
@@ -306,17 +298,18 @@ ISR(TIMER0_OVF_vect){ //Use Timer0 for collecting sensor value and PWM
 		
 	case 0x20:
 		Read_Thermister();
-		current_channel = 0x03;
+		//current_channel = 0x03;
 		//다음 ADC Mux 선택 CDS
 		
-		idx = 0x00;
+		idx = 0x01;
 		break;
 	}
 
-	//ADC 시작 시키고 ISR 종료
+	//ADC Mux 선택, ADC 시작 시키고 ISR 종료
+	ADMUX = (ADMUX & 0xF0) | (idx & 0x0F); //다음 센서 선택
 	ADCSRA |= (1 << ADSC); // ADC 변환 시작
 }
-*/
+
 
 
 //ADC 입력
