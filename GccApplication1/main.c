@@ -126,124 +126,6 @@ int main(void){
 	
 }
 
-/*
-ISR(TIMER0_OVF_vect) { // 타이머0 오버플로우 인터럽트
-	switch (
-	) {
-		case 0x01:
-		//current_channel = 0x01; // CDS 센서
-		
-		idx <<=1;
-		break;
-		case 0x02:
-		current_channel = 0x06; // Fire 센서
-		idx <<=1;
-		break;
-		case 0x04:
-		current_channel = 0x04; // Pressure 센서
-		idx <<=1;
-		break;
-		case 0x08:
-		current_channel = 0x07; // PSD 센서
-		idx <<=1;
-		break;
-		case 0x10:
-		current_channel = 0x05; // Shock 센서
-		idx <<=1;
-		break;
-		case 0x20:
-		current_channel = 0x03; // Thermister 센서
-		idx = 0x01;
-		break;
-	}
-
-	// MUX 설정 및 ADC 변환 시작
-	ADMUX = (ADMUX & 0xF0) | (current_channel & 0x0F);
-	ADCSRA |= (1 << ADSC); // ADC 변환 시작
-}
-*/
-
-/*
-ISR(ADC_vect) { // 인터럽트 사용해서 ADC 값 읽어옴
-	
-	switch (current_channel) {
-		case 0x01:
-		Read_CDS();
-
-		break;
-		
-		case 0x06:
-		Read_Fire();
-
-		break;
-		
-		case 0x04:
-		Read_Pressure();
-
-		break;
-		
-		case 0x07:
-		Read_PSD();
-
-		break;
-		
-		case 0x05:
-		Read_Shock();
-
-		break;
-		
-		case 0x03:
-		Read_Thermister();
-		
-		break;
-	}
-
-}
-*/
-
-/*
-ISR(ADC_vect){//인터럽트 사용해서 ADC값 읽어옴 <- 이거 쓰지 마
-	adc_value=ADC; //ADC값 저장
-	
-	switch(idx){
-		case 0x01:
-		Read_CDS(adc_value);
-		
-		idx <<=1;
-		break;
-		
-		case 0x02:
-		Read_Fire(adc_value);
-		
-		idx <<=1;
-		break;
-		
-		case 0x04:
-		Read_Pressure(adc_value);
-		
-		idx <<=1;
-		break;
-		
-		case 0x08:
-		Read_PSD(adc_value);
-		idx <<= 1;
-		break;
-		
-		case 0x10:
-		Read_Shock(adc_value);
-		
-		idx <<=1;
-		break;
-		
-		case 0x20:
-		Read_Thermister(adc_value);
-
-		idx = 0x00;
-		break;
-	}
-}
-*/
-
 ISR(TIMER0_OVF_vect){ //Use Timer0 for collecting sensor value and PWM
 	//Sensors.c에 있는 함수들 구현해주기
 	
@@ -253,6 +135,8 @@ ISR(TIMER0_OVF_vect){ //Use Timer0 for collecting sensor value and PWM
 	//static char idx = 0x01;
 	
 	//idx = 0x08; //이 부분 주석처리 안 하면 idx에 해당하는 부분만 실행됨. 이 경우 0x08은 PSD이므로 PSD 센서값만 읽음.
+	
+	static char idx = 0x01;
 	
 	switch(idx){
 	case 0x01:
@@ -310,8 +194,6 @@ ISR(TIMER0_OVF_vect){ //Use Timer0 for collecting sensor value and PWM
 	ADCSRA |= (1 << ADSC); // ADC 변환 시작
 }
 
-
-
 //ADC 입력
 //ADC 초기화
 void adc_init(void){
@@ -332,8 +214,6 @@ void timer0_init(void) {
 
 
 #elif DEBUG_ == 1
-
-/*
 //기정이 일하는 곳
 int main(void){
 	//debug

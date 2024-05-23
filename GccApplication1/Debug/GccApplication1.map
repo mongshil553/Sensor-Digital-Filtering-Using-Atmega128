@@ -97,6 +97,7 @@ Discarded input sections
  .text.LED_Set  0x00000000       0x50 main.o
  .bss.led_select
                 0x00000000        0x1 main.o
+ .data.idx      0x00000000        0x1 main.o
  .data.current_channel
                 0x00000000        0x1 main.o
  .bss.PSD_Detected
@@ -557,8 +558,8 @@ END GROUP
                 0x00800100                PROVIDE (__data_start, .)
  *(.data)
  *(.data*)
- .data.idx      0x00800100        0x1 main.o
-                0x00800100                idx
+ .data.idx.1801
+                0x00800100        0x1 main.o
  *(.gnu.linkonce.d*)
  *(.rodata)
  *(.rodata*)
@@ -686,11 +687,11 @@ END GROUP
 .debug_pubnames
  *(.debug_pubnames)
 
-.debug_info     0x00000000     0x1083
+.debug_info     0x00000000     0x1092
  *(.debug_info .gnu.linkonce.wi.*)
  .debug_info    0x00000000      0x780 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.7.374/gcc/dev/atmega128/avr51/crtatmega128.o
- .debug_info    0x00000780      0x584 main.o
- .debug_info    0x00000d04      0x37f Sensors.o
+ .debug_info    0x00000780      0x593 main.o
+ .debug_info    0x00000d13      0x37f Sensors.o
 
 .debug_abbrev   0x00000000      0x9fe
  *(.debug_abbrev)

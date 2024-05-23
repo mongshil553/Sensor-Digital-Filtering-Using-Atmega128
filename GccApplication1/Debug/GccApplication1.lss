@@ -15,19 +15,19 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY
   5 .debug_aranges 000000c8  00000000  00000000  00000844  2**0
                   CONTENTS, READONLY, DEBUGGING
-  6 .debug_info   00001083  00000000  00000000  0000090c  2**0
+  6 .debug_info   00001092  00000000  00000000  0000090c  2**0
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_abbrev 000009fe  00000000  00000000  0000198f  2**0
+  7 .debug_abbrev 000009fe  00000000  00000000  0000199e  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_line   000006ac  00000000  00000000  0000238d  2**0
+  8 .debug_line   000006ac  00000000  00000000  0000239c  2**0
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_frame  00000204  00000000  00000000  00002a3c  2**2
+  9 .debug_frame  00000204  00000000  00000000  00002a48  2**2
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_str    000006c9  00000000  00000000  00002c40  2**0
+ 10 .debug_str    000006c9  00000000  00000000  00002c4c  2**0
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_loc    000003b4  00000000  00000000  00003309  2**0
+ 11 .debug_loc    000003b4  00000000  00000000  00003315  2**0
                   CONTENTS, READONLY, DEBUGGING
- 12 .debug_ranges 000000a8  00000000  00000000  000036bd  2**0
+ 12 .debug_ranges 000000a8  00000000  00000000  000036c9  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -147,10 +147,10 @@ Disassembly of section .text:
   c6:	9c cf       	rjmp	.-200    	; 0x0 <__vectors>
 
 000000c8 <__vector_16>:
-		break;
-	}
+	
+	return 0;
+	
 }
-*/
 
 ISR(TIMER0_OVF_vect){ //Use Timer0 for collecting sensor value and PWM
   c8:	1f 92       	push	r1
@@ -173,9 +173,9 @@ ISR(TIMER0_OVF_vect){ //Use Timer0 for collecting sensor value and PWM
   ea:	ef 93       	push	r30
   ec:	ff 93       	push	r31
 	
-	//static char idx = 0x01;
-	
 	//idx = 0x08; //이 부분 주석처리 안 하면 idx에 해당하는 부분만 실행됨. 이 경우 0x08은 PSD이므로 PSD 센서값만 읽음.
+	
+	static char idx = 0x01;
 	
 	switch(idx){
   ee:	80 91 00 01 	lds	r24, 0x0100	; 0x800100 <__DATA_REGION_ORIGIN__>
@@ -274,10 +274,10 @@ ISR(TIMER0_OVF_vect){ //Use Timer0 for collecting sensor value and PWM
 
 	//ADC Mux 선택, ADC 시작 시키고 ISR 종료
 	ADMUX = (ADMUX & 0xF0) | (idx & 0x0F); //다음 센서 선택
- 15e:	97 b1       	in	r25, 0x07	; 7
- 160:	80 91 00 01 	lds	r24, 0x0100	; 0x800100 <__DATA_REGION_ORIGIN__>
- 164:	90 7f       	andi	r25, 0xF0	; 240
- 166:	8f 70       	andi	r24, 0x0F	; 15
+ 15e:	87 b1       	in	r24, 0x07	; 7
+ 160:	90 91 00 01 	lds	r25, 0x0100	; 0x800100 <__DATA_REGION_ORIGIN__>
+ 164:	9f 70       	andi	r25, 0x0F	; 15
+ 166:	80 7f       	andi	r24, 0xF0	; 240
  168:	89 2b       	or	r24, r25
  16a:	87 b9       	out	0x07, r24	; 7
 	ADCSRA |= (1 << ADSC); // ADC 변환 시작
@@ -306,7 +306,6 @@ ISR(TIMER0_OVF_vect){ //Use Timer0 for collecting sensor value and PWM
  196:	18 95       	reti
 
 00000198 <adc_init>:
-
 
 //ADC 입력
 //ADC 초기화
