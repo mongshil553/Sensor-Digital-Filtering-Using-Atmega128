@@ -74,7 +74,7 @@ int main(void){
 	
 	while (1) {
 		// ADC 채널 값을 읽고 필요한 변수에 저장
-		
+		/*
 		if (cds_sensor_val > 100) { //CDS
 			LED &= 0xFE; //CDS에 해당하는 LED만 켜기
 		}
@@ -82,39 +82,39 @@ int main(void){
 			LED |= ~0xFE; //CDS에 해단하는 LED만 끄기
 		}
 		
-		if (fire_sensor_val > 200) {
+		if (temp_sensor_val > 200) {
 			LED &= 0xFD;
 		}
 		else {
 			LED |= ~0xFD;
 		}
 		
-		if (pressure_sensor_val > 200) {
-			LED &= 0xFC;
-		}
-		else {
-			LED |= ~0xFC;
-		}
-		
-		if (psd_sensor_val > 100) {
+		if (pressure_sensor_val > 70) {//보류
 			LED &= 0xFB;
 		}
 		else {
 			LED |= ~0xFB;
 		}
 		
-		if (shk_sensor_val > 100) {
-			LED &= 0xFA;
+		if ( shk_sensor_val < 10) {
+			LED &= 0xF7;
 		}
 		else {
-			LED |= ~0xFA;
+			LED |= ~0xF7;
 		}
 		
-		if (temp_sensor_val > 100) {
-			LED = 0x7F;
+		if (fire_sensor_val > 100) {
+			LED &= 0xEF;
 		}
 		else {
-			LED = 0xFF;
+			LED |= ~0xEF;
+		}
+		*/
+		if ( psd_sensor_val> 100) {
+			LED = 0xBF;
+		}
+		else {
+			LED |= ~0xBF;
 		}
 		
 		PORTA=LED;
@@ -147,7 +147,8 @@ ISR(TIMER0_OVF_vect){ //Use Timer0 for collecting sensor value and PWM
 		break;
 		
 	case 0x02:
-		Read_Fire();
+		Read_Thermister();
+		
 		//current_channel = 0x06;
 		//Is_Fire_Interrupt(); //Fire Interrupt를 걸까말까
 		//다음 ADC Mux 선택 Pressure
@@ -164,7 +165,8 @@ ISR(TIMER0_OVF_vect){ //Use Timer0 for collecting sensor value and PWM
 		break;
 		
 	case 0x04:
-		Read_PSD();
+		Read_Shock();
+		
 		//current_channel = 0x07;
 		//Is_PSD_Interrupt(); //PSD Interrupt를 걸까말까
 		//다음 ADC Mux 선택 진동
@@ -173,7 +175,7 @@ ISR(TIMER0_OVF_vect){ //Use Timer0 for collecting sensor value and PWM
 		break;
 		
 	case 0x05:
-		Read_Shock();
+		Read_Fire();
 		//current_channel = 0x05;
 		//다음 ADC Mux 선택 써미스터
 		
@@ -181,7 +183,7 @@ ISR(TIMER0_OVF_vect){ //Use Timer0 for collecting sensor value and PWM
 		break;
 		
 	case 0x06:
-		Read_Thermister();
+		Read_PSD();
 		//current_channel = 0x03;
 		//다음 ADC Mux 선택 CDS
 		
@@ -198,7 +200,7 @@ ISR(TIMER0_OVF_vect){ //Use Timer0 for collecting sensor value and PWM
 //ADC 초기화
 void adc_init(void){
 	ADMUX=(1<<REFS0); //외부 레퍼런스 접압을 기준 전압으로 선택, 우측정렬, 초기 입력핀은 0번
-	ADCSRA=(1<<ADEN)|(1<<ADIE)|(1<<ADPS2)|(1<<ADPS1)|(1<<ADPS0); //ADC enable, ADC interrupt enable 분주비 128
+	ADCSRA=(1<<ADEN)|(0<<ADIE)|(1<<ADPS2)|(1<<ADPS1)|(1<<ADPS0); //ADC enable, ADC interrupt enable 분주비 128
 }
 /*
 void start_adc_conversion(void){//인터럽트 사용할때 ADC 변화

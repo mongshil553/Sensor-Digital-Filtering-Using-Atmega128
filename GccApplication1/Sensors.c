@@ -34,21 +34,21 @@ inline void Read_PSD(){
 
 inline void Read_Pressure(){
 	static uint16_t previous_value = 0;
-	pressure_sensor_val = hpf(previous_value, ADC, 0.1);
+	pressure_sensor_val = hpf(previous_value, ADC, 0.6);
 	previous_value = pressure_sensor_val;
 	//필터링 해야됨
 }
 
 inline void Read_Thermister(){
 	static uint16_t previous_value = 0;
-	temp_sensor_val = lpf(previous_value, ADC, 0.1);
+	temp_sensor_val = hpf(previous_value, ADC, 0.5);
 	previous_value = temp_sensor_val;
 	//필터링 해야됨
 }
 
 inline void Read_Shock(){
 	static uint16_t previous_value = 0;
-	shk_sensor_val = hpf(previous_value, ADC, 0.1);
+	shk_sensor_val = lpf(previous_value, ADC, 0.1);
 	previous_value = shk_sensor_val;
 	//필터링 해야됨
 }
