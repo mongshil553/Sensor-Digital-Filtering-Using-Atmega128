@@ -143,7 +143,7 @@ ISR(TIMER0_OVF_vect){ //Use Timer0 for collecting sensor value and PWM
 		Read_CDS();
 		//current_channel = 0x01;
 		//다음 ADC Mux 선택 Fire
-		idx <<=1;
+		idx++;
 		break;
 		
 	case 0x02:
@@ -152,35 +152,35 @@ ISR(TIMER0_OVF_vect){ //Use Timer0 for collecting sensor value and PWM
 		//Is_Fire_Interrupt(); //Fire Interrupt를 걸까말까
 		//다음 ADC Mux 선택 Pressure
 		
-		idx <<=1;
+		idx++;
 		break;
 		
-	case 0x04:
+	case 0x03:
 		Read_Pressure();
 		//current_channel = 0x04;
 		//다음 ADC Mux 선택 PSD
 		
-		idx <<=1;
+		idx++;
 		break;
 		
-	case 0x08:
+	case 0x04:
 		Read_PSD();
 		//current_channel = 0x07;
 		//Is_PSD_Interrupt(); //PSD Interrupt를 걸까말까
 		//다음 ADC Mux 선택 진동
 		
-		idx <<= 1;
+		idx++;
 		break;
 		
-	case 0x10:
+	case 0x05:
 		Read_Shock();
 		//current_channel = 0x05;
 		//다음 ADC Mux 선택 써미스터
 		
-		idx <<=1;
+		idx++;
 		break;
 		
-	case 0x20:
+	case 0x06:
 		Read_Thermister();
 		//current_channel = 0x03;
 		//다음 ADC Mux 선택 CDS
