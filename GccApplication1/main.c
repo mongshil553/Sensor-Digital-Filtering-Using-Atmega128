@@ -50,9 +50,10 @@ volatile char led_select = 0x00; //0x00: None, 0x01:Red, 0x02:Green, 0x03:Blue
 void ElectroMagnet_On();
 void ElectroMagnet_Off();
 
-
 void pin_init();
 void port_setup();
+void timer0_init();
+void adc_init(void);
 
 //**** Debug **************************************************************************************************************************************************//
 
@@ -125,95 +126,6 @@ int main(void){
 	return 0;
 	
 }
-
-ISR(TIMER0_OVF_vect){ //Use Timer0 for collecting sensor value and PWM
-	//Sensors.c에 있는 함수들 구현해주기
-	
-	//These Sensor Values are not filtered
-	//Must use filtered value in future
-	
-	//static char idx = 0x01;
-	
-	//idx = 0x08; //이 부분 주석처리 안 하면 idx에 해당하는 부분만 실행됨. 이 경우 0x08은 PSD이므로 PSD 센서값만 읽음.
-	
-	static char idx = 0x01;
-	
-	switch(idx){
-	case 0x01:
-		Read_CDS();
-		//current_channel = 0x01;
-		//다음 ADC Mux 선택 Fire
-		idx++;
-		break;
-		
-	case 0x02:
-		Read_Thermister();
-		
-		//current_channel = 0x06;
-		//Is_Fire_Interrupt(); //Fire Interrupt를 걸까말까
-		//다음 ADC Mux 선택 Pressure
-		
-		idx++;
-		break;
-		
-	case 0x03:
-		Read_Pressure();
-		//current_channel = 0x04;
-		//다음 ADC Mux 선택 PSD
-		
-		idx++;
-		break;
-		
-	case 0x04:
-		Read_Shock();
-		
-		//current_channel = 0x07;
-		//Is_PSD_Interrupt(); //PSD Interrupt를 걸까말까
-		//다음 ADC Mux 선택 진동
-		
-		idx++;
-		break;
-		
-	case 0x05:
-		Read_Fire();
-		//current_channel = 0x05;
-		//다음 ADC Mux 선택 써미스터
-		
-		idx++;
-		break;
-		
-	case 0x06:
-		Read_PSD();
-		//current_channel = 0x03;
-		//다음 ADC Mux 선택 CDS
-		
-		idx = 0x01;
-		break;
-	}
-
-	//ADC Mux 선택, ADC 시작 시키고 ISR 종료
-	ADMUX = (ADMUX & 0xF0) | (idx & 0x0F); //다음 센서 선택
-	ADCSRA |= (1 << ADSC); // ADC 변환 시작
-}
-
-//ADC 입력
-//ADC 초기화
-void adc_init(void){
-	ADMUX=(1<<REFS0); //외부 레퍼런스 접압을 기준 전압으로 선택, 우측정렬, 초기 입력핀은 0번
-	ADCSRA=(1<<ADEN)|(0<<ADIE)|(1<<ADPS2)|(1<<ADPS1)|(1<<ADPS0); //ADC enable, ADC interrupt enable 분주비 128
-}
-/*
-void start_adc_conversion(void){//인터럽트 사용할때 ADC 변화
-	ADCSRA |=(1<<ADSC); //ADC 변화 시작
-}*/
-
-
-void timer0_init(void) {
-	TCCR0 = (1 << CS02) | (1 << CS00); // 분주비 1024
-	TIMSK = (1 << TOIE0); // 타이머0 오버플로우 인터럽트 허용
-	TCNT0 = 0; // 타이머 카운터 초기화
-}
-
 
 #elif DEBUG_ == 1
 //기정이 일하는 곳
@@ -333,98 +245,6 @@ ISR(INT0_vect)
 	BT_send('0');
 }
 
-ISR(TIMER0_OVF_vect){ //Use Timer0 for collecting sensor value and PWM
-	
-	volatile static char key = 0;
-	
-	if(key == 0) ElectroMagnet_On();
-	else ElectroMagnet_Off();
-	
-	//These Sensor Values are not filtered
-	//Must use filtered value in future
-	/*
-	switch(state){
-		case 0x01: //if not started
-		//Get Pressure Value
-		//pressure_sensor_val = 포트
-		break;
-		
-		default: //started
-		//Get CdS Value
-		//cds_sensor_val = 포트
-		
-		//Get Temperature Value
-		//temp_sensor_val = 포트
-		if(temp_en == 0x01){
-			//Set Servo_increment_threshold with respect to temp_sensor_val
-			//Servo_increment_threshold = ...
-			//Servo_increment_threshold is used to check if cnt has reached threshold and increment servo pwm value to destination
-		}
-		
-		//Get Shock Value
-		//shk_sensor_val = 포트
-		if(shk_sensor_val >= 50)
-		shk_detected = 0x01;
-		
-		//Get PSD Value
-		//Need to Control PSD
-		//psd_sensor_val...
-		if(psd_sensor_val >= 50){ //if human detected
-			PSD_Detected = 0x01;
-			}else{
-			PSD_Detected = 0x00;
-		}
-		break;
-	}
-	
-	//always get Fire sensor value
-	//Need to Control Fire Sensor
-	*/
-}
-
-#ifdef USE_BLUETOOTH_INTERRUPT
-
-ISR(USART1_RX_vect){
-	
-	rdata = UDR1;
-	BT_send(rdata);
-	
-	static volatile char key = 0;
-	
-	ElectroMagnet_On();
-	
-	if(key == 0){
-		if(rdata >= 0 && rdata <= 3){
-			marble.color = rdata;
-			key++;
-		}
-	}
-	else if(key == 1){
-		marble.posX = rdata*10;
-		key++;
-	}
-	else if(key == 2){
-		marble.posY = rdata*10;
-		key++;
-	}
-	
-	if(key == 3){
-		ElectroMagnet_Off();
-		key = 0;
-		if(marble.color == 1) Servo_Go_Home();
-		else if(marble.color == 2) Servo_Go_Box();
-		else if(marble.color == 3){
-			Servo_Set_Target((SERVO_BOX+SERVO_HOME)/2);
-			Servo_Act();
-		}
-		else{
-			Servo_Set_Target((SERVO_BOX+SERVO_HOME)/3);
-			Servo_Act();
-		}
-	}
-}
-#endif // BLUETOOTH_INTERRUPT
-
 #endif
 //************************************************************************************************************************************************************//
 
@@ -433,9 +253,16 @@ ISR(USART1_RX_vect){
 
 int main(void)
 {	
-	pin_init(); //Pin Setup
-	init();		//Interrupt, Timer, Register
+	port_setup(); //setup port
+	adc_init(); // ADC 초기화
+	timer0_init(); // 타이머0 초기화
+	timer1_init(); //타이머 초기화
+	
 	init_BT();	//Bluetooth Setup
+	
+	Reset_sensor_val(); //센서 변수 초기화
+	
+	sei(); //Allow Interrupt
 	
 	//Action_Allowed = 0x01;
 	
@@ -549,102 +376,16 @@ int main(void)
     }
 }
 
-ISR(TIMER0_OVF_vect){ //Use Timer0 for collecting sensor value and PWM
-	
-	//These Sensor Values are not filtered
-	//Must use filtered value in future
-	
-	static char idx = 0x01;
-	
-	switch(idx){
-	case 0x01:
-		Read_CDS();
-		idx <<=1;
-		break;
-		
-	case 0x02:
-		Read_Fire();
-		//Is_Fire_Interrupt();
-		idx <<=1;
-		break;
-		
-	case 0x04:
-		Read_Pressure();
-		idx <<=1;
-		break;
-		
-	case 0x08:
-		Read_PSD();
-		//Is_PSD_Interrupt();
-		idx <<= 1;
-		break;
-		
-	case 0x10:
-		Read_Shock();
-		idx <<=1;
-		break;
-		
-	case 0x20:
-		Read_Thermister();
-		idx = 0x00;
-		break;
-	}
-	
-	//ADC Start
-	
-	/*
-	switch(state){
-		case 0x01: //if not started
-		//Get Pressure Value
-		//pressure_sensor_val = 포트
-		break;
-		
-		default: //started
-		//Get CdS Value
-		//cds_sensor_val = 포트
-		
-		//Get Temperature Value
-		//temp_sensor_val = 포트
-		if(temp_en == 0x01){
-			//Set Servo_increment_threshold with respect to temp_sensor_val
-			//Servo_increment_threshold = ...
-			//Servo_increment_threshold is used to check if cnt has reached threshold and increment servo pwm value to destination
-		}
-		
-		//Get Shock Value
-		//shk_sensor_val = 포트
-		if(shk_sensor_val >= 50)
-		shk_detected = 0x01;
-		
-		//Get PSD Value
-		//Need to Control PSD
-		//psd_sensor_val...
-		if(psd_sensor_val >= 50){ //if human detected
-			PSD_Detected = 0x01;
-			}else{
-			PSD_Detected = 0x00;
-		}
-		break;
-	}
-	
-	//always get Fire sensor value
-	//Need to Control Fire Sensor
-	*/
-}
-
-void pin_init(){
-	//Pin Setup
-}
-
-void init(){
-	//Init Timer
-	
-}
-
 #endif
 //************************************************************************************************************************************************************//
 
-void timer_setup(){
+void timer0_init(void) {
+	TCCR0 |= (1 << CS02) | (1 << CS00); // 분주비 1024
+	TIMSK |= (1 << TOIE0); // 타이머0 오버플로우 인터럽트 허용
+	TCNT0 = 0; // 타이머 카운터 초기화
+}
+
+void timer1_init(){
 	TCCR1A=0x82;
 	TCCR1B=0x1b;
 
@@ -655,8 +396,59 @@ void port_setup(){
 	DDRA = 0xFF;
 	DDRD = 0x00;
 	DDRB = 0xFF;
-	DDRC = (1<<ElectroMagnet);
+	DDRC = 0xFF;
+	DDRF=0x00;
+	
 	//DDRC = 0xFF;
+}
+
+//ADC 입력
+//ADC 초기화
+void adc_init(void){
+	ADMUX=(1<<REFS0); //외부 레퍼런스 접압을 기준 전압으로 선택, 우측정렬, 초기 입력핀은 0번
+	ADCSRA=(1<<ADEN)|(0<<ADIE)|(1<<ADPS2)|(1<<ADPS1)|(1<<ADPS0); //ADC enable, ADC interrupt enable 분주비 128
+}
+
+ISR(TIMER0_OVF_vect){ //Use Timer0 for collecting sensor value
+	static char idx = 0x01;
+	
+	switch(idx){
+		case 0x01:
+		Read_CDS();
+		idx++;
+		break;
+		
+		case 0x02:
+		Read_Thermister();
+		//Is_Fire_Interrupt(); //Fire Interrupt를 걸까말까
+		idx++;
+		break;
+		
+		case 0x03:
+		Read_Pressure();
+		idx++;
+		break;
+		
+		case 0x04:
+		Read_Shock();
+		//Is_PSD_Interrupt(); //PSD Interrupt를 걸까말까
+		idx++;
+		break;
+		
+		case 0x05:
+		Read_Fire();
+		idx++;
+		break;
+		
+		case 0x06:
+		Read_PSD();
+		idx = 0x01;
+		break;
+	}
+
+	//ADC Mux 선택, ADC 시작 시키고 ISR 종료
+	ADMUX = (ADMUX & 0xF0) | (idx & 0x0F); //다음 센서 선택
+	ADCSRA |= (1 << ADSC); // ADC 변환 시작
 }
 
 inline void ElectroMagnet_On(){
