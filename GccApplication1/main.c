@@ -5,7 +5,7 @@
  * Author : kijun
  */ 
 
-#define DEBUG_ 0
+#define DEBUG_ 1
 #define F_CPU 16000000UL
 
 #define ElectroMagnet 7
@@ -19,19 +19,11 @@
 #include "Servo.h"
 #include "Sensors.h"
 #include "Bluetooth.h"
+#include "Item.h"
 
 void sys_init();
 void timer_setup();
 void port_setup();
-
-//Demux
-#define ITEM_NONE		0x0E	//0000 1110
-#define ITEM_SERVO		0x02	//0000 0010
-#define ITEM_SPEAKER	0x0A	//0000 1010
-#define ITEM_LED_RED	0x01	//0000 0001
-#define ITEM_LED_GREEN	0x05	//0000 0101
-#define ITEM_LED_BLUE	0x09	//0000 1001
-void Select_Item(char item);
 
 //MAIN
 volatile char state = 0x01;
@@ -42,7 +34,7 @@ volatile uint8_t idx=0x01;
 
 //LED PWM Value
 volatile unsigned int led_pwm_value;
-void LED_Set();
+void Show_Marble_Color();
 volatile char led_select = 0x00; //0x00: None, 0x01:Red, 0x02:Green, 0x03:Blue
 //Use Timer2 for PWM when not using Servo
 
@@ -50,9 +42,17 @@ volatile char led_select = 0x00; //0x00: None, 0x01:Red, 0x02:Green, 0x03:Blue
 void ElectroMagnet_On();
 void ElectroMagnet_Off();
 
+//LED
+#define LED_MAX 500
+#define LED_MIN 200
+void RED_LED_On(unsigned int p);
+void GREEN_LED_On(unsigned int p);
+void BLUE_LED_On(unsigned int p);
+
 void pin_init();
 void port_setup();
 void timer0_init();
+void timer1_init();
 void adc_init(void);
 
 //**** Debug **************************************************************************************************************************************************//
@@ -135,13 +135,18 @@ int main(void){
 	
 	cli();
 	port_setup();
-	timer_setup();
+	timer1_init();
 	init_BT();
 	
-	EIMSK = 0x03;
-	EICRA = 0x0F;
+	EIMSK = 0x03; //External Interrupt Enable Mask
+	EICRA = 0x0F; //External Interrupt Control Register(Edge)
 
 	sei();
+	
+	DDRC = 0xFF;
+	PORTC = 0x00;
+	
+	shk_detected = 0x00;
 	
 	ElectroMagnet_Off();
 	
@@ -150,50 +155,37 @@ int main(void){
 	
 	Servo_Quick_Move(375);
 	
-	shk_detected = 0x00;
-	
-	DDRC = 0xFF;
-	PORTC = 0xFE;
-	
 	//PORTC &= 0xFB; //0x1111 1110
 	//PORTC &= 0xF3; //0b1111 0010
-	PORTC = (PORTC & 0xF3) | (0x00 << 2);
+	
+	//PORTC = (PORTC & 0xF3) | (0x00 << 2);
+	
 	//0x1111 0011: mask, 
 	
 	while(1){
 		_delay_ms(10);
 		
-		switch(PORTD & 0x03){
-			case 0x02: //Disbale Demux
-				//PORTC |= 0x01;
-				
-				//if((PORTC & 0x01) == 0x00){ //Enabled
-				//	PORTC |= 0x01; //Disable
-				//}else{
-				//	PORTC &= 0xFE; //Enable
-				//}
-				
-				//PORTC |= 0x01;
+		switch(PIND & 0x03){
+			case 0x02: //Select Red LED
+
+				//Servo_Quick_Move(SERVO_HOME);
+				RED_LED_On(500);
+				//ElectroMagnet_On();
 			break;
 			
-			case 0x01:
-			/*
-				if((PORTC & 0x0C) == 0x08){
-					PORTC = (PORTC & 0xF3) | 0x00;
-				}
-				else{
-					PORTC = (PORTC & 0xF3) | 0x08;
-				}
-			*/
-			
-			Servo_Quick_Move(SERVO_HOME);
+			case 0x01: //Select Green LED
+
+				//Servo_Quick_Move(SERVO_BOX);
+				//Select_Item(ITEM_LED_GREEN);
+				
+				GREEN_LED_On(500);
+				//ElectroMagnet_Off();
 			break;
 		}
 		
 		/*
 		_delay_ms(10);
 		
-#ifndef USE_BLUETOOTH_INTERRUPT
 		if(BT_Receive()){
 			if(marble.color == 1) Servo_Quick_Move(200);
 			else if(marble.color == 2) Servo_Quick_Move(500);
@@ -210,7 +202,7 @@ int main(void){
 			
 			Servo_Quick_Move(SERVO_HOME);
 		}
-#endif
+
 		switch(PIND & 0x03){
 			case 0x01:
 				ElectroMagnet_On();
@@ -237,12 +229,14 @@ int main(void){
 ISR(INT1_vect)
 {
 	//BT_send('1');
-	shk_detected = 0x01;
+	//shk_detected = 0x01;
+	//ElectroMagnet_On();
 }
 
 ISR(INT0_vect)
 {
-	BT_send('0');
+	//BT_send('0');
+	//ElectroMagnet_Off();
 }
 
 #endif
@@ -272,7 +266,7 @@ int main(void)
 	
 	Reset_sensor_val();
 	
-	LED_Set();
+	//LED_Set();
 	
 	//Select_Item(ITEM_SERVO);
 	Servo_Go_Home(); //Move Servo to Home Position
@@ -451,22 +445,30 @@ ISR(TIMER0_OVF_vect){ //Use Timer0 for collecting sensor value
 	ADCSRA |= (1 << ADSC); // ADC 변환 시작
 }
 
-inline void ElectroMagnet_On(){
+void ElectroMagnet_On(){
 	PORTC &= (0 << ElectroMagnet);
 	//PORTC = 0x7F;
 }
 
-inline void ElectroMagnet_Off(){
+void ElectroMagnet_Off(){
 	PORTC |=  (1 << ElectroMagnet);
 	//PORTC = 0xFF;
 }
 
-void Select_Item(char item){
-	PORTC = (PORTC & 0xF0) | item;
-	_delay_us(100);
+void RED_LED_On(unsigned int p){
+	Select_Item(ITEM_LED_RED);
+	OCR1A = p;
+}
+void GREEN_LED_On(unsigned int p){
+	Select_Item(ITEM_LED_GREEN);
+	OCR1A = p;
+}
+void BLUE_LED_On(unsigned int p){
+	Select_Item(ITEM_LED_BLUE);
+	OCR1A = p;
 }
 
-void LED_Set(){
+void Show_Marble_Color(){
 	
 	//By using demux, we can select 1 of 3 LEDs with 1 output OC2 pin
 	//need to wait for demux to set

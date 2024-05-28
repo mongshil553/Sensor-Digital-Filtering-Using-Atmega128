@@ -145,6 +145,12 @@
     <Compile Include="Bluetooth.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="Item.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Item.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="main.c">
       <SubType>compile</SubType>
     </Compile>

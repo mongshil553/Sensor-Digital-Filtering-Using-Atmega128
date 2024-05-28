@@ -2,7 +2,7 @@
 
 #include <avr/io.h>
 #include <util/delay.h>
-#include "Overall.h"
+#include "Item.h"
 #include "Servo.h"
 
 void Calculate_Servo_Rotate_Angle(){
@@ -14,11 +14,14 @@ void Calculate_Marble_pos(){
 
 
 void Servo_Quick_Move(unsigned short val){
+	Select_Item(ITEM_SERVO);
 	Servo_pos = val;
 	OCR1A = Servo_pos;
 }
 
 inline void Servo_Set_Target(unsigned short val){
+	Select_Item(ITEM_SERVO);
+	
 	Servo_target = val;
 	
 	if(Servo_pos >= Servo_target) Servo_step = -1;
@@ -26,14 +29,17 @@ inline void Servo_Set_Target(unsigned short val){
 }
 
 void Servo_Go_Home(){
+	Select_Item(ITEM_SERVO);
 	Servo_Set_Target(SERVO_HOME);
 	Servo_Act();
 }
 void Servo_Go_Box(){
+	Select_Item(ITEM_SERVO);
 	Servo_Set_Target(SERVO_BOX);
 	Servo_Act();
 }
 void Servo_Go_Marble(){
+	Select_Item(ITEM_SERVO);
 	Servo_Set_Target(Marble_pos);
 	Servo_Act();
 }
