@@ -5,15 +5,18 @@
  * Author : kijun
  */ 
 
-#define DEBUG_ 1
+#define DEBUG_ 0
 #define F_CPU 16000000UL
 
 #define ElectroMagnet 7
+
+#define UBRR 103
 
 #include <avr/io.h>
 #include <stdbool.h>
 #include <avr/interrupt.h>
 #include <util/delay.h>
+#include <stdlib.h>//
 
 #include "Marble.h"
 #include "Servo.h"
@@ -55,6 +58,9 @@ void timer0_init();
 void timer1_init();
 void adc_init(void);
 
+//shock
+void Is_PSD_Interrupt();
+
 //**** Debug **************************************************************************************************************************************************//
 
 #if DEBUG_ == 0
@@ -63,25 +69,40 @@ int main(void){
 	
 	volatile unsigned char LED=0xFF;
 	
+	DDRA=0xFF;
+	DDRF=0x00;
+	
 	adc_init(); // ADC 초기화
 	timer0_init(); // 타이머0 초기화
 	
 	Reset_sensor_val(); //센서 변수 초기화
 	
+	UBRR0L = (unsigned char)UBRR;
+	UBRR0H = (unsigned char)(UBRR >> 8);
+
+	
+	UCSR0A = 0x00; //비동기 1배속
+	UCSR0B = 0x18; //송수신 허가
+	//UCSR0B = (1<<RXCIE0)|(1<<TXCIE0)|(1<<RXEN0)|(1<<TXEN0); //recv complete interrupt enable
+	UCSR0C = 0x87; //비동기, non-parity mode, stop bit:1 bit, data: 8bit
+	
+	shk_detected = 0x00;
+	
 	sei(); // 전역 인터럽트 허용
 
-	DDRA=0xFF;
-	DDRF=0x00;
+	
 	
 	while (1) {
 		// ADC 채널 값을 읽고 필요한 변수에 저장
-		/*
+		
 		if (cds_sensor_val > 100) { //CDS
-			LED &= 0xFE; //CDS에 해당하는 LED만 켜기
+			LED &= 0xFE; //CDS에 해당하는 LED만 켜기 -
 		}
 		else {
 			LED |= ~0xFE; //CDS에 해단하는 LED만 끄기
 		}
+		
+		
 		
 		if (temp_sensor_val > 200) {
 			LED &= 0xFD;
@@ -90,42 +111,66 @@ int main(void){
 			LED |= ~0xFD;
 		}
 		
-		if (pressure_sensor_val > 70) {//보류
+		
+		
+		if (pressure_sensor_val > 900) {//보류 -
 			LED &= 0xFB;
 		}
 		else {
 			LED |= ~0xFB;
 		}
 		
-		if ( shk_sensor_val < 10) {
+		if ( shk_detected) {
 			LED &= 0xF7;
+			shk_detected = 0x00;
 		}
 		else {
 			LED |= ~0xF7;
 		}
 		
-		if (fire_sensor_val > 100) {
+		if (fire_sensor_val > 100) {//-
 			LED &= 0xEF;
 		}
 		else {
 			LED |= ~0xEF;
 		}
-		*/
-		if ( psd_sensor_val> 100) {
-			LED = 0xBF;
+		
+		if ( (psd_sensor_val> 720)) {
+			LED &= 0xBF;
 		}
 		else {
 			LED |= ~0xBF;
 		}
 		
+		//if(shk_sensor_val <= 979){
+			USART0_NUM(shk_sensor_val);
+			USART0_TX_vect('\n');
+			USART0_TX_vect('\r');
+		//}
+		
+		
 		PORTA=LED;
-		_delay_ms(50);
+		_delay_us(1);
 
 	}
 	
 	return 0;
 	
 }
+
+void USART0_TX_vect(unsigned char data){
+	while(!(UCSR0A & (1<<UDRE0)));
+	UDR0 = data;
+}
+
+void USART0_NUM(unsigned short num){
+
+	USART0_TX_vect(num / 1000 + 48);
+	USART0_TX_vect((num%1000) / 100 + 48);
+	USART0_TX_vect((num%100)/10 + 48);
+	USART0_TX_vect((num%10) + 48);
+}
+
 
 #elif DEBUG_ == 1
 //기정이 일하는 곳
@@ -374,7 +419,7 @@ int main(void)
 //************************************************************************************************************************************************************//
 
 void timer0_init(void) {
-	TCCR0 |= (1 << CS02) | (1 << CS00); // 분주비 1024
+	TCCR0 |= (1 << CS02) |(1<<CS01)| (1 << CS00); // 분주비 1024
 	TIMSK |= (1 << TOIE0); // 타이머0 오버플로우 인터럽트 허용
 	TCNT0 = 0; // 타이머 카운터 초기화
 }
@@ -409,40 +454,46 @@ ISR(TIMER0_OVF_vect){ //Use Timer0 for collecting sensor value
 	switch(idx){
 		case 0x01:
 		Read_CDS();
-		idx++;
+		idx=0x02;
 		break;
 		
 		case 0x02:
+		
 		Read_Thermister();
 		//Is_Fire_Interrupt(); //Fire Interrupt를 걸까말까
-		idx++;
-		break;
-		
-		case 0x03:
-		Read_Pressure();
-		idx++;
+		idx=0x04;
 		break;
 		
 		case 0x04:
-		Read_Shock();
-		//Is_PSD_Interrupt(); //PSD Interrupt를 걸까말까
-		idx++;
+		
+		Read_Pressure();
+		idx=0x05;
 		break;
 		
 		case 0x05:
-		Read_Fire();
-		idx++;
+		
+		Read_Shock();
+		Is_PSD_Interrupt(); //PSD Interrupt를 걸까말까
+		idx=0x06;
+		
 		break;
 		
 		case 0x06:
+		
+		Read_Fire();
+		idx = 0x07;
+		break;
+		
+		case 0x07:
+		
 		Read_PSD();
 		idx = 0x01;
 		break;
 	}
-
+	
 	//ADC Mux 선택, ADC 시작 시키고 ISR 종료
-	ADMUX = (ADMUX & 0xF0) | (idx & 0x0F); //다음 센서 선택
-	ADCSRA |= (1 << ADSC); // ADC 변환 시작
+	ADMUX = (ADMUX & 0x40) | (idx & 0x0F); //다음 센서 선택
+	//ADCSRA |= (1 << ADSC); // ADC 변환 시작
 }
 
 void ElectroMagnet_On(){
@@ -497,4 +548,9 @@ void Show_Marble_Color(){
 	}
 	
 	OCR2 = led_pwm_value; //Set PWM Value
+}
+
+void Is_PSD_Interrupt(){
+	if(shk_sensor_val <= 900)
+		shk_detected = 0x01;
 }
