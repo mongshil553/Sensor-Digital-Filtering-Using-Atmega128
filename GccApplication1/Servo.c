@@ -43,6 +43,11 @@ void Servo_Go_Marble(){
 	Servo_Set_Target(Marble_pos);
 	Servo_Act();
 }
+void Servo_Goto(unsigned short pos){
+	Select_Item(ITEM_SERVO);
+	Servo_Set_Target(pos);
+	Servo_Act();
+}
 
 void Servo_Act(){
 	//static unsigned short tmp = 0;
@@ -58,4 +63,8 @@ void Servo_Act(){
 		_delay_us(100);
 	}
 	
+}
+
+void Servo_Set_Speed(char sp){
+	Servo_increment_threshold = sp;
 }

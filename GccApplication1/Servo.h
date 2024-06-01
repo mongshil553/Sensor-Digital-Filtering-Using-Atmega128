@@ -23,8 +23,10 @@ void Servo_Quick_Move(unsigned short val);
 void Servo_Go_Home();
 void Servo_Go_Box();
 void Servo_Go_Marble();
+void Servo_Goto(unsigned short pos);
 void Servo_Act();
 void Servo_Set_Target(unsigned short val);
+void Servo_Set_Speed(char sp);
 //Servo invrement_threshold: 0:Super Fast, 50:Very Slow
 //Servo is using Timer1 for PWM
 

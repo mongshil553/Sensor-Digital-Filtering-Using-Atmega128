@@ -5,7 +5,7 @@
  * Author : kijun
  */ 
 
-#define DEBUG_ 1
+#define DEBUG_ 2
 #define F_CPU 16000000UL
 
 #define ElectroMagnet 7
@@ -65,6 +65,7 @@ int main(void){
 	
 	adc_init(); // ADC 초기화
 	timer0_init(); // 타이머0 초기화
+	timer1_init();
 	
 	Reset_sensor_val(); //센서 변수 초기화
 	
@@ -73,10 +74,13 @@ int main(void){
 	DDRA=0xFF;
 	DDRF=0x00;
 	
+	Select_Item(ITEM_NONE);
+	port_setup();
+	
 	while (1) {
 		// ADC 채널 값을 읽고 필요한 변수에 저장
-		/*
-		if (cds_sensor_val > 100) { //CDS
+		
+		if (cds_sensor_val > 200) { //CDS
 			LED &= 0xFE; //CDS에 해당하는 LED만 켜기
 		}
 		else {
@@ -110,13 +114,13 @@ int main(void){
 		else {
 			LED |= ~0xEF;
 		}
-		*/
-		if ( psd_sensor_val> 100) {
+		
+		/*if ( psd_sensor_val> 100) {
 			LED = 0xBF;
 		}
 		else {
 			LED |= ~0xBF;
-		}
+		}*/
 		
 		PORTA=LED;
 		_delay_ms(50);
@@ -138,7 +142,8 @@ int main(void){
 	timer1_init();
 	init_BT();
 	
-	EIMSK = 0x03; //External Interrupt Enable Mask
+	//EIMSK = 0x03; //External Interrupt Enable Mask
+	EIMSK = 0x00;
 	EICRA = 0x0F; //External Interrupt Control Register(Edge)
 
 	sei();
@@ -153,7 +158,8 @@ int main(void){
 	Servo_increment_threshold = 20;
 	Servo_Allowed = 0x01;
 	
-	Servo_Quick_Move(375);
+	//Servo_Quick_Move(375);
+	Servo_Goto(375);
 	
 	//PORTC &= 0xFB; //0x1111 1110
 	//PORTC &= 0xF3; //0b1111 0010
@@ -165,12 +171,14 @@ int main(void){
 	while(1){
 		_delay_ms(10);
 		
+		
 		switch(PIND & 0x03){
 			case 0x02: //Select Red LED
 
 				//Servo_Quick_Move(SERVO_HOME);
-				RED_LED_On(500);
-				//ElectroMagnet_On();
+				//RED_LED_On(500);
+				ElectroMagnet_On();
+				//BT_send('1');
 			break;
 			
 			case 0x01: //Select Green LED
@@ -178,18 +186,21 @@ int main(void){
 				//Servo_Quick_Move(SERVO_BOX);
 				//Select_Item(ITEM_LED_GREEN);
 				
-				GREEN_LED_On(500);
-				//ElectroMagnet_Off();
+				//GREEN_LED_On(500);
+				ElectroMagnet_Off();
 			break;
 		}
 		
-		/*
-		_delay_ms(10);
 		
+		/*
 		if(BT_Receive()){
-			if(marble.color == 1) Servo_Quick_Move(200);
-			else if(marble.color == 2) Servo_Quick_Move(500);
-			else Servo_Quick_Move(375);
+			//if(marble.color == 1) Servo_Quick_Move(200);
+			//else if(marble.color == 2) Servo_Quick_Move(500);
+			//else Servo_Quick_Move(375);
+			
+			if(marble.color == 0) RED_LED_On(500);
+			else if(marble.color == 1) GREEN_LED_On(500);
+			else BLUE_LED_On(500);
 			
 			for(iter=0; iter<50; iter++){ //2 second for shock to be detected
 				_delay_ms(100);
@@ -219,9 +230,8 @@ int main(void){
 			default:
 			break;
 		}
+		*/
 		
-		
-	*/
 	}
 	
 }
@@ -229,14 +239,14 @@ int main(void){
 ISR(INT1_vect)
 {
 	//BT_send('1');
-	//shk_detected = 0x01;
-	//ElectroMagnet_On();
+
+	//RED_LED_On(500);
 }
 
 ISR(INT0_vect)
 {
-	//BT_send('0');
-	//ElectroMagnet_Off();
+	BT_send('0');
+	//GREEN_LED_On(500);
 }
 
 #endif
@@ -256,20 +266,20 @@ int main(void)
 	
 	Reset_sensor_val(); //센서 변수 초기화
 	
-	sei(); //Allow Interrupt
+	ElectroMagnet_Off();
 	
-	//Action_Allowed = 0x01;
-	
-	marble.color = 0x00;
+	marble.color = 0x05;
 	marble.posX = -1;
 	marble.posY = -1;
 	
-	Reset_sensor_val();
+	sei(); //Allow Interrupt
 	
-	//LED_Set();
-	
-	//Select_Item(ITEM_SERVO);
-	Servo_Go_Home(); //Move Servo to Home Position
+	//Action_Allowed = 0x01;
+	Servo_increment_threshold = 20;
+	Servo_Allowed = 0x01;
+	//Servo_Go_Home(); //Move Servo to Home Position
+	Servo_Goto(375);
+	Servo_Go_Home();
 	
 	//Need to Check Connection with Server
 	//If not connected, try for few seconds and if failed connection, do other actions
@@ -281,19 +291,28 @@ int main(void)
     while (1) {
 		switch(state){
 			case 0b00000001:					//not started
-				if(pressure_sensor_val >= 50)	//pressure threshold is 50(just guessing)
-					state <<= 1;				//Change state
+				//if(pressure_sensor_val >= 50)	//pressure threshold is 50(just guessing)
+					//state <<= 1;				//Change state
+				
+				if(!(PIND & 0x01)){ //sw0 pushed
+					Select_Item(ITEM_NONE);
+					ElectroMagnet_On();
+					BT_send('0'); //start signal
+					state <<= 1;
+				}
+				break;
 				
 			case 0b00000010:	//wait for Marble data to arrive from the server
 				if(BT_Receive()){
 					//Marble Data has arrived from the server
-					Calculate_Marble_pos();
+					//Calculate_Marble_pos();
 					state <<= 1;
 				}
 				break;
 				
 			case 0b00000100:	//Catch & Drop Marble
-				Servo_Go_Marble(); //Rotate Servo to Marble to catch marble
+				//Servo_Go_Marble(); //Rotate Servo to Marble to catch marble
+				Servo_Goto(375);
 				
 				//Servo Reached Destination				
 				ElectroMagnet_On(); //Turn on ElectroMagnet
@@ -322,14 +341,19 @@ int main(void)
 					state <<= 1;
 				}
 				else{ //Marble failed
+					//Servo_Go_Home();
+					//state <<= 1;
+					//break;
+					
 					//Move servo to home
+					Servo_Set_Speed(20); //temporary
 					Servo_Go_Home();
 					
 					//Turn on Electro Magnet
 					ElectroMagnet_On();
 					
 					temp_en = 0x00; //temperature sensor does not control servo speed
-					Servo_increment_threshold = 40; //Very slowly
+					Servo_Set_Speed(80); //Very slowly
 					
 					//Move servo to Marble Collecting Box
 					Servo_Go_Box();
@@ -339,6 +363,7 @@ int main(void)
 					
 					temp_en = 0x01; //temperature sensor controls servo speed
 					
+					Servo_Set_Speed(20);
 					Servo_Go_Home(); //Servo returns home
 					
 					state <<= 1;
@@ -346,24 +371,14 @@ int main(void)
 				break;
 				
 			case 0b00010000:
-				switch(marble.color){
-					case 0x00:
-						Select_Item(ITEM_NONE);
-						break;
-					case 0x01:
-						Select_Item(ITEM_LED_RED);
-						break;
-					case 0x02:
-						Select_Item(ITEM_LED_GREEN);
-						break;
-					case 0x03:
-						Select_Item(ITEM_LED_BLUE);
-						break;
-					default:
-						Select_Item(ITEM_NONE);
-						break;
-				}
-				LED_Set(); //LED PWM of Marble Color
+				
+				
+				if(marble.color == 0) RED_LED_On(500);
+				else if(marble.color == 1) GREEN_LED_On(500);
+				else if(marble.color == 2) BLUE_LED_On(500);
+				else Select_Item(ITEM_NONE);
+				
+				//LED_Set(); //LED PWM of Marble Color
 				state = 0x01; //Done, wait for pressure sensor
 				break;
 		}
@@ -446,12 +461,14 @@ ISR(TIMER0_OVF_vect){ //Use Timer0 for collecting sensor value
 }
 
 void ElectroMagnet_On(){
-	PORTC &= (0 << ElectroMagnet);
+	//PORTC &= (0 << ElectroMagnet);
+	PORTC = (PORTC & ~(1<<ElectroMagnet)) | (0<<ElectroMagnet);
 	//PORTC = 0x7F;
 }
 
 void ElectroMagnet_Off(){
-	PORTC |=  (1 << ElectroMagnet);
+	//PORTC |=  (1 << ElectroMagnet);
+	PORTC = (PORTC & ~(1<<ElectroMagnet)) | (1<<ElectroMagnet);
 	//PORTC = 0xFF;
 }
 
