@@ -54,11 +54,13 @@ void Servo_Act(){
 	
 	unsigned short tmp = 0;
 	
-	while((Servo_pos != Servo_target) && Servo_Allowed){
-		if(++tmp == Servo_increment_threshold){
-			Servo_pos += Servo_step;
-			OCR1A = Servo_pos;
-			tmp = 0;
+	while(Servo_pos != Servo_target){
+		if(Servo_Allowed){
+			if(++tmp == Servo_increment_threshold){
+				Servo_pos += Servo_step;
+				OCR1A = Servo_pos;
+				tmp = 0;
+			}
 		}
 		_delay_us(100);
 	}

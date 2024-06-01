@@ -60,6 +60,7 @@ void adc_init(void);
 
 //shock
 void Is_PSD_Interrupt();
+void Is_Shock_Interrupt();
 
 //**** Debug **************************************************************************************************************************************************//
 
@@ -129,7 +130,7 @@ int main(void){
 		
 		if ( shk_detected) {
 			LED &= 0xF7;
-			shk_detected = 0x00;
+			//shk_detected = 0x00;
 		}
 		else {
 			LED |= ~0xF7;
@@ -142,7 +143,7 @@ int main(void){
 			LED |= ~0xEF;
 		}
 		
-		if ( (psd_sensor_val> 720)) {
+		if ( (psd_sensor_val> 520)) {
 			LED &= 0xBF;
 		}
 		else {
@@ -326,6 +327,9 @@ int main(void)
 	
 	init_BT();	//Bluetooth Setup
 	
+	EIMSK = 0xC0; //1100 0000
+	EICRB = 0xF0; //External Interrupt Control Register(Edge)
+	
 	Reset_sensor_val(); //센서 변수 초기화
 	
 	ElectroMagnet_Off();
@@ -336,10 +340,10 @@ int main(void)
 	
 	sei(); //Allow Interrupt
 	
-	//Action_Allowed = 0x01;
-	Servo_increment_threshold = 20;
 	Servo_Allowed = 0x01;
-	//Servo_Go_Home(); //Move Servo to Home Position
+	
+	Servo_Set_Speed(20);
+	
 	Servo_Goto(375);
 	Servo_Go_Home();
 	
@@ -436,8 +440,8 @@ int main(void)
 				
 				
 				if(marble.color == 0) RED_LED_On(500);
-				else if(marble.color == 1) GREEN_LED_On(500);
-				else if(marble.color == 2) BLUE_LED_On(500);
+				else if(marble.color == 2) GREEN_LED_On(500);
+				else if(marble.color == 1) BLUE_LED_On(500);
 				else Select_Item(ITEM_NONE);
 				
 				//LED_Set(); //LED PWM of Marble Color
@@ -445,6 +449,15 @@ int main(void)
 				break;
 		}
     }
+}
+
+ISR(INT7_vect)
+{
+	//BT_send('0');
+	//GREEN_LED_On(500);
+	
+	//Select_Item(ITEM_NONE);
+	//Servo_Allowed = 0x00;
 }
 
 #endif
@@ -468,7 +481,8 @@ void port_setup(){
 	DDRD = 0x00;
 	DDRB = 0xFF;
 	DDRC = 0xFF;
-	DDRF=0x00;
+	DDRF = 0x00;
+	DDRE = 0x00;
 	
 	//DDRC = 0xFF;
 }
@@ -492,7 +506,8 @@ ISR(TIMER0_OVF_vect){ //Use Timer0 for collecting sensor value
 		case 0x02:
 		
 		Read_Thermister();
-		//Is_Fire_Interrupt(); //Fire Interrupt를 걸까말까
+		
+		//Servo_Set_Speed();
 		idx=0x04;
 		break;
 		
@@ -505,7 +520,7 @@ ISR(TIMER0_OVF_vect){ //Use Timer0 for collecting sensor value
 		case 0x05:
 		
 		Read_Shock();
-		Is_PSD_Interrupt(); //PSD Interrupt를 걸까말까
+		Is_Shock_Interrupt(); //Shock Interrupt를 걸까말까
 		idx=0x06;
 		
 		break;
@@ -519,6 +534,7 @@ ISR(TIMER0_OVF_vect){ //Use Timer0 for collecting sensor value
 		case 0x07:
 		
 		Read_PSD();
+		Is_PSD_Interrupt();
 		idx = 0x01;
 		break;
 	}
@@ -526,6 +542,53 @@ ISR(TIMER0_OVF_vect){ //Use Timer0 for collecting sensor value
 	//ADC Mux 선택, ADC 시작 시키고 ISR 종료
 	ADMUX = (ADMUX & 0x40) | (idx & 0x0F); //다음 센서 선택
 	//ADCSRA |= (1 << ADSC); // ADC 변환 시작
+	
+	if (cds_sensor_val > 100) { //CDS
+		PORTA &= 0xFE; //CDS에 해당하는 LED만 켜기 //1111 1110
+	}
+	else {
+		PORTA |= ~0xFE; //CDS에 해단하는 LED만 끄기
+	}
+	
+	if (temp_sensor_val > 200) {
+		PORTA &= 0xFD; // 1111 1101
+	}
+	else {
+		PORTA |= ~0xFD;
+	}
+	
+	
+	
+	if (pressure_sensor_val > 900) {//보류 -
+		PORTA &= 0xFB; //1111 1011
+	}
+	else {
+		PORTA |= ~0xFB;
+	}
+	
+	if ( shk_detected) {
+		PORTA &= 0xF7;
+		//shk_detected = 0x00;
+	}
+	else {
+		PORTA |= ~0xF7;
+	}
+	
+	if (fire_sensor_val > 100) {//-
+		PORTA &= 0xEF;
+	}
+	else {
+		PORTA |= ~0xEF;
+	}
+	
+	
+	if ( (psd_sensor_val> 520)) {
+		
+		PORTA &= 0xBF;
+	}
+	else {
+		PORTA |= ~0xBF;
+	}
 }
 
 void ElectroMagnet_On(){
@@ -584,7 +647,21 @@ void Show_Marble_Color(){
 	OCR2 = led_pwm_value; //Set PWM Value
 }
 
-void Is_PSD_Interrupt(){
+void Is_Shock_Interrupt(){
 	if(shk_sensor_val <= 900)
 		shk_detected = 0x01;
+}
+
+void Is_PSD_Interrupt(){
+	if ( (psd_sensor_val> 520)) {
+		//PORTC |= 0x20; //0010 0000
+		//PORTA &= 0xBF;
+		Servo_Allowed = 0x00;
+	}
+	else {
+		//PORTC &= ~(0x20); //0100 0000
+		//PORTA |= ~0xBF;
+		Servo_Allowed = 0x01;
+	}
+	
 }
