@@ -5,7 +5,7 @@
  * Author : kijun
  */ 
 
-#define DEBUG_ 0
+#define DEBUG_ 2
 #define F_CPU 16000000UL
 
 #define ElectroMagnet 7
@@ -89,6 +89,8 @@ int main(void){
 	
 	shk_detected = 0x00;
 	
+	
+	
 	sei(); // 전역 인터럽트 허용
 
 	
@@ -100,7 +102,7 @@ int main(void){
 		// ADC 채널 값을 읽고 필요한 변수에 저장
 		
 		if (cds_sensor_val > 100) { //CDS
-			LED &= 0xFE; //CDS에 해당하는 LED만 켜기
+			LED &= 0xFE; //CDS에 해당하는 LED만 켜기 //1111 1110
 		}
 		else {
 			LED |= ~0xFE; //CDS에 해단하는 LED만 끄기
@@ -108,8 +110,9 @@ int main(void){
 		
 		
 		
+		
 		if (temp_sensor_val > 200) {
-			LED &= 0xFD;
+			LED &= 0xFD; // 1111 1101
 		}
 		else {
 			LED |= ~0xFD;
@@ -118,7 +121,7 @@ int main(void){
 		
 		
 		if (pressure_sensor_val > 900) {//보류 -
-			LED &= 0xFB;
+			LED &= 0xFB; //1111 1011
 		}
 		else {
 			LED |= ~0xFB;
@@ -144,7 +147,7 @@ int main(void){
 		}
 		else {
 			LED |= ~0xBF;
-		}*/
+		}
 		
 		//if(shk_sensor_val <= 979){
 			USART0_NUM(shk_sensor_val);
@@ -152,6 +155,20 @@ int main(void){
 			USART0_TX_vect('\r');
 		//}
 		
+		//---------------- 부저 ---------------//
+		switch(PIND & 0x03){
+			case 0x01:
+			//OCR1A = ...;
+			break;
+			
+			case 0x02:
+			//OCR1A = ...;
+			break;
+			
+			default:
+			break;
+		}
+		//---------------- 부저 ---------------//
 		
 		PORTA=LED;
 		_delay_us(1);
@@ -339,7 +356,7 @@ int main(void)
 				//if(pressure_sensor_val >= 50)	//pressure threshold is 50(just guessing)
 					//state <<= 1;				//Change state
 				
-				if(!(PIND & 0x01)){ //sw0 pushed
+				if(pressure_sensor_val > 900){ //pressure 
 					Select_Item(ITEM_NONE);
 					ElectroMagnet_On();
 					BT_send('0'); //start signal
