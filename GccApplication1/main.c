@@ -5,7 +5,7 @@
  * Author : kijun
  */ 
 
-#define DEBUG_ 2
+#define DEBUG_ 0
 #define F_CPU 16000000UL
 
 #define ElectroMagnet 7
@@ -163,11 +163,13 @@ int main(void){
 		//---------------- 부저 ---------------//
 		switch(PIND & 0x03){
 			case 0x01:
-			//OCR1A = ...;
+			ICR1 = 50;
+			OCR1A=ICR1/5;
 			break;
 			
 			case 0x02:
-			//OCR1A = ...;
+			ICR1 = 70;
+			OCR1A=ICR1/5;
 			break;
 			
 			default:
