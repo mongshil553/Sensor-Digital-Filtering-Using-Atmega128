@@ -19,6 +19,41 @@
 
 void Select_Item(char item);
 
+//================ Servo ===================//
+#define Servo_MAX 520
+#define Servo_MIN 230
+#define SERVO_HOME 130
+#define SERVO_BOX 620
 
+//Servo Motor
+volatile unsigned short Servo_target, tmp;
+unsigned short Servo_pos, Servo_increment_threshold, Servo_step;
+volatile char Servo_Allowed;
+
+//void Servo_Set_Target(unsigned short val);
+void Servo_Quick_Move(unsigned short val);
+void Servo_Go_Home();
+void Servo_Go_Box();
+void Servo_Go_Marble();
+void Servo_Goto(unsigned short pos);
+void Servo_Act();
+void Servo_Set_Target(unsigned short val);
+void Servo_Set_Speed(char sp);
+//Servo invrement_threshold: 0:Super Fast, 50:Very Slow
+//Servo is using Timer1 for PWM
+
+unsigned short Marble_pos;
+void Calculate_Marble_pos();
+
+//================ LED ===================//
+#define LED_MAX 500
+#define LED_MIN 200
+void RED_LED_On(unsigned int p);
+void GREEN_LED_On(unsigned int p);
+void BLUE_LED_On(unsigned int p);
+
+//================ Buzzer ====================//
+void Buzzer_on(int hz);
+void Buzzer_off();
 
 #endif /* ITEM_H_ */

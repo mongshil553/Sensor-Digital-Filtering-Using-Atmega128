@@ -5,7 +5,7 @@
  * Author : kijun
  */ 
 
-#define DEBUG_ 0
+#define DEBUG_ 2
 #define F_CPU 16000000UL
 
 #define ElectroMagnet 7
@@ -19,38 +19,9 @@
 #include <stdlib.h>//
 
 #include "Marble.h"
-#include "Servo.h"
 #include "Sensors.h"
 #include "Bluetooth.h"
 #include "Item.h"
-
-void sys_init();
-void timer_setup();
-void port_setup();
-
-//MAIN
-volatile char state = 0x01;
-volatile char PSD_Detected = 0x00;
-volatile uint8_t current_channel=0x01;//현재 읽고있는 채널 값 저장
-volatile uint8_t idx=0x01;
-
-
-//LED PWM Value
-volatile unsigned int led_pwm_value;
-void Show_Marble_Color();
-volatile char led_select = 0x00; //0x00: None, 0x01:Red, 0x02:Green, 0x03:Blue
-//Use Timer2 for PWM when not using Servo
-
-//Electromagnet
-void ElectroMagnet_On();
-void ElectroMagnet_Off();
-
-//LED
-#define LED_MAX 500
-#define LED_MIN 200
-void RED_LED_On(unsigned int p);
-void GREEN_LED_On(unsigned int p);
-void BLUE_LED_On(unsigned int p);
 
 void pin_init();
 void port_setup();
@@ -58,13 +29,14 @@ void timer0_init();
 void timer1_init();
 void adc_init(void);
 
-//shock
+//Electromagnet
+void ElectroMagnet_On();
+void ElectroMagnet_Off();
+
+//Sensor Check
 void Is_PSD_Interrupt();
 void Is_Shock_Interrupt();
 
-//Buzzer
-void Buzzer_on(int hz);
-void Buzzer_off();
 
 //**** Debug **************************************************************************************************************************************************//
 
@@ -163,13 +135,15 @@ int main(void){
 		//---------------- 부저 ---------------//
 		switch(PIND & 0x03){
 			case 0x01:
-			ICR1 = 50;
-			OCR1A=ICR1/5;
+			//ICR1 = 50;
+			//OCR1A=ICR1/5;
+			Buzzer_on(50);
 			break;
 			
 			case 0x02:
-			ICR1 = 70;
-			OCR1A=ICR1/5;
+			//ICR1 = 70;
+			//OCR1A=ICR1/5;
+			Buzzer_on(70);
 			break;
 			
 			default:
@@ -358,7 +332,8 @@ int main(void)
 	//Thus, there are two cases. 1, Bluetooth is connected, 2, Bluetooth is not connected
 	//This is for just in case bluetooth fails at presentation
 	
-	short i;
+	//short i;
+	char state = 0x01;
 	
     while (1) {
 		switch(state){
@@ -613,56 +588,6 @@ void ElectroMagnet_Off(){
 	//PORTC = 0xFF;
 }
 
-void RED_LED_On(unsigned int p){
-	Show_Marble_Color(ITEM_NONE);
-	ICR1 = 4999;
-	OCR1A = p;
-	Select_Item(ITEM_LED_RED);
-}
-void GREEN_LED_On(unsigned int p){
-	Show_Marble_Color(ITEM_NONE);
-	ICR1 = 4999;
-	OCR1A = p;
-	Select_Item(ITEM_LED_GREEN);
-}
-void BLUE_LED_On(unsigned int p){
-	Show_Marble_Color(ITEM_NONE);
-	ICR1 = 4999;
-	OCR1A = p;
-	Select_Item(ITEM_LED_BLUE);
-}
-
-void Show_Marble_Color(){
-	
-	//By using demux, we can select 1 of 3 LEDs with 1 output OC2 pin
-	//need to wait for demux to set
-	//output 4 pins, R,G,B,None
-	
-	switch(marble.color){
-		case 0x00: //LED Off
-			led_select = 0x04;
-		break;
-		
-		case 0x01: //Red
-			led_select = 0x01;
-		break;
-		
-		case 0x02: //Green
-			led_select = 0x02;
-		break;
-		
-		case 0x03: //Blue
-			led_select = 0x03;
-		break;
-		
-		case 0x04: //None <- LED Off
-			led_select = 0x04;
-		break;
-	}
-	
-	OCR2 = led_pwm_value; //Set PWM Value
-}
-
 void Is_Shock_Interrupt(){
 	if(shk_sensor_val <= 900)
 		shk_detected = 0x01;
@@ -680,13 +605,4 @@ void Is_PSD_Interrupt(){
 		Servo_Allowed = 0x01;
 	}
 	
-}
-
-void Buzzer_on(int hz){
-	Select_Item(ITEM_NONE);
-	//Set COM Register as PWM (Top = ICR)
-	//Set OCR as duty ratio 50%
-}
-void Buzzer_off(){
-	//Set COM register as None
 }

@@ -27,6 +27,7 @@ char shk_detected;
 
 //PSD Sensor
 unsigned short psd_sensor_val;
+char PSD_detected;
 
 //Fire sensor
 unsigned short fire_sensor_val;
