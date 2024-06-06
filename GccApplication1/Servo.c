@@ -29,21 +29,25 @@ inline void Servo_Set_Target(unsigned short val){
 }
 
 void Servo_Go_Home(){
+	OCR1A = Servo_pos;
 	Select_Item(ITEM_SERVO);
 	Servo_Set_Target(SERVO_HOME);
 	Servo_Act();
 }
 void Servo_Go_Box(){
+	OCR1A = Servo_pos;
 	Select_Item(ITEM_SERVO);
 	Servo_Set_Target(SERVO_BOX);
 	Servo_Act();
 }
 void Servo_Go_Marble(){
+	OCR1A = Servo_pos;
 	Select_Item(ITEM_SERVO);
 	Servo_Set_Target(Marble_pos);
 	Servo_Act();
 }
 void Servo_Goto(unsigned short pos){
+	OCR1A = Servo_pos;
 	Select_Item(ITEM_SERVO);
 	Servo_Set_Target(pos);
 	Servo_Act();

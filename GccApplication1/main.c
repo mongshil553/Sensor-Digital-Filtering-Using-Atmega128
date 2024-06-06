@@ -62,6 +62,10 @@ void adc_init(void);
 void Is_PSD_Interrupt();
 void Is_Shock_Interrupt();
 
+//Buzzer
+void Buzzer_on(int hz);
+void Buzzer_off();
+
 //**** Debug **************************************************************************************************************************************************//
 
 #if DEBUG_ == 0
@@ -494,6 +498,55 @@ void adc_init(void){
 	ADCSRA=(1<<ADEN)|(0<<ADIE)|(1<<ADPS2)|(1<<ADPS1)|(1<<ADPS0); //ADC enable, ADC interrupt enable 분주비 128
 }
 
+inline void Sensor_show(){
+	if (cds_sensor_val > 100) { //CDS
+		PORTA &= 0xFE; //CDS에 해당하는 LED만 켜기 //1111 1110
+	}
+	else {
+		PORTA |= ~0xFE; //CDS에 해단하는 LED만 끄기
+	}
+	
+	if (temp_sensor_val > 200) {
+		PORTA &= 0xFD; // 1111 1101
+	}
+	else {
+		PORTA |= ~0xFD;
+	}
+	
+	
+	
+	if (pressure_sensor_val > 900) {//보류 -
+		PORTA &= 0xFB; //1111 1011
+	}
+	else {
+		PORTA |= ~0xFB;
+	}
+	
+	if ( shk_detected) {
+		PORTA &= 0xF7;
+		//shk_detected = 0x00;
+	}
+	else {
+		PORTA |= ~0xF7;
+	}
+	
+	if (fire_sensor_val > 100) {//-
+		PORTA &= 0xEF;
+	}
+	else {
+		PORTA |= ~0xEF;
+	}
+	
+	
+	if ( (psd_sensor_val> 520)) {
+		
+		PORTA &= 0xBF;
+	}
+	else {
+		PORTA |= ~0xBF;
+	}
+}
+
 ISR(TIMER0_OVF_vect){ //Use Timer0 for collecting sensor value
 	static char idx = 0x01;
 	
@@ -543,52 +596,7 @@ ISR(TIMER0_OVF_vect){ //Use Timer0 for collecting sensor value
 	ADMUX = (ADMUX & 0x40) | (idx & 0x0F); //다음 센서 선택
 	//ADCSRA |= (1 << ADSC); // ADC 변환 시작
 	
-	if (cds_sensor_val > 100) { //CDS
-		PORTA &= 0xFE; //CDS에 해당하는 LED만 켜기 //1111 1110
-	}
-	else {
-		PORTA |= ~0xFE; //CDS에 해단하는 LED만 끄기
-	}
-	
-	if (temp_sensor_val > 200) {
-		PORTA &= 0xFD; // 1111 1101
-	}
-	else {
-		PORTA |= ~0xFD;
-	}
-	
-	
-	
-	if (pressure_sensor_val > 900) {//보류 -
-		PORTA &= 0xFB; //1111 1011
-	}
-	else {
-		PORTA |= ~0xFB;
-	}
-	
-	if ( shk_detected) {
-		PORTA &= 0xF7;
-		//shk_detected = 0x00;
-	}
-	else {
-		PORTA |= ~0xF7;
-	}
-	
-	if (fire_sensor_val > 100) {//-
-		PORTA &= 0xEF;
-	}
-	else {
-		PORTA |= ~0xEF;
-	}
-	
-	
-	if ( (psd_sensor_val> 520)) {
-		
-		PORTA &= 0xBF;
-	}
-	else {
-		PORTA |= ~0xBF;
-	}
+	Sensor_show(); //LED A
 }
 
 void ElectroMagnet_On(){
@@ -604,16 +612,22 @@ void ElectroMagnet_Off(){
 }
 
 void RED_LED_On(unsigned int p){
-	Select_Item(ITEM_LED_RED);
+	Show_Marble_Color(ITEM_NONE);
+	ICR1 = 4999;
 	OCR1A = p;
+	Select_Item(ITEM_LED_RED);
 }
 void GREEN_LED_On(unsigned int p){
-	Select_Item(ITEM_LED_GREEN);
+	Show_Marble_Color(ITEM_NONE);
+	ICR1 = 4999;
 	OCR1A = p;
+	Select_Item(ITEM_LED_GREEN);
 }
 void BLUE_LED_On(unsigned int p){
-	Select_Item(ITEM_LED_BLUE);
+	Show_Marble_Color(ITEM_NONE);
+	ICR1 = 4999;
 	OCR1A = p;
+	Select_Item(ITEM_LED_BLUE);
 }
 
 void Show_Marble_Color(){
@@ -664,4 +678,13 @@ void Is_PSD_Interrupt(){
 		Servo_Allowed = 0x01;
 	}
 	
+}
+
+void Buzzer_on(int hz){
+	Select_Item(ITEM_NONE);
+	//Set COM Register as PWM (Top = ICR)
+	//Set OCR as duty ratio 50%
+}
+void Buzzer_off(){
+	//Set COM register as None
 }
