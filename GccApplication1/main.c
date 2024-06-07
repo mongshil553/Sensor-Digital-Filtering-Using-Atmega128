@@ -34,8 +34,9 @@ void ElectroMagnet_On();
 void ElectroMagnet_Off();
 
 //Sensor Check
-void Is_PSD_Interrupt();
-void Is_Shock_Interrupt();
+void If_PSD_Detected();
+void If_Shock_Detected();
+void If_Fire_Detected();
 
 
 //**** Debug **************************************************************************************************************************************************//
@@ -550,7 +551,7 @@ ISR(TIMER0_OVF_vect){ //Use Timer0 for collecting sensor value
 		case 0x05:
 		
 		Read_Shock();
-		Is_Shock_Interrupt(); //Shock Interrupt를 걸까말까
+		If_Shock_Detected(); //Shock Interrupt를 걸까말까
 		idx=0x06;
 		
 		break;
@@ -558,13 +559,14 @@ ISR(TIMER0_OVF_vect){ //Use Timer0 for collecting sensor value
 		case 0x06:
 		
 		Read_Fire();
+		If_Fire_Detected();
 		idx = 0x07;
 		break;
 		
 		case 0x07:
 		
 		Read_PSD();
-		Is_PSD_Interrupt();
+		If_PSD_Detected();
 		idx = 0x01;
 		break;
 	}
@@ -588,12 +590,13 @@ void ElectroMagnet_Off(){
 	//PORTC = 0xFF;
 }
 
-void Is_Shock_Interrupt(){
+void If_Shock_Detected(){
 	if(shk_sensor_val <= 900)
 		shk_detected = 0x01;
+
 }
 
-void Is_PSD_Interrupt(){
+void If_PSD_Detected(){
 	if ( (psd_sensor_val> 520)) {
 		//PORTC |= 0x20; //0010 0000
 		//PORTA &= 0xBF;
@@ -605,4 +608,40 @@ void Is_PSD_Interrupt(){
 		Servo_Allowed = 0x01;
 	}
 	
+}
+
+void If_Fire_Detected(){
+	static char i = 0; //increment
+	static char s = 0x00; //state
+	static char was = 0x00; //was detected
+	
+	if(fire_sensor_val >= 500){
+		
+		if(!was){ //was not detected -> turn buzzer on
+			was = 0x01;
+			switch(s){
+				case 0x00:
+				Buzzer_on(50);
+				break;
+				case 0x01:
+				Buzzer_on(70);
+			}
+		}
+		else if(++i >= 20){
+			if(s) s = 0x01;
+			else s = 0x00;
+			
+			switch(s){
+				case 0x00:
+				Buzzer_on(50);
+				break;
+				case 0x01:
+				Buzzer_on(70);
+			}
+		}
+	}
+	else{
+		was = 0x00;
+		Buzzer_off();
+	}
 }

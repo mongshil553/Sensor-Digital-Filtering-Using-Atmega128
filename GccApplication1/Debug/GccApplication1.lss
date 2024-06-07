@@ -3,31 +3,31 @@ GccApplication1.elf:     file format elf32-avr
 
 Sections:
 Idx Name          Size      VMA       LMA       File off  Algn
-  0 .data         00000002  00800100  000007fa  0000088e  2**0
+  0 .data         00000002  00800100  000008a8  0000093c  2**0
                   CONTENTS, ALLOC, LOAD, DATA
-  1 .text         000007fa  00000000  00000000  00000094  2**1
+  1 .text         000008a8  00000000  00000000  00000094  2**1
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  2 .bss          00000030  00800102  00800102  00000890  2**0
+  2 .bss          00000033  00800102  00800102  0000093e  2**0
                   ALLOC
-  3 .comment      00000030  00000000  00000000  00000890  2**0
+  3 .comment      00000030  00000000  00000000  0000093e  2**0
                   CONTENTS, READONLY
-  4 .note.gnu.avr.deviceinfo 0000003c  00000000  00000000  000008c0  2**2
+  4 .note.gnu.avr.deviceinfo 0000003c  00000000  00000000  00000970  2**2
                   CONTENTS, READONLY
-  5 .debug_aranges 00000198  00000000  00000000  000008fc  2**0
+  5 .debug_aranges 000001a0  00000000  00000000  000009ac  2**0
                   CONTENTS, READONLY, DEBUGGING
-  6 .debug_info   00001879  00000000  00000000  00000a94  2**0
+  6 .debug_info   00001956  00000000  00000000  00000b4c  2**0
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_abbrev 00000cac  00000000  00000000  0000230d  2**0
+  7 .debug_abbrev 00000cc4  00000000  00000000  000024a2  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_line   00000e00  00000000  00000000  00002fb9  2**0
+  8 .debug_line   00000e83  00000000  00000000  00003166  2**0
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_frame  000003c8  00000000  00000000  00003dbc  2**2
+  9 .debug_frame  000003d8  00000000  00000000  00003fec  2**2
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_str    000007dd  00000000  00000000  00004184  2**0
+ 10 .debug_str    000007ec  00000000  00000000  000043c4  2**0
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_loc    000007f7  00000000  00000000  00004961  2**0
+ 11 .debug_loc    000007f7  00000000  00000000  00004bb0  2**0
                   CONTENTS, READONLY, DEBUGGING
- 12 .debug_ranges 00000158  00000000  00000000  00005158  2**0
+ 12 .debug_ranges 00000160  00000000  00000000  000053a7  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -49,7 +49,7 @@ Disassembly of section .text:
   1a:	00 00       	nop
   1c:	54 c0       	rjmp	.+168    	; 0xc6 <__bad_interrupt>
   1e:	00 00       	nop
-  20:	eb c1       	rjmp	.+982    	; 0x3f8 <__vector_8>
+  20:	00 c2       	rjmp	.+1024   	; 0x422 <__vector_8>
   22:	00 00       	nop
   24:	50 c0       	rjmp	.+160    	; 0xc6 <__bad_interrupt>
   26:	00 00       	nop
@@ -65,7 +65,7 @@ Disassembly of section .text:
   3a:	00 00       	nop
   3c:	44 c0       	rjmp	.+136    	; 0xc6 <__bad_interrupt>
   3e:	00 00       	nop
-  40:	b4 c2       	rjmp	.+1384   	; 0x5aa <__vector_16>
+  40:	0a c3       	rjmp	.+1556   	; 0x656 <__vector_16>
   42:	00 00       	nop
   44:	40 c0       	rjmp	.+128    	; 0xc6 <__bad_interrupt>
   46:	00 00       	nop
@@ -116,8 +116,8 @@ Disassembly of section .text:
   98:	11 e0       	ldi	r17, 0x01	; 1
   9a:	a0 e0       	ldi	r26, 0x00	; 0
   9c:	b1 e0       	ldi	r27, 0x01	; 1
-  9e:	ea ef       	ldi	r30, 0xFA	; 250
-  a0:	f7 e0       	ldi	r31, 0x07	; 7
+  9e:	e8 ea       	ldi	r30, 0xA8	; 168
+  a0:	f8 e0       	ldi	r31, 0x08	; 8
   a2:	00 e0       	ldi	r16, 0x00	; 0
   a4:	0b bf       	out	0x3b, r16	; 59
   a6:	02 c0       	rjmp	.+4      	; 0xac <__do_copy_data+0x14>
@@ -137,11 +137,11 @@ Disassembly of section .text:
   ba:	1d 92       	st	X+, r1
 
 000000bc <.do_clear_bss_start>:
-  bc:	a2 33       	cpi	r26, 0x32	; 50
+  bc:	a5 33       	cpi	r26, 0x35	; 53
   be:	b2 07       	cpc	r27, r18
   c0:	e1 f7       	brne	.-8      	; 0xba <.do_clear_bss_loop>
-  c2:	cb d1       	rcall	.+918    	; 0x45a <main>
-  c4:	98 c3       	rjmp	.+1840   	; 0x7f6 <_exit>
+  c2:	e0 d1       	rcall	.+960    	; 0x484 <main>
+  c4:	ef c3       	rjmp	.+2014   	; 0x8a4 <_exit>
 
 000000c6 <__bad_interrupt>:
   c6:	9c cf       	rjmp	.-200    	; 0x0 <__vectors>
@@ -170,7 +170,7 @@ Disassembly of section .text:
   f8:	0c f0       	brlt	.+2      	; 0xfc <BT_Receive+0xa>
   fa:	87 c0       	rjmp	.+270    	; 0x20a <BT_Receive+0x118>
   fc:	80 91 9c 00 	lds	r24, 0x009C	; 0x80009c <__TEXT_REGION_LENGTH__+0x7e009c>
- 100:	80 93 03 01 	sts	0x0103, r24	; 0x800103 <rdata>
+ 100:	80 93 06 01 	sts	0x0106, r24	; 0x800106 <rdata>
  104:	80 91 02 01 	lds	r24, 0x0102	; 0x800102 <__data_end>
  108:	82 30       	cpi	r24, 0x02	; 2
  10a:	b1 f0       	breq	.+44     	; 0x138 <BT_Receive+0x46>
@@ -179,27 +179,27 @@ Disassembly of section .text:
  110:	81 30       	cpi	r24, 0x01	; 1
  112:	09 f0       	breq	.+2      	; 0x116 <BT_Receive+0x24>
  114:	54 c0       	rjmp	.+168    	; 0x1be <BT_Receive+0xcc>
- 116:	80 91 03 01 	lds	r24, 0x0103	; 0x800103 <rdata>
+ 116:	80 91 06 01 	lds	r24, 0x0106	; 0x800106 <rdata>
  11a:	8e 32       	cpi	r24, 0x2E	; 46
  11c:	39 f4       	brne	.+14     	; 0x12c <BT_Receive+0x3a>
  11e:	10 92 02 01 	sts	0x0102, r1	; 0x800102 <__data_end>
- 122:	80 91 03 01 	lds	r24, 0x0103	; 0x800103 <rdata>
+ 122:	80 91 06 01 	lds	r24, 0x0106	; 0x800106 <rdata>
  126:	de df       	rcall	.-68     	; 0xe4 <BT_send>
  128:	80 e0       	ldi	r24, 0x00	; 0
  12a:	08 95       	ret
- 12c:	80 91 03 01 	lds	r24, 0x0103	; 0x800103 <rdata>
+ 12c:	80 91 06 01 	lds	r24, 0x0106	; 0x800106 <rdata>
  130:	80 53       	subi	r24, 0x30	; 48
- 132:	80 93 04 01 	sts	0x0104, r24	; 0x800104 <marble>
+ 132:	80 93 07 01 	sts	0x0107, r24	; 0x800107 <marble>
  136:	43 c0       	rjmp	.+134    	; 0x1be <BT_Receive+0xcc>
- 138:	80 91 03 01 	lds	r24, 0x0103	; 0x800103 <rdata>
+ 138:	80 91 06 01 	lds	r24, 0x0106	; 0x800106 <rdata>
  13c:	8e 32       	cpi	r24, 0x2E	; 46
  13e:	39 f4       	brne	.+14     	; 0x14e <BT_Receive+0x5c>
  140:	10 92 02 01 	sts	0x0102, r1	; 0x800102 <__data_end>
- 144:	80 91 03 01 	lds	r24, 0x0103	; 0x800103 <rdata>
+ 144:	80 91 06 01 	lds	r24, 0x0106	; 0x800106 <rdata>
  148:	cd df       	rcall	.-102    	; 0xe4 <BT_send>
  14a:	80 e0       	ldi	r24, 0x00	; 0
  14c:	08 95       	ret
- 14e:	e4 e0       	ldi	r30, 0x04	; 4
+ 14e:	e7 e0       	ldi	r30, 0x07	; 7
  150:	f1 e0       	ldi	r31, 0x01	; 1
  152:	81 81       	ldd	r24, Z+1	; 0x01
  154:	92 81       	ldd	r25, Z+2	; 0x02
@@ -214,22 +214,22 @@ Disassembly of section .text:
  166:	99 1f       	adc	r25, r25
  168:	82 0f       	add	r24, r18
  16a:	93 1f       	adc	r25, r19
- 16c:	20 91 03 01 	lds	r18, 0x0103	; 0x800103 <rdata>
+ 16c:	20 91 06 01 	lds	r18, 0x0106	; 0x800106 <rdata>
  170:	82 0f       	add	r24, r18
  172:	91 1d       	adc	r25, r1
  174:	c0 97       	sbiw	r24, 0x30	; 48
  176:	92 83       	std	Z+2, r25	; 0x02
  178:	81 83       	std	Z+1, r24	; 0x01
  17a:	21 c0       	rjmp	.+66     	; 0x1be <BT_Receive+0xcc>
- 17c:	80 91 03 01 	lds	r24, 0x0103	; 0x800103 <rdata>
+ 17c:	80 91 06 01 	lds	r24, 0x0106	; 0x800106 <rdata>
  180:	8e 32       	cpi	r24, 0x2E	; 46
  182:	39 f4       	brne	.+14     	; 0x192 <BT_Receive+0xa0>
  184:	10 92 02 01 	sts	0x0102, r1	; 0x800102 <__data_end>
- 188:	80 91 03 01 	lds	r24, 0x0103	; 0x800103 <rdata>
+ 188:	80 91 06 01 	lds	r24, 0x0106	; 0x800106 <rdata>
  18c:	ab df       	rcall	.-170    	; 0xe4 <BT_send>
  18e:	81 e0       	ldi	r24, 0x01	; 1
  190:	08 95       	ret
- 192:	e4 e0       	ldi	r30, 0x04	; 4
+ 192:	e7 e0       	ldi	r30, 0x07	; 7
  194:	f1 e0       	ldi	r31, 0x01	; 1
  196:	83 81       	ldd	r24, Z+3	; 0x03
  198:	94 81       	ldd	r25, Z+4	; 0x04
@@ -244,35 +244,35 @@ Disassembly of section .text:
  1aa:	99 1f       	adc	r25, r25
  1ac:	82 0f       	add	r24, r18
  1ae:	93 1f       	adc	r25, r19
- 1b0:	20 91 03 01 	lds	r18, 0x0103	; 0x800103 <rdata>
+ 1b0:	20 91 06 01 	lds	r18, 0x0106	; 0x800106 <rdata>
  1b4:	82 0f       	add	r24, r18
  1b6:	91 1d       	adc	r25, r1
  1b8:	c0 97       	sbiw	r24, 0x30	; 48
  1ba:	94 83       	std	Z+4, r25	; 0x04
  1bc:	83 83       	std	Z+3, r24	; 0x03
- 1be:	80 91 03 01 	lds	r24, 0x0103	; 0x800103 <rdata>
+ 1be:	80 91 06 01 	lds	r24, 0x0106	; 0x800106 <rdata>
  1c2:	83 32       	cpi	r24, 0x23	; 35
  1c4:	31 f4       	brne	.+12     	; 0x1d2 <BT_Receive+0xe0>
- 1c6:	10 92 04 01 	sts	0x0104, r1	; 0x800104 <marble>
+ 1c6:	10 92 07 01 	sts	0x0107, r1	; 0x800107 <marble>
  1ca:	81 e0       	ldi	r24, 0x01	; 1
  1cc:	80 93 02 01 	sts	0x0102, r24	; 0x800102 <__data_end>
  1d0:	17 c0       	rjmp	.+46     	; 0x200 <BT_Receive+0x10e>
- 1d2:	80 91 03 01 	lds	r24, 0x0103	; 0x800103 <rdata>
+ 1d2:	80 91 06 01 	lds	r24, 0x0106	; 0x800106 <rdata>
  1d6:	81 32       	cpi	r24, 0x21	; 33
  1d8:	41 f4       	brne	.+16     	; 0x1ea <BT_Receive+0xf8>
- 1da:	10 92 06 01 	sts	0x0106, r1	; 0x800106 <marble+0x2>
- 1de:	10 92 05 01 	sts	0x0105, r1	; 0x800105 <marble+0x1>
+ 1da:	10 92 09 01 	sts	0x0109, r1	; 0x800109 <marble+0x2>
+ 1de:	10 92 08 01 	sts	0x0108, r1	; 0x800108 <marble+0x1>
  1e2:	82 e0       	ldi	r24, 0x02	; 2
  1e4:	80 93 02 01 	sts	0x0102, r24	; 0x800102 <__data_end>
  1e8:	0b c0       	rjmp	.+22     	; 0x200 <BT_Receive+0x10e>
- 1ea:	80 91 03 01 	lds	r24, 0x0103	; 0x800103 <rdata>
+ 1ea:	80 91 06 01 	lds	r24, 0x0106	; 0x800106 <rdata>
  1ee:	8a 32       	cpi	r24, 0x2A	; 42
  1f0:	39 f4       	brne	.+14     	; 0x200 <BT_Receive+0x10e>
- 1f2:	10 92 08 01 	sts	0x0108, r1	; 0x800108 <marble+0x4>
- 1f6:	10 92 07 01 	sts	0x0107, r1	; 0x800107 <marble+0x3>
+ 1f2:	10 92 0b 01 	sts	0x010B, r1	; 0x80010b <marble+0x4>
+ 1f6:	10 92 0a 01 	sts	0x010A, r1	; 0x80010a <marble+0x3>
  1fa:	83 e0       	ldi	r24, 0x03	; 3
  1fc:	80 93 02 01 	sts	0x0102, r24	; 0x800102 <__data_end>
- 200:	80 91 03 01 	lds	r24, 0x0103	; 0x800103 <rdata>
+ 200:	80 91 06 01 	lds	r24, 0x0106	; 0x800106 <rdata>
  204:	6f df       	rcall	.-290    	; 0xe4 <BT_send>
  206:	80 e0       	ldi	r24, 0x00	; 0
  208:	08 95       	ret
@@ -305,22 +305,22 @@ void Servo_Go_Marble(){
  22a:	40 e0       	ldi	r20, 0x00	; 0
  22c:	50 e0       	ldi	r21, 0x00	; 0
  22e:	21 c0       	rjmp	.+66     	; 0x272 <Servo_Act+0x48>
- 230:	20 91 19 01 	lds	r18, 0x0119	; 0x800119 <Servo_Allowed>
+ 230:	20 91 1c 01 	lds	r18, 0x011C	; 0x80011c <Servo_Allowed>
  234:	22 23       	and	r18, r18
  236:	b9 f0       	breq	.+46     	; 0x266 <Servo_Act+0x3c>
  238:	4f 5f       	subi	r20, 0xFF	; 255
  23a:	5f 4f       	sbci	r21, 0xFF	; 255
- 23c:	20 91 1e 01 	lds	r18, 0x011E	; 0x80011e <Servo_increment_threshold>
- 240:	30 91 1f 01 	lds	r19, 0x011F	; 0x80011f <Servo_increment_threshold+0x1>
+ 23c:	20 91 21 01 	lds	r18, 0x0121	; 0x800121 <Servo_increment_threshold>
+ 240:	30 91 22 01 	lds	r19, 0x0122	; 0x800122 <Servo_increment_threshold+0x1>
  244:	42 17       	cp	r20, r18
  246:	53 07       	cpc	r21, r19
  248:	71 f4       	brne	.+28     	; 0x266 <Servo_Act+0x3c>
- 24a:	20 91 20 01 	lds	r18, 0x0120	; 0x800120 <Servo_step>
- 24e:	30 91 21 01 	lds	r19, 0x0121	; 0x800121 <Servo_step+0x1>
+ 24a:	20 91 23 01 	lds	r18, 0x0123	; 0x800123 <Servo_step>
+ 24e:	30 91 24 01 	lds	r19, 0x0124	; 0x800124 <Servo_step+0x1>
  252:	82 0f       	add	r24, r18
  254:	93 1f       	adc	r25, r19
- 256:	90 93 1d 01 	sts	0x011D, r25	; 0x80011d <Servo_pos+0x1>
- 25a:	80 93 1c 01 	sts	0x011C, r24	; 0x80011c <Servo_pos>
+ 256:	90 93 20 01 	sts	0x0120, r25	; 0x800120 <Servo_pos+0x1>
+ 25a:	80 93 1f 01 	sts	0x011F, r24	; 0x80011f <Servo_pos>
  25e:	9b bd       	out	0x2b, r25	; 43
  260:	8a bd       	out	0x2a, r24	; 42
  262:	40 e0       	ldi	r20, 0x00	; 0
@@ -331,18 +331,18 @@ void Servo_Go_Marble(){
  26c:	f1 f7       	brne	.-4      	; 0x26a <Servo_Act+0x40>
  26e:	00 c0       	rjmp	.+0      	; 0x270 <Servo_Act+0x46>
  270:	00 00       	nop
- 272:	80 91 1c 01 	lds	r24, 0x011C	; 0x80011c <Servo_pos>
- 276:	90 91 1d 01 	lds	r25, 0x011D	; 0x80011d <Servo_pos+0x1>
- 27a:	20 91 17 01 	lds	r18, 0x0117	; 0x800117 <Servo_target>
- 27e:	30 91 18 01 	lds	r19, 0x0118	; 0x800118 <Servo_target+0x1>
+ 272:	80 91 1f 01 	lds	r24, 0x011F	; 0x80011f <Servo_pos>
+ 276:	90 91 20 01 	lds	r25, 0x0120	; 0x800120 <Servo_pos+0x1>
+ 27a:	20 91 1a 01 	lds	r18, 0x011A	; 0x80011a <Servo_target>
+ 27e:	30 91 1b 01 	lds	r19, 0x011B	; 0x80011b <Servo_target+0x1>
  282:	82 17       	cp	r24, r18
  284:	93 07       	cpc	r25, r19
  286:	a1 f6       	brne	.-88     	; 0x230 <Servo_Act+0x6>
  288:	08 95       	ret
 
 0000028a <Servo_Go_Home>:
- 28a:	80 91 1c 01 	lds	r24, 0x011C	; 0x80011c <Servo_pos>
- 28e:	90 91 1d 01 	lds	r25, 0x011D	; 0x80011d <Servo_pos+0x1>
+ 28a:	80 91 1f 01 	lds	r24, 0x011F	; 0x80011f <Servo_pos>
+ 28e:	90 91 20 01 	lds	r25, 0x0120	; 0x800120 <Servo_pos+0x1>
  292:	9b bd       	out	0x2b, r25	; 43
  294:	8a bd       	out	0x2a, r24	; 42
  296:	82 e0       	ldi	r24, 0x02	; 2
@@ -351,30 +351,30 @@ void Servo_Go_Marble(){
  29c:	b8 df       	rcall	.-144    	; 0x20e <Select_Item>
  29e:	82 e8       	ldi	r24, 0x82	; 130
  2a0:	90 e0       	ldi	r25, 0x00	; 0
- 2a2:	90 93 18 01 	sts	0x0118, r25	; 0x800118 <Servo_target+0x1>
- 2a6:	80 93 17 01 	sts	0x0117, r24	; 0x800117 <Servo_target>
- 2aa:	20 91 1c 01 	lds	r18, 0x011C	; 0x80011c <Servo_pos>
- 2ae:	30 91 1d 01 	lds	r19, 0x011D	; 0x80011d <Servo_pos+0x1>
- 2b2:	80 91 17 01 	lds	r24, 0x0117	; 0x800117 <Servo_target>
- 2b6:	90 91 18 01 	lds	r25, 0x0118	; 0x800118 <Servo_target+0x1>
+ 2a2:	90 93 1b 01 	sts	0x011B, r25	; 0x80011b <Servo_target+0x1>
+ 2a6:	80 93 1a 01 	sts	0x011A, r24	; 0x80011a <Servo_target>
+ 2aa:	20 91 1f 01 	lds	r18, 0x011F	; 0x80011f <Servo_pos>
+ 2ae:	30 91 20 01 	lds	r19, 0x0120	; 0x800120 <Servo_pos+0x1>
+ 2b2:	80 91 1a 01 	lds	r24, 0x011A	; 0x80011a <Servo_target>
+ 2b6:	90 91 1b 01 	lds	r25, 0x011B	; 0x80011b <Servo_target+0x1>
  2ba:	28 17       	cp	r18, r24
  2bc:	39 07       	cpc	r19, r25
  2be:	38 f0       	brcs	.+14     	; 0x2ce <Servo_Go_Home+0x44>
  2c0:	8f ef       	ldi	r24, 0xFF	; 255
  2c2:	9f ef       	ldi	r25, 0xFF	; 255
- 2c4:	90 93 21 01 	sts	0x0121, r25	; 0x800121 <Servo_step+0x1>
- 2c8:	80 93 20 01 	sts	0x0120, r24	; 0x800120 <Servo_step>
+ 2c4:	90 93 24 01 	sts	0x0124, r25	; 0x800124 <Servo_step+0x1>
+ 2c8:	80 93 23 01 	sts	0x0123, r24	; 0x800123 <Servo_step>
  2cc:	06 c0       	rjmp	.+12     	; 0x2da <Servo_Go_Home+0x50>
  2ce:	81 e0       	ldi	r24, 0x01	; 1
  2d0:	90 e0       	ldi	r25, 0x00	; 0
- 2d2:	90 93 21 01 	sts	0x0121, r25	; 0x800121 <Servo_step+0x1>
- 2d6:	80 93 20 01 	sts	0x0120, r24	; 0x800120 <Servo_step>
+ 2d2:	90 93 24 01 	sts	0x0124, r25	; 0x800124 <Servo_step+0x1>
+ 2d6:	80 93 23 01 	sts	0x0123, r24	; 0x800123 <Servo_step>
  2da:	a7 cf       	rjmp	.-178    	; 0x22a <Servo_Act>
  2dc:	08 95       	ret
 
 000002de <Servo_Go_Box>:
- 2de:	80 91 1c 01 	lds	r24, 0x011C	; 0x80011c <Servo_pos>
- 2e2:	90 91 1d 01 	lds	r25, 0x011D	; 0x80011d <Servo_pos+0x1>
+ 2de:	80 91 1f 01 	lds	r24, 0x011F	; 0x80011f <Servo_pos>
+ 2e2:	90 91 20 01 	lds	r25, 0x0120	; 0x800120 <Servo_pos+0x1>
  2e6:	9b bd       	out	0x2b, r25	; 43
  2e8:	8a bd       	out	0x2a, r24	; 42
  2ea:	82 e0       	ldi	r24, 0x02	; 2
@@ -383,24 +383,24 @@ void Servo_Go_Marble(){
  2f0:	8e df       	rcall	.-228    	; 0x20e <Select_Item>
  2f2:	8c e6       	ldi	r24, 0x6C	; 108
  2f4:	92 e0       	ldi	r25, 0x02	; 2
- 2f6:	90 93 18 01 	sts	0x0118, r25	; 0x800118 <Servo_target+0x1>
- 2fa:	80 93 17 01 	sts	0x0117, r24	; 0x800117 <Servo_target>
- 2fe:	20 91 1c 01 	lds	r18, 0x011C	; 0x80011c <Servo_pos>
- 302:	30 91 1d 01 	lds	r19, 0x011D	; 0x80011d <Servo_pos+0x1>
- 306:	80 91 17 01 	lds	r24, 0x0117	; 0x800117 <Servo_target>
- 30a:	90 91 18 01 	lds	r25, 0x0118	; 0x800118 <Servo_target+0x1>
+ 2f6:	90 93 1b 01 	sts	0x011B, r25	; 0x80011b <Servo_target+0x1>
+ 2fa:	80 93 1a 01 	sts	0x011A, r24	; 0x80011a <Servo_target>
+ 2fe:	20 91 1f 01 	lds	r18, 0x011F	; 0x80011f <Servo_pos>
+ 302:	30 91 20 01 	lds	r19, 0x0120	; 0x800120 <Servo_pos+0x1>
+ 306:	80 91 1a 01 	lds	r24, 0x011A	; 0x80011a <Servo_target>
+ 30a:	90 91 1b 01 	lds	r25, 0x011B	; 0x80011b <Servo_target+0x1>
  30e:	28 17       	cp	r18, r24
  310:	39 07       	cpc	r19, r25
  312:	38 f0       	brcs	.+14     	; 0x322 <Servo_Go_Box+0x44>
  314:	8f ef       	ldi	r24, 0xFF	; 255
  316:	9f ef       	ldi	r25, 0xFF	; 255
- 318:	90 93 21 01 	sts	0x0121, r25	; 0x800121 <Servo_step+0x1>
- 31c:	80 93 20 01 	sts	0x0120, r24	; 0x800120 <Servo_step>
+ 318:	90 93 24 01 	sts	0x0124, r25	; 0x800124 <Servo_step+0x1>
+ 31c:	80 93 23 01 	sts	0x0123, r24	; 0x800123 <Servo_step>
  320:	06 c0       	rjmp	.+12     	; 0x32e <Servo_Go_Box+0x50>
  322:	81 e0       	ldi	r24, 0x01	; 1
  324:	90 e0       	ldi	r25, 0x00	; 0
- 326:	90 93 21 01 	sts	0x0121, r25	; 0x800121 <Servo_step+0x1>
- 32a:	80 93 20 01 	sts	0x0120, r24	; 0x800120 <Servo_step>
+ 326:	90 93 24 01 	sts	0x0124, r25	; 0x800124 <Servo_step+0x1>
+ 32a:	80 93 23 01 	sts	0x0123, r24	; 0x800123 <Servo_step>
  32e:	7d cf       	rjmp	.-262    	; 0x22a <Servo_Act>
  330:	08 95       	ret
 
@@ -410,8 +410,8 @@ void Servo_Goto(unsigned short pos){
  334:	df 93       	push	r29
  336:	ec 01       	movw	r28, r24
 	OCR1A = Servo_pos;
- 338:	80 91 1c 01 	lds	r24, 0x011C	; 0x80011c <Servo_pos>
- 33c:	90 91 1d 01 	lds	r25, 0x011D	; 0x80011d <Servo_pos+0x1>
+ 338:	80 91 1f 01 	lds	r24, 0x011F	; 0x80011f <Servo_pos>
+ 33c:	90 91 20 01 	lds	r25, 0x0120	; 0x800120 <Servo_pos+0x1>
  340:	9b bd       	out	0x2b, r25	; 43
  342:	8a bd       	out	0x2a, r24	; 42
 	Select_Item(ITEM_SERVO);
@@ -427,27 +427,27 @@ inline void Servo_Set_Target(unsigned short val){
  34a:	61 df       	rcall	.-318    	; 0x20e <Select_Item>
 	
 	Servo_target = val;
- 34c:	d0 93 18 01 	sts	0x0118, r29	; 0x800118 <Servo_target+0x1>
- 350:	c0 93 17 01 	sts	0x0117, r28	; 0x800117 <Servo_target>
+ 34c:	d0 93 1b 01 	sts	0x011B, r29	; 0x80011b <Servo_target+0x1>
+ 350:	c0 93 1a 01 	sts	0x011A, r28	; 0x80011a <Servo_target>
 	
 	if(Servo_pos >= Servo_target) Servo_step = -1;
- 354:	20 91 1c 01 	lds	r18, 0x011C	; 0x80011c <Servo_pos>
- 358:	30 91 1d 01 	lds	r19, 0x011D	; 0x80011d <Servo_pos+0x1>
- 35c:	80 91 17 01 	lds	r24, 0x0117	; 0x800117 <Servo_target>
- 360:	90 91 18 01 	lds	r25, 0x0118	; 0x800118 <Servo_target+0x1>
+ 354:	20 91 1f 01 	lds	r18, 0x011F	; 0x80011f <Servo_pos>
+ 358:	30 91 20 01 	lds	r19, 0x0120	; 0x800120 <Servo_pos+0x1>
+ 35c:	80 91 1a 01 	lds	r24, 0x011A	; 0x80011a <Servo_target>
+ 360:	90 91 1b 01 	lds	r25, 0x011B	; 0x80011b <Servo_target+0x1>
  364:	28 17       	cp	r18, r24
  366:	39 07       	cpc	r19, r25
  368:	38 f0       	brcs	.+14     	; 0x378 <Servo_Goto+0x46>
  36a:	8f ef       	ldi	r24, 0xFF	; 255
  36c:	9f ef       	ldi	r25, 0xFF	; 255
- 36e:	90 93 21 01 	sts	0x0121, r25	; 0x800121 <Servo_step+0x1>
- 372:	80 93 20 01 	sts	0x0120, r24	; 0x800120 <Servo_step>
+ 36e:	90 93 24 01 	sts	0x0124, r25	; 0x800124 <Servo_step+0x1>
+ 372:	80 93 23 01 	sts	0x0123, r24	; 0x800123 <Servo_step>
  376:	06 c0       	rjmp	.+12     	; 0x384 <Servo_Goto+0x52>
 	else Servo_step = 1;
  378:	81 e0       	ldi	r24, 0x01	; 1
  37a:	90 e0       	ldi	r25, 0x00	; 0
- 37c:	90 93 21 01 	sts	0x0121, r25	; 0x800121 <Servo_step+0x1>
- 380:	80 93 20 01 	sts	0x0120, r24	; 0x800120 <Servo_step>
+ 37c:	90 93 24 01 	sts	0x0124, r25	; 0x800124 <Servo_step+0x1>
+ 380:	80 93 23 01 	sts	0x0123, r24	; 0x800123 <Servo_step>
 }
 void Servo_Goto(unsigned short pos){
 	OCR1A = Servo_pos;
@@ -468,8 +468,8 @@ void Servo_Goto(unsigned short pos){
 void Servo_Set_Speed(char sp){
 	Servo_increment_threshold = sp;
  38c:	90 e0       	ldi	r25, 0x00	; 0
- 38e:	90 93 1f 01 	sts	0x011F, r25	; 0x80011f <Servo_increment_threshold+0x1>
- 392:	80 93 1e 01 	sts	0x011E, r24	; 0x80011e <Servo_increment_threshold>
+ 38e:	90 93 22 01 	sts	0x0122, r25	; 0x800122 <Servo_increment_threshold+0x1>
+ 392:	80 93 21 01 	sts	0x0121, r24	; 0x800121 <Servo_increment_threshold>
  396:	08 95       	ret
 
 00000398 <RED_LED_On>:
@@ -547,906 +547,1032 @@ void BLUE_LED_On(unsigned int p){
  3f4:	cf 91       	pop	r28
  3f6:	08 95       	ret
 
-000003f8 <__vector_8>:
+000003f8 <Buzzer_on>:
+
+//=============== Buzzer =================//
+void Buzzer_on(int key){
+ 3f8:	cf 93       	push	r28
+ 3fa:	df 93       	push	r29
+ 3fc:	ec 01       	movw	r28, r24
+	Select_Item(ITEM_NONE);
+ 3fe:	83 e0       	ldi	r24, 0x03	; 3
+ 400:	06 df       	rcall	.-500    	; 0x20e <Select_Item>
+	ICR1 = key;
+ 402:	d7 bd       	out	0x27, r29	; 39
+ 404:	c6 bd       	out	0x26, r28	; 38
+	OCR1A = ICR1 / 2;
+ 406:	86 b5       	in	r24, 0x26	; 38
+ 408:	97 b5       	in	r25, 0x27	; 39
+ 40a:	96 95       	lsr	r25
+ 40c:	87 95       	ror	r24
+ 40e:	9b bd       	out	0x2b, r25	; 43
+ 410:	8a bd       	out	0x2a, r24	; 42
+	Select_Item(ITEM_SPEAKER);
+ 412:	8e e0       	ldi	r24, 0x0E	; 14
+ 414:	fc de       	rcall	.-520    	; 0x20e <Select_Item>
+}
+ 416:	df 91       	pop	r29
+ 418:	cf 91       	pop	r28
+ 41a:	08 95       	ret
+
+0000041c <Buzzer_off>:
+void Buzzer_off(){
+	Select_Item(ITEM_NONE);
+ 41c:	83 e0       	ldi	r24, 0x03	; 3
+ 41e:	f7 ce       	rjmp	.-530    	; 0x20e <Select_Item>
+ 420:	08 95       	ret
+
+00000422 <__vector_8>:
 		}
     }
 }
 
 ISR(INT7_vect)
 {
- 3f8:	1f 92       	push	r1
- 3fa:	0f 92       	push	r0
- 3fc:	0f b6       	in	r0, 0x3f	; 63
- 3fe:	0f 92       	push	r0
- 400:	11 24       	eor	r1, r1
+ 422:	1f 92       	push	r1
+ 424:	0f 92       	push	r0
+ 426:	0f b6       	in	r0, 0x3f	; 63
+ 428:	0f 92       	push	r0
+ 42a:	11 24       	eor	r1, r1
 	//BT_send('0');
 	//GREEN_LED_On(500);
 	
 	//Select_Item(ITEM_NONE);
 	//Servo_Allowed = 0x00;
 }
- 402:	0f 90       	pop	r0
- 404:	0f be       	out	0x3f, r0	; 63
- 406:	0f 90       	pop	r0
- 408:	1f 90       	pop	r1
- 40a:	18 95       	reti
+ 42c:	0f 90       	pop	r0
+ 42e:	0f be       	out	0x3f, r0	; 63
+ 430:	0f 90       	pop	r0
+ 432:	1f 90       	pop	r1
+ 434:	18 95       	reti
 
-0000040c <timer0_init>:
+00000436 <timer0_init>:
 
 #endif
 //************************************************************************************************************************************************************//
 
 void timer0_init(void) {
 	TCCR0 |= (1 << CS02) |(1<<CS01)| (1 << CS00); // 분주비 1024
- 40c:	83 b7       	in	r24, 0x33	; 51
- 40e:	87 60       	ori	r24, 0x07	; 7
- 410:	83 bf       	out	0x33, r24	; 51
+ 436:	83 b7       	in	r24, 0x33	; 51
+ 438:	87 60       	ori	r24, 0x07	; 7
+ 43a:	83 bf       	out	0x33, r24	; 51
 	TIMSK |= (1 << TOIE0); // 타이머0 오버플로우 인터럽트 허용
- 412:	87 b7       	in	r24, 0x37	; 55
- 414:	81 60       	ori	r24, 0x01	; 1
- 416:	87 bf       	out	0x37, r24	; 55
+ 43c:	87 b7       	in	r24, 0x37	; 55
+ 43e:	81 60       	ori	r24, 0x01	; 1
+ 440:	87 bf       	out	0x37, r24	; 55
 	TCNT0 = 0; // 타이머 카운터 초기화
- 418:	12 be       	out	0x32, r1	; 50
- 41a:	08 95       	ret
+ 442:	12 be       	out	0x32, r1	; 50
+ 444:	08 95       	ret
 
-0000041c <timer1_init>:
+00000446 <timer1_init>:
 }
 
 void timer1_init(){
 	TCCR1A=0x82;
- 41c:	82 e8       	ldi	r24, 0x82	; 130
- 41e:	8f bd       	out	0x2f, r24	; 47
+ 446:	82 e8       	ldi	r24, 0x82	; 130
+ 448:	8f bd       	out	0x2f, r24	; 47
 	TCCR1B=0x1b;
- 420:	8b e1       	ldi	r24, 0x1B	; 27
- 422:	8e bd       	out	0x2e, r24	; 46
+ 44a:	8b e1       	ldi	r24, 0x1B	; 27
+ 44c:	8e bd       	out	0x2e, r24	; 46
 
 	ICR1=4999;     //TOP
- 424:	87 e8       	ldi	r24, 0x87	; 135
- 426:	93 e1       	ldi	r25, 0x13	; 19
- 428:	97 bd       	out	0x27, r25	; 39
- 42a:	86 bd       	out	0x26, r24	; 38
- 42c:	08 95       	ret
+ 44e:	87 e8       	ldi	r24, 0x87	; 135
+ 450:	93 e1       	ldi	r25, 0x13	; 19
+ 452:	97 bd       	out	0x27, r25	; 39
+ 454:	86 bd       	out	0x26, r24	; 38
+ 456:	08 95       	ret
 
-0000042e <port_setup>:
+00000458 <port_setup>:
 }
 
 void port_setup(){
 	DDRA = 0xFF;
- 42e:	8f ef       	ldi	r24, 0xFF	; 255
- 430:	8a bb       	out	0x1a, r24	; 26
+ 458:	8f ef       	ldi	r24, 0xFF	; 255
+ 45a:	8a bb       	out	0x1a, r24	; 26
 	DDRD = 0x00;
- 432:	11 ba       	out	0x11, r1	; 17
+ 45c:	11 ba       	out	0x11, r1	; 17
 	DDRB = 0xFF;
- 434:	87 bb       	out	0x17, r24	; 23
+ 45e:	87 bb       	out	0x17, r24	; 23
 	DDRC = 0xFF;
- 436:	84 bb       	out	0x14, r24	; 20
+ 460:	84 bb       	out	0x14, r24	; 20
 	DDRF = 0x00;
- 438:	10 92 61 00 	sts	0x0061, r1	; 0x800061 <__TEXT_REGION_LENGTH__+0x7e0061>
+ 462:	10 92 61 00 	sts	0x0061, r1	; 0x800061 <__TEXT_REGION_LENGTH__+0x7e0061>
 	DDRE = 0x00;
- 43c:	12 b8       	out	0x02, r1	; 2
- 43e:	08 95       	ret
+ 466:	12 b8       	out	0x02, r1	; 2
+ 468:	08 95       	ret
 
-00000440 <adc_init>:
+0000046a <adc_init>:
 }
 
 //ADC 입력
 //ADC 초기화
 void adc_init(void){
 	ADMUX=(1<<REFS0); //외부 레퍼런스 접압을 기준 전압으로 선택, 우측정렬, 초기 입력핀은 0번
- 440:	80 e4       	ldi	r24, 0x40	; 64
- 442:	87 b9       	out	0x07, r24	; 7
+ 46a:	80 e4       	ldi	r24, 0x40	; 64
+ 46c:	87 b9       	out	0x07, r24	; 7
 	ADCSRA=(1<<ADEN)|(0<<ADIE)|(1<<ADPS2)|(1<<ADPS1)|(1<<ADPS0); //ADC enable, ADC interrupt enable 분주비 128
- 444:	87 e8       	ldi	r24, 0x87	; 135
- 446:	86 b9       	out	0x06, r24	; 6
- 448:	08 95       	ret
+ 46e:	87 e8       	ldi	r24, 0x87	; 135
+ 470:	86 b9       	out	0x06, r24	; 6
+ 472:	08 95       	ret
 
-0000044a <ElectroMagnet_On>:
+00000474 <ElectroMagnet_On>:
 	Sensor_show(); //LED A
 }
 
 void ElectroMagnet_On(){
 	//PORTC &= (0 << ElectroMagnet);
 	PORTC = (PORTC & ~(1<<ElectroMagnet)) | (0<<ElectroMagnet);
- 44a:	85 b3       	in	r24, 0x15	; 21
- 44c:	8f 77       	andi	r24, 0x7F	; 127
- 44e:	85 bb       	out	0x15, r24	; 21
- 450:	08 95       	ret
+ 474:	85 b3       	in	r24, 0x15	; 21
+ 476:	8f 77       	andi	r24, 0x7F	; 127
+ 478:	85 bb       	out	0x15, r24	; 21
+ 47a:	08 95       	ret
 
-00000452 <ElectroMagnet_Off>:
+0000047c <ElectroMagnet_Off>:
 	//PORTC = 0x7F;
 }
 
 void ElectroMagnet_Off(){
 	//PORTC |=  (1 << ElectroMagnet);
 	PORTC = (PORTC & ~(1<<ElectroMagnet)) | (1<<ElectroMagnet);
- 452:	85 b3       	in	r24, 0x15	; 21
- 454:	80 68       	ori	r24, 0x80	; 128
- 456:	85 bb       	out	0x15, r24	; 21
- 458:	08 95       	ret
+ 47c:	85 b3       	in	r24, 0x15	; 21
+ 47e:	80 68       	ori	r24, 0x80	; 128
+ 480:	85 bb       	out	0x15, r24	; 21
+ 482:	08 95       	ret
 
-0000045a <main>:
+00000484 <main>:
 //**** Not Debug *********************************************************************************************************************************************//
 #if DEBUG_ == 2
 
 int main(void)
 {	
 	port_setup(); //setup port
- 45a:	e9 df       	rcall	.-46     	; 0x42e <port_setup>
+ 484:	e9 df       	rcall	.-46     	; 0x458 <port_setup>
 	adc_init(); // ADC 초기화
- 45c:	f1 df       	rcall	.-30     	; 0x440 <adc_init>
+ 486:	f1 df       	rcall	.-30     	; 0x46a <adc_init>
 	timer0_init(); // 타이머0 초기화
- 45e:	d6 df       	rcall	.-84     	; 0x40c <timer0_init>
+ 488:	d6 df       	rcall	.-84     	; 0x436 <timer0_init>
 	timer1_init(); //타이머 초기화
- 460:	dd df       	rcall	.-70     	; 0x41c <timer1_init>
- 462:	32 de       	rcall	.-924    	; 0xc8 <init_BT>
+ 48a:	dd df       	rcall	.-70     	; 0x446 <timer1_init>
+ 48c:	1d de       	rcall	.-966    	; 0xc8 <init_BT>
 	
 	init_BT();	//Bluetooth Setup
- 464:	80 ec       	ldi	r24, 0xC0	; 192
+ 48e:	80 ec       	ldi	r24, 0xC0	; 192
 	
 	EIMSK = 0xC0; //1100 0000
- 466:	89 bf       	out	0x39, r24	; 57
+ 490:	89 bf       	out	0x39, r24	; 57
 	EICRB = 0xF0; //External Interrupt Control Register(Edge)
- 468:	80 ef       	ldi	r24, 0xF0	; 240
- 46a:	8a bf       	out	0x3a, r24	; 58
+ 492:	80 ef       	ldi	r24, 0xF0	; 240
+ 494:	8a bf       	out	0x3a, r24	; 58
 	
 	Reset_sensor_val(); //센서 변수 초기화
- 46c:	a5 d1       	rcall	.+842    	; 0x7b8 <Reset_sensor_val>
- 46e:	f1 df       	rcall	.-30     	; 0x452 <ElectroMagnet_Off>
+ 496:	e7 d1       	rcall	.+974    	; 0x866 <Reset_sensor_val>
+ 498:	f1 df       	rcall	.-30     	; 0x47c <ElectroMagnet_Off>
 	
 	ElectroMagnet_Off();
- 470:	e4 e0       	ldi	r30, 0x04	; 4
- 472:	f1 e0       	ldi	r31, 0x01	; 1
+ 49a:	e7 e0       	ldi	r30, 0x07	; 7
+ 49c:	f1 e0       	ldi	r31, 0x01	; 1
 	
 	marble.color = 0x05;
- 474:	85 e0       	ldi	r24, 0x05	; 5
- 476:	80 83       	st	Z, r24
- 478:	8f ef       	ldi	r24, 0xFF	; 255
- 47a:	9f ef       	ldi	r25, 0xFF	; 255
+ 49e:	85 e0       	ldi	r24, 0x05	; 5
+ 4a0:	80 83       	st	Z, r24
+ 4a2:	8f ef       	ldi	r24, 0xFF	; 255
+ 4a4:	9f ef       	ldi	r25, 0xFF	; 255
 	marble.posX = -1;
- 47c:	92 83       	std	Z+2, r25	; 0x02
- 47e:	81 83       	std	Z+1, r24	; 0x01
- 480:	94 83       	std	Z+4, r25	; 0x04
- 482:	83 83       	std	Z+3, r24	; 0x03
+ 4a6:	92 83       	std	Z+2, r25	; 0x02
+ 4a8:	81 83       	std	Z+1, r24	; 0x01
+ 4aa:	94 83       	std	Z+4, r25	; 0x04
+ 4ac:	83 83       	std	Z+3, r24	; 0x03
 	marble.posY = -1;
- 484:	78 94       	sei
+ 4ae:	78 94       	sei
 	
 	sei(); //Allow Interrupt
- 486:	81 e0       	ldi	r24, 0x01	; 1
+ 4b0:	81 e0       	ldi	r24, 0x01	; 1
 	
 	Servo_Allowed = 0x01;
- 488:	80 93 19 01 	sts	0x0119, r24	; 0x800119 <Servo_Allowed>
+ 4b2:	80 93 1c 01 	sts	0x011C, r24	; 0x80011c <Servo_Allowed>
 	
 	Servo_Set_Speed(20);
- 48c:	84 e1       	ldi	r24, 0x14	; 20
- 48e:	7e df       	rcall	.-260    	; 0x38c <Servo_Set_Speed>
+ 4b6:	84 e1       	ldi	r24, 0x14	; 20
+ 4b8:	69 df       	rcall	.-302    	; 0x38c <Servo_Set_Speed>
 	
 	Servo_Goto(375);
- 490:	87 e7       	ldi	r24, 0x77	; 119
- 492:	91 e0       	ldi	r25, 0x01	; 1
- 494:	4e df       	rcall	.-356    	; 0x332 <Servo_Goto>
- 496:	f9 de       	rcall	.-526    	; 0x28a <Servo_Go_Home>
+ 4ba:	87 e7       	ldi	r24, 0x77	; 119
+ 4bc:	91 e0       	ldi	r25, 0x01	; 1
+ 4be:	39 df       	rcall	.-398    	; 0x332 <Servo_Goto>
+ 4c0:	e4 de       	rcall	.-568    	; 0x28a <Servo_Go_Home>
 	Servo_Go_Home();
- 498:	c1 e0       	ldi	r28, 0x01	; 1
- 49a:	c4 30       	cpi	r28, 0x04	; 4
+ 4c2:	c1 e0       	ldi	r28, 0x01	; 1
+ 4c4:	c4 30       	cpi	r28, 0x04	; 4
 	//If not connected, try for few seconds and if failed connection, do other actions
 	//Thus, there are two cases. 1, Bluetooth is connected, 2, Bluetooth is not connected
 	//This is for just in case bluetooth fails at presentation
 	
 	//short i;
 	char state = 0x01;
- 49c:	f9 f0       	breq	.+62     	; 0x4dc <main+0x82>
+ 4c6:	f9 f0       	breq	.+62     	; 0x506 <main+0x82>
 	
     while (1) {
 		switch(state){
- 49e:	28 f4       	brcc	.+10     	; 0x4aa <main+0x50>
- 4a0:	c1 30       	cpi	r28, 0x01	; 1
- 4a2:	49 f0       	breq	.+18     	; 0x4b6 <main+0x5c>
- 4a4:	c2 30       	cpi	r28, 0x02	; 2
- 4a6:	a9 f0       	breq	.+42     	; 0x4d2 <main+0x78>
- 4a8:	f8 cf       	rjmp	.-16     	; 0x49a <main+0x40>
- 4aa:	c8 30       	cpi	r28, 0x08	; 8
- 4ac:	51 f1       	breq	.+84     	; 0x502 <main+0xa8>
- 4ae:	c0 31       	cpi	r28, 0x10	; 16
- 4b0:	09 f4       	brne	.+2      	; 0x4b4 <main+0x5a>
- 4b2:	47 c0       	rjmp	.+142    	; 0x542 <main+0xe8>
- 4b4:	f2 cf       	rjmp	.-28     	; 0x49a <main+0x40>
- 4b6:	80 91 2d 01 	lds	r24, 0x012D	; 0x80012d <pressure_sensor_val>
+ 4c8:	28 f4       	brcc	.+10     	; 0x4d4 <main+0x50>
+ 4ca:	c1 30       	cpi	r28, 0x01	; 1
+ 4cc:	49 f0       	breq	.+18     	; 0x4e0 <main+0x5c>
+ 4ce:	c2 30       	cpi	r28, 0x02	; 2
+ 4d0:	a9 f0       	breq	.+42     	; 0x4fc <main+0x78>
+ 4d2:	f8 cf       	rjmp	.-16     	; 0x4c4 <main+0x40>
+ 4d4:	c8 30       	cpi	r28, 0x08	; 8
+ 4d6:	51 f1       	breq	.+84     	; 0x52c <main+0xa8>
+ 4d8:	c0 31       	cpi	r28, 0x10	; 16
+ 4da:	09 f4       	brne	.+2      	; 0x4de <main+0x5a>
+ 4dc:	47 c0       	rjmp	.+142    	; 0x56c <main+0xe8>
+ 4de:	f2 cf       	rjmp	.-28     	; 0x4c4 <main+0x40>
+ 4e0:	80 91 30 01 	lds	r24, 0x0130	; 0x800130 <pressure_sensor_val>
 			case 0b00000001:					//not started
 				//if(pressure_sensor_val >= 50)	//pressure threshold is 50(just guessing)
 					//state <<= 1;				//Change state
 				
 				if(pressure_sensor_val > 900){ //pressure 
- 4ba:	90 91 2e 01 	lds	r25, 0x012E	; 0x80012e <pressure_sensor_val+0x1>
- 4be:	85 38       	cpi	r24, 0x85	; 133
- 4c0:	93 40       	sbci	r25, 0x03	; 3
+ 4e4:	90 91 31 01 	lds	r25, 0x0131	; 0x800131 <pressure_sensor_val+0x1>
+ 4e8:	85 38       	cpi	r24, 0x85	; 133
+ 4ea:	93 40       	sbci	r25, 0x03	; 3
 					Select_Item(ITEM_NONE);
- 4c2:	58 f3       	brcs	.-42     	; 0x49a <main+0x40>
- 4c4:	83 e0       	ldi	r24, 0x03	; 3
- 4c6:	a3 de       	rcall	.-698    	; 0x20e <Select_Item>
+ 4ec:	58 f3       	brcs	.-42     	; 0x4c4 <main+0x40>
+ 4ee:	83 e0       	ldi	r24, 0x03	; 3
+ 4f0:	8e de       	rcall	.-740    	; 0x20e <Select_Item>
 					ElectroMagnet_On();
- 4c8:	c0 df       	rcall	.-128    	; 0x44a <ElectroMagnet_On>
+ 4f2:	c0 df       	rcall	.-128    	; 0x474 <ElectroMagnet_On>
 					BT_send('0'); //start signal
- 4ca:	80 e3       	ldi	r24, 0x30	; 48
+ 4f4:	80 e3       	ldi	r24, 0x30	; 48
 					state <<= 1;
- 4cc:	0b de       	rcall	.-1002   	; 0xe4 <BT_send>
+ 4f6:	f6 dd       	rcall	.-1044   	; 0xe4 <BT_send>
 				}
 				break;
 				
 			case 0b00000010:	//wait for Marble data to arrive from the server
 				if(BT_Receive()){
- 4ce:	cc 0f       	add	r28, r28
- 4d0:	e4 cf       	rjmp	.-56     	; 0x49a <main+0x40>
- 4d2:	0f de       	rcall	.-994    	; 0xf2 <BT_Receive>
- 4d4:	88 23       	and	r24, r24
+ 4f8:	cc 0f       	add	r28, r28
+ 4fa:	e4 cf       	rjmp	.-56     	; 0x4c4 <main+0x40>
+ 4fc:	fa dd       	rcall	.-1036   	; 0xf2 <BT_Receive>
+ 4fe:	88 23       	and	r24, r24
 					//Marble Data has arrived from the server
 					//Calculate_Marble_pos();
 					state <<= 1;
- 4d6:	09 f3       	breq	.-62     	; 0x49a <main+0x40>
- 4d8:	cc 0f       	add	r28, r28
+ 500:	09 f3       	breq	.-62     	; 0x4c4 <main+0x40>
+ 502:	cc 0f       	add	r28, r28
 				}
 				break;
 				
 			case 0b00000100:	//Catch & Drop Marble
 				//Servo_Go_Marble(); //Rotate Servo to Marble to catch marble
 				Servo_Goto(375);
- 4da:	df cf       	rjmp	.-66     	; 0x49a <main+0x40>
- 4dc:	87 e7       	ldi	r24, 0x77	; 119
- 4de:	91 e0       	ldi	r25, 0x01	; 1
- 4e0:	28 df       	rcall	.-432    	; 0x332 <Servo_Goto>
+ 504:	df cf       	rjmp	.-66     	; 0x4c4 <main+0x40>
+ 506:	87 e7       	ldi	r24, 0x77	; 119
+ 508:	91 e0       	ldi	r25, 0x01	; 1
+ 50a:	13 df       	rcall	.-474    	; 0x332 <Servo_Goto>
 				
 				//Servo Reached Destination				
 				ElectroMagnet_On(); //Turn on ElectroMagnet
- 4e2:	b3 df       	rcall	.-154    	; 0x44a <ElectroMagnet_On>
- 4e4:	fc de       	rcall	.-520    	; 0x2de <Servo_Go_Box>
+ 50c:	b3 df       	rcall	.-154    	; 0x474 <ElectroMagnet_On>
+ 50e:	e7 de       	rcall	.-562    	; 0x2de <Servo_Go_Box>
 				
 				//Rotate Servo to Marble Box
 				Servo_Go_Box();
- 4e6:	10 92 2a 01 	sts	0x012A, r1	; 0x80012a <shk_detected>
+ 510:	10 92 2d 01 	sts	0x012D, r1	; 0x80012d <shk_detected>
 
 				//Servo Reached Destination
 				shk_detected = 0x00; //Reset Shock Flag
- 4ea:	b3 df       	rcall	.-154    	; 0x452 <ElectroMagnet_Off>
- 4ec:	8f ef       	ldi	r24, 0xFF	; 255
+ 514:	b3 df       	rcall	.-154    	; 0x47c <ElectroMagnet_Off>
+ 516:	8f ef       	ldi	r24, 0xFF	; 255
 				ElectroMagnet_Off(); //Drop Marble
- 4ee:	97 ea       	ldi	r25, 0xA7	; 167
+ 518:	97 ea       	ldi	r25, 0xA7	; 167
 	#else
 		//round up by default
 		__ticks_dc = (uint32_t)(ceil(fabs(__tmp)));
 	#endif
 
 	__builtin_avr_delay_cycles(__ticks_dc);
- 4f0:	21 e6       	ldi	r18, 0x61	; 97
- 4f2:	81 50       	subi	r24, 0x01	; 1
- 4f4:	90 40       	sbci	r25, 0x00	; 0
- 4f6:	20 40       	sbci	r18, 0x00	; 0
- 4f8:	e1 f7       	brne	.-8      	; 0x4f2 <main+0x98>
- 4fa:	00 c0       	rjmp	.+0      	; 0x4fc <main+0xa2>
+ 51a:	21 e6       	ldi	r18, 0x61	; 97
+ 51c:	81 50       	subi	r24, 0x01	; 1
+ 51e:	90 40       	sbci	r25, 0x00	; 0
+ 520:	20 40       	sbci	r18, 0x00	; 0
+ 522:	e1 f7       	brne	.-8      	; 0x51c <main+0x98>
+ 524:	00 c0       	rjmp	.+0      	; 0x526 <main+0xa2>
 				
 				_delay_ms(2000); //Wait 2 seconds for Marble to drop and Shock to be detected
 
 				state <<= 1;
- 4fc:	00 00       	nop
+ 526:	00 00       	nop
 				
 				//Set LED
 				//Set OCR with Timer for PWM Control
 				break;
- 4fe:	cc 0f       	add	r28, r28
+ 528:	cc 0f       	add	r28, r28
 				
 			case 0b00001000: //Marble success or retry
 				if(shk_detected == 0x01){ //Marble was succefully dropped
- 500:	cc cf       	rjmp	.-104    	; 0x49a <main+0x40>
- 502:	80 91 2a 01 	lds	r24, 0x012A	; 0x80012a <shk_detected>
+ 52a:	cc cf       	rjmp	.-104    	; 0x4c4 <main+0x40>
+ 52c:	80 91 2d 01 	lds	r24, 0x012D	; 0x80012d <shk_detected>
 					shk_detected = 0x00;
- 506:	81 30       	cpi	r24, 0x01	; 1
+ 530:	81 30       	cpi	r24, 0x01	; 1
 					
 					Servo_Go_Home();
- 508:	29 f4       	brne	.+10     	; 0x514 <main+0xba>
- 50a:	10 92 2a 01 	sts	0x012A, r1	; 0x80012a <shk_detected>
+ 532:	29 f4       	brne	.+10     	; 0x53e <main+0xba>
+ 534:	10 92 2d 01 	sts	0x012D, r1	; 0x80012d <shk_detected>
 					
 					state <<= 1;
- 50e:	bd de       	rcall	.-646    	; 0x28a <Servo_Go_Home>
+ 538:	a8 de       	rcall	.-688    	; 0x28a <Servo_Go_Home>
 					//Servo_Go_Home();
 					//state <<= 1;
 					//break;
 					
 					//Move servo to home
 					Servo_Set_Speed(20); //temporary
- 510:	cc 0f       	add	r28, r28
+ 53a:	cc 0f       	add	r28, r28
 					Servo_Go_Home();
- 512:	c3 cf       	rjmp	.-122    	; 0x49a <main+0x40>
- 514:	84 e1       	ldi	r24, 0x14	; 20
+ 53c:	c3 cf       	rjmp	.-122    	; 0x4c4 <main+0x40>
+ 53e:	84 e1       	ldi	r24, 0x14	; 20
 					
 					//Turn on Electro Magnet
 					ElectroMagnet_On();
- 516:	3a df       	rcall	.-396    	; 0x38c <Servo_Set_Speed>
- 518:	b8 de       	rcall	.-656    	; 0x28a <Servo_Go_Home>
+ 540:	25 df       	rcall	.-438    	; 0x38c <Servo_Set_Speed>
+ 542:	a3 de       	rcall	.-698    	; 0x28a <Servo_Go_Home>
 					
 					temp_en = 0x00; //temperature sensor does not control servo speed
- 51a:	97 df       	rcall	.-210    	; 0x44a <ElectroMagnet_On>
- 51c:	10 92 27 01 	sts	0x0127, r1	; 0x800127 <temp_en+0x1>
+ 544:	97 df       	rcall	.-210    	; 0x474 <ElectroMagnet_On>
+ 546:	10 92 2a 01 	sts	0x012A, r1	; 0x80012a <temp_en+0x1>
 					Servo_Set_Speed(80); //Very slowly
- 520:	10 92 26 01 	sts	0x0126, r1	; 0x800126 <temp_en>
- 524:	80 e5       	ldi	r24, 0x50	; 80
+ 54a:	10 92 29 01 	sts	0x0129, r1	; 0x800129 <temp_en>
+ 54e:	80 e5       	ldi	r24, 0x50	; 80
 					
 					//Move servo to Marble Collecting Box
 					Servo_Go_Box();
- 526:	32 df       	rcall	.-412    	; 0x38c <Servo_Set_Speed>
- 528:	da de       	rcall	.-588    	; 0x2de <Servo_Go_Box>
+ 550:	1d df       	rcall	.-454    	; 0x38c <Servo_Set_Speed>
+ 552:	c5 de       	rcall	.-630    	; 0x2de <Servo_Go_Box>
 					
 					//Turn off Electro Magnet <- Drop Marble
 					ElectroMagnet_Off();
- 52a:	93 df       	rcall	.-218    	; 0x452 <ElectroMagnet_Off>
+ 554:	93 df       	rcall	.-218    	; 0x47c <ElectroMagnet_Off>
 					
 					temp_en = 0x01; //temperature sensor controls servo speed
- 52c:	81 e0       	ldi	r24, 0x01	; 1
- 52e:	90 e0       	ldi	r25, 0x00	; 0
- 530:	90 93 27 01 	sts	0x0127, r25	; 0x800127 <temp_en+0x1>
- 534:	80 93 26 01 	sts	0x0126, r24	; 0x800126 <temp_en>
+ 556:	81 e0       	ldi	r24, 0x01	; 1
+ 558:	90 e0       	ldi	r25, 0x00	; 0
+ 55a:	90 93 2a 01 	sts	0x012A, r25	; 0x80012a <temp_en+0x1>
+ 55e:	80 93 29 01 	sts	0x0129, r24	; 0x800129 <temp_en>
 					
 					Servo_Set_Speed(20);
- 538:	84 e1       	ldi	r24, 0x14	; 20
- 53a:	28 df       	rcall	.-432    	; 0x38c <Servo_Set_Speed>
+ 562:	84 e1       	ldi	r24, 0x14	; 20
+ 564:	13 df       	rcall	.-474    	; 0x38c <Servo_Set_Speed>
 					Servo_Go_Home(); //Servo returns home
- 53c:	a6 de       	rcall	.-692    	; 0x28a <Servo_Go_Home>
+ 566:	91 de       	rcall	.-734    	; 0x28a <Servo_Go_Home>
 					
 					state <<= 1;
- 53e:	cc 0f       	add	r28, r28
- 540:	ac cf       	rjmp	.-168    	; 0x49a <main+0x40>
+ 568:	cc 0f       	add	r28, r28
+ 56a:	ac cf       	rjmp	.-168    	; 0x4c4 <main+0x40>
 				break;
 				
 			case 0b00010000:
 				
 				
 				if(marble.color == 0) RED_LED_On(500);
- 542:	80 91 04 01 	lds	r24, 0x0104	; 0x800104 <marble>
- 546:	81 11       	cpse	r24, r1
- 548:	05 c0       	rjmp	.+10     	; 0x554 <main+0xfa>
- 54a:	84 ef       	ldi	r24, 0xF4	; 244
- 54c:	91 e0       	ldi	r25, 0x01	; 1
- 54e:	24 df       	rcall	.-440    	; 0x398 <RED_LED_On>
- 550:	c1 e0       	ldi	r28, 0x01	; 1
+ 56c:	80 91 07 01 	lds	r24, 0x0107	; 0x800107 <marble>
+ 570:	81 11       	cpse	r24, r1
+ 572:	05 c0       	rjmp	.+10     	; 0x57e <main+0xfa>
+ 574:	84 ef       	ldi	r24, 0xF4	; 244
+ 576:	91 e0       	ldi	r25, 0x01	; 1
+ 578:	0f df       	rcall	.-482    	; 0x398 <RED_LED_On>
+ 57a:	c1 e0       	ldi	r28, 0x01	; 1
 				else if(marble.color == 2) GREEN_LED_On(500);
 				else if(marble.color == 1) BLUE_LED_On(500);
 				else Select_Item(ITEM_NONE);
 				
 				//LED_Set(); //LED PWM of Marble Color
 				state = 0x01; //Done, wait for pressure sensor
- 552:	a3 cf       	rjmp	.-186    	; 0x49a <main+0x40>
- 554:	82 30       	cpi	r24, 0x02	; 2
+ 57c:	a3 cf       	rjmp	.-186    	; 0x4c4 <main+0x40>
+ 57e:	82 30       	cpi	r24, 0x02	; 2
 				
 			case 0b00010000:
 				
 				
 				if(marble.color == 0) RED_LED_On(500);
 				else if(marble.color == 2) GREEN_LED_On(500);
- 556:	29 f4       	brne	.+10     	; 0x562 <main+0x108>
- 558:	84 ef       	ldi	r24, 0xF4	; 244
- 55a:	91 e0       	ldi	r25, 0x01	; 1
- 55c:	2d df       	rcall	.-422    	; 0x3b8 <GREEN_LED_On>
- 55e:	c1 e0       	ldi	r28, 0x01	; 1
- 560:	9c cf       	rjmp	.-200    	; 0x49a <main+0x40>
+ 580:	29 f4       	brne	.+10     	; 0x58c <main+0x108>
+ 582:	84 ef       	ldi	r24, 0xF4	; 244
+ 584:	91 e0       	ldi	r25, 0x01	; 1
+ 586:	18 df       	rcall	.-464    	; 0x3b8 <GREEN_LED_On>
+ 588:	c1 e0       	ldi	r28, 0x01	; 1
+ 58a:	9c cf       	rjmp	.-200    	; 0x4c4 <main+0x40>
 				else if(marble.color == 1) BLUE_LED_On(500);
 				else Select_Item(ITEM_NONE);
 				
 				//LED_Set(); //LED PWM of Marble Color
 				state = 0x01; //Done, wait for pressure sensor
- 562:	81 30       	cpi	r24, 0x01	; 1
- 564:	29 f4       	brne	.+10     	; 0x570 <main+0x116>
+ 58c:	81 30       	cpi	r24, 0x01	; 1
+ 58e:	29 f4       	brne	.+10     	; 0x59a <main+0x116>
 			case 0b00010000:
 				
 				
 				if(marble.color == 0) RED_LED_On(500);
 				else if(marble.color == 2) GREEN_LED_On(500);
 				else if(marble.color == 1) BLUE_LED_On(500);
- 566:	84 ef       	ldi	r24, 0xF4	; 244
- 568:	91 e0       	ldi	r25, 0x01	; 1
- 56a:	36 df       	rcall	.-404    	; 0x3d8 <BLUE_LED_On>
- 56c:	c1 e0       	ldi	r28, 0x01	; 1
- 56e:	95 cf       	rjmp	.-214    	; 0x49a <main+0x40>
- 570:	83 e0       	ldi	r24, 0x03	; 3
+ 590:	84 ef       	ldi	r24, 0xF4	; 244
+ 592:	91 e0       	ldi	r25, 0x01	; 1
+ 594:	21 df       	rcall	.-446    	; 0x3d8 <BLUE_LED_On>
+ 596:	c1 e0       	ldi	r28, 0x01	; 1
+ 598:	95 cf       	rjmp	.-214    	; 0x4c4 <main+0x40>
+ 59a:	83 e0       	ldi	r24, 0x03	; 3
 				else Select_Item(ITEM_NONE);
 				
 				//LED_Set(); //LED PWM of Marble Color
 				state = 0x01; //Done, wait for pressure sensor
- 572:	4d de       	rcall	.-870    	; 0x20e <Select_Item>
- 574:	c1 e0       	ldi	r28, 0x01	; 1
+ 59c:	38 de       	rcall	.-912    	; 0x20e <Select_Item>
+ 59e:	c1 e0       	ldi	r28, 0x01	; 1
 				
 				
 				if(marble.color == 0) RED_LED_On(500);
 				else if(marble.color == 2) GREEN_LED_On(500);
 				else if(marble.color == 1) BLUE_LED_On(500);
 				else Select_Item(ITEM_NONE);
- 576:	91 cf       	rjmp	.-222    	; 0x49a <main+0x40>
+ 5a0:	91 cf       	rjmp	.-222    	; 0x4c4 <main+0x40>
 
-00000578 <Is_Shock_Interrupt>:
- 578:	80 91 2f 01 	lds	r24, 0x012F	; 0x80012f <shk_sensor_val>
+000005a2 <If_Shock_Detected>:
+ 5a2:	80 91 32 01 	lds	r24, 0x0132	; 0x800132 <shk_sensor_val>
 				
 				//LED_Set(); //LED PWM of Marble Color
 				state = 0x01; //Done, wait for pressure sensor
- 57c:	90 91 30 01 	lds	r25, 0x0130	; 0x800130 <shk_sensor_val+0x1>
+ 5a6:	90 91 33 01 	lds	r25, 0x0133	; 0x800133 <shk_sensor_val+0x1>
 	PORTC = (PORTC & ~(1<<ElectroMagnet)) | (1<<ElectroMagnet);
 	//PORTC = 0xFF;
 }
 
-void Is_Shock_Interrupt(){
+void If_Shock_Detected(){
 	if(shk_sensor_val <= 900)
- 580:	85 38       	cpi	r24, 0x85	; 133
- 582:	93 40       	sbci	r25, 0x03	; 3
- 584:	18 f4       	brcc	.+6      	; 0x58c <Is_Shock_Interrupt+0x14>
+ 5aa:	85 38       	cpi	r24, 0x85	; 133
+ 5ac:	93 40       	sbci	r25, 0x03	; 3
+ 5ae:	18 f4       	brcc	.+6      	; 0x5b6 <If_Shock_Detected+0x14>
 		shk_detected = 0x01;
- 586:	81 e0       	ldi	r24, 0x01	; 1
- 588:	80 93 2a 01 	sts	0x012A, r24	; 0x80012a <shk_detected>
- 58c:	08 95       	ret
+ 5b0:	81 e0       	ldi	r24, 0x01	; 1
+ 5b2:	80 93 2d 01 	sts	0x012D, r24	; 0x80012d <shk_detected>
+ 5b6:	08 95       	ret
 
-0000058e <Is_PSD_Interrupt>:
+000005b8 <If_PSD_Detected>:
+
 }
 
-void Is_PSD_Interrupt(){
+void If_PSD_Detected(){
 	if ( (psd_sensor_val> 520)) {
- 58e:	80 91 2b 01 	lds	r24, 0x012B	; 0x80012b <psd_sensor_val>
- 592:	90 91 2c 01 	lds	r25, 0x012C	; 0x80012c <psd_sensor_val+0x1>
- 596:	89 30       	cpi	r24, 0x09	; 9
- 598:	92 40       	sbci	r25, 0x02	; 2
- 59a:	18 f0       	brcs	.+6      	; 0x5a2 <Is_PSD_Interrupt+0x14>
+ 5b8:	80 91 2e 01 	lds	r24, 0x012E	; 0x80012e <psd_sensor_val>
+ 5bc:	90 91 2f 01 	lds	r25, 0x012F	; 0x80012f <psd_sensor_val+0x1>
+ 5c0:	89 30       	cpi	r24, 0x09	; 9
+ 5c2:	92 40       	sbci	r25, 0x02	; 2
+ 5c4:	18 f0       	brcs	.+6      	; 0x5cc <If_PSD_Detected+0x14>
 		//PORTC |= 0x20; //0010 0000
 		//PORTA &= 0xBF;
 		Servo_Allowed = 0x00;
- 59c:	10 92 19 01 	sts	0x0119, r1	; 0x800119 <Servo_Allowed>
- 5a0:	08 95       	ret
+ 5c6:	10 92 1c 01 	sts	0x011C, r1	; 0x80011c <Servo_Allowed>
+ 5ca:	08 95       	ret
 	}
 	else {
 		//PORTC &= ~(0x20); //0100 0000
 		//PORTA |= ~0xBF;
 		Servo_Allowed = 0x01;
- 5a2:	81 e0       	ldi	r24, 0x01	; 1
- 5a4:	80 93 19 01 	sts	0x0119, r24	; 0x800119 <Servo_Allowed>
- 5a8:	08 95       	ret
+ 5cc:	81 e0       	ldi	r24, 0x01	; 1
+ 5ce:	80 93 1c 01 	sts	0x011C, r24	; 0x80011c <Servo_Allowed>
+ 5d2:	08 95       	ret
 
-000005aa <__vector_16>:
+000005d4 <If_Fire_Detected>:
+void If_Fire_Detected(){
+	static char i = 0; //increment
+	static char s = 0x00; //state
+	static char was = 0x00; //was detected
+	
+	if(fire_sensor_val >= 500){
+ 5d4:	80 91 27 01 	lds	r24, 0x0127	; 0x800127 <fire_sensor_val>
+ 5d8:	90 91 28 01 	lds	r25, 0x0128	; 0x800128 <fire_sensor_val+0x1>
+ 5dc:	84 3f       	cpi	r24, 0xF4	; 244
+ 5de:	91 40       	sbci	r25, 0x01	; 1
+ 5e0:	b0 f1       	brcs	.+108    	; 0x64e <If_Fire_Detected+0x7a>
+		
+		if(!was){ //was not detected -> turn buzzer on
+ 5e2:	80 91 05 01 	lds	r24, 0x0105	; 0x800105 <was.2010>
+ 5e6:	81 11       	cpse	r24, r1
+ 5e8:	12 c0       	rjmp	.+36     	; 0x60e <If_Fire_Detected+0x3a>
+			was = 0x01;
+ 5ea:	81 e0       	ldi	r24, 0x01	; 1
+ 5ec:	80 93 05 01 	sts	0x0105, r24	; 0x800105 <was.2010>
+			switch(s){
+ 5f0:	80 91 04 01 	lds	r24, 0x0104	; 0x800104 <s.2009>
+ 5f4:	88 23       	and	r24, r24
+ 5f6:	19 f0       	breq	.+6      	; 0x5fe <If_Fire_Detected+0x2a>
+ 5f8:	81 30       	cpi	r24, 0x01	; 1
+ 5fa:	29 f0       	breq	.+10     	; 0x606 <If_Fire_Detected+0x32>
+ 5fc:	08 95       	ret
+				case 0x00:
+				Buzzer_on(50);
+ 5fe:	82 e3       	ldi	r24, 0x32	; 50
+ 600:	90 e0       	ldi	r25, 0x00	; 0
+ 602:	fa ce       	rjmp	.-524    	; 0x3f8 <Buzzer_on>
+				break;
+ 604:	08 95       	ret
+				case 0x01:
+				Buzzer_on(70);
+ 606:	86 e4       	ldi	r24, 0x46	; 70
+ 608:	90 e0       	ldi	r25, 0x00	; 0
+ 60a:	f6 ce       	rjmp	.-532    	; 0x3f8 <Buzzer_on>
+ 60c:	08 95       	ret
+			}
+		}
+		else if(++i >= 20){
+ 60e:	80 91 03 01 	lds	r24, 0x0103	; 0x800103 <i.2008>
+ 612:	8f 5f       	subi	r24, 0xFF	; 255
+ 614:	80 93 03 01 	sts	0x0103, r24	; 0x800103 <i.2008>
+ 618:	84 31       	cpi	r24, 0x14	; 20
+ 61a:	e0 f0       	brcs	.+56     	; 0x654 <If_Fire_Detected+0x80>
+			if(s) s = 0x01;
+ 61c:	80 91 04 01 	lds	r24, 0x0104	; 0x800104 <s.2009>
+ 620:	88 23       	and	r24, r24
+ 622:	21 f0       	breq	.+8      	; 0x62c <If_Fire_Detected+0x58>
+ 624:	81 e0       	ldi	r24, 0x01	; 1
+ 626:	80 93 04 01 	sts	0x0104, r24	; 0x800104 <s.2009>
+ 62a:	02 c0       	rjmp	.+4      	; 0x630 <If_Fire_Detected+0x5c>
+			else s = 0x00;
+ 62c:	10 92 04 01 	sts	0x0104, r1	; 0x800104 <s.2009>
+			
+			switch(s){
+ 630:	80 91 04 01 	lds	r24, 0x0104	; 0x800104 <s.2009>
+ 634:	88 23       	and	r24, r24
+ 636:	19 f0       	breq	.+6      	; 0x63e <If_Fire_Detected+0x6a>
+ 638:	81 30       	cpi	r24, 0x01	; 1
+ 63a:	29 f0       	breq	.+10     	; 0x646 <If_Fire_Detected+0x72>
+ 63c:	08 95       	ret
+				case 0x00:
+				Buzzer_on(50);
+ 63e:	82 e3       	ldi	r24, 0x32	; 50
+ 640:	90 e0       	ldi	r25, 0x00	; 0
+ 642:	da ce       	rjmp	.-588    	; 0x3f8 <Buzzer_on>
+				break;
+				case 0x01:
+				Buzzer_on(70);
+ 644:	08 95       	ret
+ 646:	86 e4       	ldi	r24, 0x46	; 70
+ 648:	90 e0       	ldi	r25, 0x00	; 0
+ 64a:	d6 ce       	rjmp	.-596    	; 0x3f8 <Buzzer_on>
+			}
+		}
+	}
+	else{
+		was = 0x00;
+ 64c:	08 95       	ret
+ 64e:	10 92 05 01 	sts	0x0105, r1	; 0x800105 <was.2010>
+		Buzzer_off();
+ 652:	e4 ce       	rjmp	.-568    	; 0x41c <Buzzer_off>
+ 654:	08 95       	ret
+
+00000656 <__vector_16>:
 	else {
 		PORTA |= ~0xBF;
 	}
 }
 
 ISR(TIMER0_OVF_vect){ //Use Timer0 for collecting sensor value
- 5aa:	1f 92       	push	r1
- 5ac:	0f 92       	push	r0
- 5ae:	0f b6       	in	r0, 0x3f	; 63
- 5b0:	0f 92       	push	r0
- 5b2:	11 24       	eor	r1, r1
- 5b4:	0b b6       	in	r0, 0x3b	; 59
- 5b6:	0f 92       	push	r0
- 5b8:	2f 93       	push	r18
- 5ba:	3f 93       	push	r19
- 5bc:	4f 93       	push	r20
- 5be:	5f 93       	push	r21
- 5c0:	6f 93       	push	r22
- 5c2:	7f 93       	push	r23
- 5c4:	8f 93       	push	r24
- 5c6:	9f 93       	push	r25
- 5c8:	af 93       	push	r26
- 5ca:	bf 93       	push	r27
- 5cc:	ef 93       	push	r30
- 5ce:	ff 93       	push	r31
+ 656:	1f 92       	push	r1
+ 658:	0f 92       	push	r0
+ 65a:	0f b6       	in	r0, 0x3f	; 63
+ 65c:	0f 92       	push	r0
+ 65e:	11 24       	eor	r1, r1
+ 660:	0b b6       	in	r0, 0x3b	; 59
+ 662:	0f 92       	push	r0
+ 664:	2f 93       	push	r18
+ 666:	3f 93       	push	r19
+ 668:	4f 93       	push	r20
+ 66a:	5f 93       	push	r21
+ 66c:	6f 93       	push	r22
+ 66e:	7f 93       	push	r23
+ 670:	8f 93       	push	r24
+ 672:	9f 93       	push	r25
+ 674:	af 93       	push	r26
+ 676:	bf 93       	push	r27
+ 678:	ef 93       	push	r30
+ 67a:	ff 93       	push	r31
 	static char idx = 0x01;
 	
 	switch(idx){
- 5d0:	80 91 00 01 	lds	r24, 0x0100	; 0x800100 <__DATA_REGION_ORIGIN__>
- 5d4:	84 30       	cpi	r24, 0x04	; 4
- 5d6:	b1 f0       	breq	.+44     	; 0x604 <__vector_16+0x5a>
- 5d8:	28 f4       	brcc	.+10     	; 0x5e4 <__vector_16+0x3a>
- 5da:	81 30       	cpi	r24, 0x01	; 1
- 5dc:	49 f0       	breq	.+18     	; 0x5f0 <__vector_16+0x46>
- 5de:	82 30       	cpi	r24, 0x02	; 2
- 5e0:	61 f0       	breq	.+24     	; 0x5fa <__vector_16+0x50>
- 5e2:	25 c0       	rjmp	.+74     	; 0x62e <__vector_16+0x84>
- 5e4:	86 30       	cpi	r24, 0x06	; 6
- 5e6:	c9 f0       	breq	.+50     	; 0x61a <__vector_16+0x70>
- 5e8:	90 f0       	brcs	.+36     	; 0x60e <__vector_16+0x64>
- 5ea:	87 30       	cpi	r24, 0x07	; 7
- 5ec:	d9 f0       	breq	.+54     	; 0x624 <__vector_16+0x7a>
- 5ee:	1f c0       	rjmp	.+62     	; 0x62e <__vector_16+0x84>
+ 67c:	80 91 00 01 	lds	r24, 0x0100	; 0x800100 <__DATA_REGION_ORIGIN__>
+ 680:	84 30       	cpi	r24, 0x04	; 4
+ 682:	b1 f0       	breq	.+44     	; 0x6b0 <__vector_16+0x5a>
+ 684:	28 f4       	brcc	.+10     	; 0x690 <__vector_16+0x3a>
+ 686:	81 30       	cpi	r24, 0x01	; 1
+ 688:	49 f0       	breq	.+18     	; 0x69c <__vector_16+0x46>
+ 68a:	82 30       	cpi	r24, 0x02	; 2
+ 68c:	61 f0       	breq	.+24     	; 0x6a6 <__vector_16+0x50>
+ 68e:	26 c0       	rjmp	.+76     	; 0x6dc <__vector_16+0x86>
+ 690:	86 30       	cpi	r24, 0x06	; 6
+ 692:	c9 f0       	breq	.+50     	; 0x6c6 <__vector_16+0x70>
+ 694:	90 f0       	brcs	.+36     	; 0x6ba <__vector_16+0x64>
+ 696:	87 30       	cpi	r24, 0x07	; 7
+ 698:	e1 f0       	breq	.+56     	; 0x6d2 <__vector_16+0x7c>
+ 69a:	20 c0       	rjmp	.+64     	; 0x6dc <__vector_16+0x86>
 		case 0x01:
 		Read_CDS();
- 5f0:	89 d0       	rcall	.+274    	; 0x704 <Read_CDS>
+ 69c:	8a d0       	rcall	.+276    	; 0x7b2 <Read_CDS>
 		idx=0x02;
- 5f2:	82 e0       	ldi	r24, 0x02	; 2
- 5f4:	80 93 00 01 	sts	0x0100, r24	; 0x800100 <__DATA_REGION_ORIGIN__>
+ 69e:	82 e0       	ldi	r24, 0x02	; 2
+ 6a0:	80 93 00 01 	sts	0x0100, r24	; 0x800100 <__DATA_REGION_ORIGIN__>
 		break;
 		
 		case 0x02:
 		
 		Read_Thermister();
- 5f8:	1a c0       	rjmp	.+52     	; 0x62e <__vector_16+0x84>
- 5fa:	c0 d0       	rcall	.+384    	; 0x77c <Read_Thermister>
+ 6a4:	1b c0       	rjmp	.+54     	; 0x6dc <__vector_16+0x86>
+ 6a6:	c1 d0       	rcall	.+386    	; 0x82a <Read_Thermister>
 		
 		//Servo_Set_Speed();
 		idx=0x04;
- 5fc:	84 e0       	ldi	r24, 0x04	; 4
- 5fe:	80 93 00 01 	sts	0x0100, r24	; 0x800100 <__DATA_REGION_ORIGIN__>
+ 6a8:	84 e0       	ldi	r24, 0x04	; 4
+ 6aa:	80 93 00 01 	sts	0x0100, r24	; 0x800100 <__DATA_REGION_ORIGIN__>
 		break;
 		
 		case 0x04:
 		
 		Read_Pressure();
- 602:	15 c0       	rjmp	.+42     	; 0x62e <__vector_16+0x84>
- 604:	ac d0       	rcall	.+344    	; 0x75e <Read_Pressure>
+ 6ae:	16 c0       	rjmp	.+44     	; 0x6dc <__vector_16+0x86>
+ 6b0:	ad d0       	rcall	.+346    	; 0x80c <Read_Pressure>
 		idx=0x05;
- 606:	85 e0       	ldi	r24, 0x05	; 5
- 608:	80 93 00 01 	sts	0x0100, r24	; 0x800100 <__DATA_REGION_ORIGIN__>
+ 6b2:	85 e0       	ldi	r24, 0x05	; 5
+ 6b4:	80 93 00 01 	sts	0x0100, r24	; 0x800100 <__DATA_REGION_ORIGIN__>
 		break;
 		
 		case 0x05:
 		
 		Read_Shock();
- 60c:	10 c0       	rjmp	.+32     	; 0x62e <__vector_16+0x84>
- 60e:	c5 d0       	rcall	.+394    	; 0x79a <Read_Shock>
-		Is_Shock_Interrupt(); //Shock Interrupt를 걸까말까
- 610:	b3 df       	rcall	.-154    	; 0x578 <Is_Shock_Interrupt>
+ 6b8:	11 c0       	rjmp	.+34     	; 0x6dc <__vector_16+0x86>
+ 6ba:	c6 d0       	rcall	.+396    	; 0x848 <Read_Shock>
+		If_Shock_Detected(); //Shock Interrupt를 걸까말까
+ 6bc:	72 df       	rcall	.-284    	; 0x5a2 <If_Shock_Detected>
 		idx=0x06;
- 612:	86 e0       	ldi	r24, 0x06	; 6
- 614:	80 93 00 01 	sts	0x0100, r24	; 0x800100 <__DATA_REGION_ORIGIN__>
+ 6be:	86 e0       	ldi	r24, 0x06	; 6
+ 6c0:	80 93 00 01 	sts	0x0100, r24	; 0x800100 <__DATA_REGION_ORIGIN__>
 		
 		break;
- 618:	0a c0       	rjmp	.+20     	; 0x62e <__vector_16+0x84>
 		
 		case 0x06:
 		
 		Read_Fire();
- 61a:	83 d0       	rcall	.+262    	; 0x722 <Read_Fire>
+ 6c4:	0b c0       	rjmp	.+22     	; 0x6dc <__vector_16+0x86>
+		If_Fire_Detected();
+ 6c6:	84 d0       	rcall	.+264    	; 0x7d0 <Read_Fire>
 		idx = 0x07;
- 61c:	87 e0       	ldi	r24, 0x07	; 7
- 61e:	80 93 00 01 	sts	0x0100, r24	; 0x800100 <__DATA_REGION_ORIGIN__>
+ 6c8:	85 df       	rcall	.-246    	; 0x5d4 <If_Fire_Detected>
+ 6ca:	87 e0       	ldi	r24, 0x07	; 7
+ 6cc:	80 93 00 01 	sts	0x0100, r24	; 0x800100 <__DATA_REGION_ORIGIN__>
 		break;
- 622:	05 c0       	rjmp	.+10     	; 0x62e <__vector_16+0x84>
 		
 		case 0x07:
 		
 		Read_PSD();
- 624:	8d d0       	rcall	.+282    	; 0x740 <Read_PSD>
- 626:	b3 df       	rcall	.-154    	; 0x58e <Is_PSD_Interrupt>
-		Is_PSD_Interrupt();
- 628:	81 e0       	ldi	r24, 0x01	; 1
- 62a:	80 93 00 01 	sts	0x0100, r24	; 0x800100 <__DATA_REGION_ORIGIN__>
+ 6d0:	05 c0       	rjmp	.+10     	; 0x6dc <__vector_16+0x86>
+ 6d2:	8d d0       	rcall	.+282    	; 0x7ee <Read_PSD>
+		If_PSD_Detected();
+ 6d4:	71 df       	rcall	.-286    	; 0x5b8 <If_PSD_Detected>
+ 6d6:	81 e0       	ldi	r24, 0x01	; 1
 		idx = 0x01;
- 62e:	87 b1       	in	r24, 0x07	; 7
- 630:	90 91 00 01 	lds	r25, 0x0100	; 0x800100 <__DATA_REGION_ORIGIN__>
+ 6d8:	80 93 00 01 	sts	0x0100, r24	; 0x800100 <__DATA_REGION_ORIGIN__>
+ 6dc:	87 b1       	in	r24, 0x07	; 7
 		break;
 	}
 	
 	//ADC Mux 선택, ADC 시작 시키고 ISR 종료
 	ADMUX = (ADMUX & 0x40) | (idx & 0x0F); //다음 센서 선택
- 634:	9f 70       	andi	r25, 0x0F	; 15
- 636:	80 74       	andi	r24, 0x40	; 64
- 638:	89 2b       	or	r24, r25
- 63a:	87 b9       	out	0x07, r24	; 7
- 63c:	80 91 28 01 	lds	r24, 0x0128	; 0x800128 <cds_sensor_val>
+ 6de:	90 91 00 01 	lds	r25, 0x0100	; 0x800100 <__DATA_REGION_ORIGIN__>
+ 6e2:	9f 70       	andi	r25, 0x0F	; 15
+ 6e4:	80 74       	andi	r24, 0x40	; 64
+ 6e6:	89 2b       	or	r24, r25
+ 6e8:	87 b9       	out	0x07, r24	; 7
+ 6ea:	80 91 2b 01 	lds	r24, 0x012B	; 0x80012b <cds_sensor_val>
 	ADMUX=(1<<REFS0); //외부 레퍼런스 접압을 기준 전압으로 선택, 우측정렬, 초기 입력핀은 0번
 	ADCSRA=(1<<ADEN)|(0<<ADIE)|(1<<ADPS2)|(1<<ADPS1)|(1<<ADPS0); //ADC enable, ADC interrupt enable 분주비 128
 }
 
 inline void Sensor_show(){
 	if (cds_sensor_val > 100) { //CDS
- 640:	90 91 29 01 	lds	r25, 0x0129	; 0x800129 <cds_sensor_val+0x1>
- 644:	85 36       	cpi	r24, 0x65	; 101
- 646:	91 05       	cpc	r25, r1
- 648:	20 f0       	brcs	.+8      	; 0x652 <__vector_16+0xa8>
- 64a:	8b b3       	in	r24, 0x1b	; 27
- 64c:	8e 7f       	andi	r24, 0xFE	; 254
+ 6ee:	90 91 2c 01 	lds	r25, 0x012C	; 0x80012c <cds_sensor_val+0x1>
+ 6f2:	85 36       	cpi	r24, 0x65	; 101
+ 6f4:	91 05       	cpc	r25, r1
+ 6f6:	20 f0       	brcs	.+8      	; 0x700 <__vector_16+0xaa>
+ 6f8:	8b b3       	in	r24, 0x1b	; 27
 		PORTA &= 0xFE; //CDS에 해당하는 LED만 켜기 //1111 1110
- 64e:	8b bb       	out	0x1b, r24	; 27
- 650:	03 c0       	rjmp	.+6      	; 0x658 <__vector_16+0xae>
- 652:	8b b3       	in	r24, 0x1b	; 27
- 654:	81 60       	ori	r24, 0x01	; 1
+ 6fa:	8e 7f       	andi	r24, 0xFE	; 254
+ 6fc:	8b bb       	out	0x1b, r24	; 27
+ 6fe:	03 c0       	rjmp	.+6      	; 0x706 <__vector_16+0xb0>
+ 700:	8b b3       	in	r24, 0x1b	; 27
 	}
 	else {
 		PORTA |= ~0xFE; //CDS에 해단하는 LED만 끄기
- 656:	8b bb       	out	0x1b, r24	; 27
- 658:	80 91 22 01 	lds	r24, 0x0122	; 0x800122 <temp_sensor_val>
+ 702:	81 60       	ori	r24, 0x01	; 1
+ 704:	8b bb       	out	0x1b, r24	; 27
+ 706:	80 91 25 01 	lds	r24, 0x0125	; 0x800125 <temp_sensor_val>
 	}
 	
 	if (temp_sensor_val > 200) {
- 65c:	90 91 23 01 	lds	r25, 0x0123	; 0x800123 <temp_sensor_val+0x1>
- 660:	89 3c       	cpi	r24, 0xC9	; 201
- 662:	91 05       	cpc	r25, r1
- 664:	20 f0       	brcs	.+8      	; 0x66e <__vector_16+0xc4>
- 666:	8b b3       	in	r24, 0x1b	; 27
- 668:	8d 7f       	andi	r24, 0xFD	; 253
+ 70a:	90 91 26 01 	lds	r25, 0x0126	; 0x800126 <temp_sensor_val+0x1>
+ 70e:	89 3c       	cpi	r24, 0xC9	; 201
+ 710:	91 05       	cpc	r25, r1
+ 712:	20 f0       	brcs	.+8      	; 0x71c <__vector_16+0xc6>
+ 714:	8b b3       	in	r24, 0x1b	; 27
 		PORTA &= 0xFD; // 1111 1101
- 66a:	8b bb       	out	0x1b, r24	; 27
- 66c:	03 c0       	rjmp	.+6      	; 0x674 <__vector_16+0xca>
- 66e:	8b b3       	in	r24, 0x1b	; 27
- 670:	82 60       	ori	r24, 0x02	; 2
+ 716:	8d 7f       	andi	r24, 0xFD	; 253
+ 718:	8b bb       	out	0x1b, r24	; 27
+ 71a:	03 c0       	rjmp	.+6      	; 0x722 <__vector_16+0xcc>
+ 71c:	8b b3       	in	r24, 0x1b	; 27
 	}
 	else {
 		PORTA |= ~0xFD;
- 672:	8b bb       	out	0x1b, r24	; 27
- 674:	80 91 2d 01 	lds	r24, 0x012D	; 0x80012d <pressure_sensor_val>
+ 71e:	82 60       	ori	r24, 0x02	; 2
+ 720:	8b bb       	out	0x1b, r24	; 27
+ 722:	80 91 30 01 	lds	r24, 0x0130	; 0x800130 <pressure_sensor_val>
 	}
 	
 	
 	
 	if (pressure_sensor_val > 900) {//보류 -
- 678:	90 91 2e 01 	lds	r25, 0x012E	; 0x80012e <pressure_sensor_val+0x1>
- 67c:	85 38       	cpi	r24, 0x85	; 133
- 67e:	93 40       	sbci	r25, 0x03	; 3
- 680:	20 f0       	brcs	.+8      	; 0x68a <__vector_16+0xe0>
- 682:	8b b3       	in	r24, 0x1b	; 27
- 684:	8b 7f       	andi	r24, 0xFB	; 251
+ 726:	90 91 31 01 	lds	r25, 0x0131	; 0x800131 <pressure_sensor_val+0x1>
+ 72a:	85 38       	cpi	r24, 0x85	; 133
+ 72c:	93 40       	sbci	r25, 0x03	; 3
+ 72e:	20 f0       	brcs	.+8      	; 0x738 <__vector_16+0xe2>
+ 730:	8b b3       	in	r24, 0x1b	; 27
 		PORTA &= 0xFB; //1111 1011
- 686:	8b bb       	out	0x1b, r24	; 27
- 688:	03 c0       	rjmp	.+6      	; 0x690 <__vector_16+0xe6>
- 68a:	8b b3       	in	r24, 0x1b	; 27
- 68c:	84 60       	ori	r24, 0x04	; 4
+ 732:	8b 7f       	andi	r24, 0xFB	; 251
+ 734:	8b bb       	out	0x1b, r24	; 27
+ 736:	03 c0       	rjmp	.+6      	; 0x73e <__vector_16+0xe8>
+ 738:	8b b3       	in	r24, 0x1b	; 27
 	}
 	else {
 		PORTA |= ~0xFB;
- 68e:	8b bb       	out	0x1b, r24	; 27
- 690:	80 91 2a 01 	lds	r24, 0x012A	; 0x80012a <shk_detected>
+ 73a:	84 60       	ori	r24, 0x04	; 4
+ 73c:	8b bb       	out	0x1b, r24	; 27
+ 73e:	80 91 2d 01 	lds	r24, 0x012D	; 0x80012d <shk_detected>
 	}
 	
 	if ( shk_detected) {
- 694:	88 23       	and	r24, r24
- 696:	21 f0       	breq	.+8      	; 0x6a0 <__vector_16+0xf6>
- 698:	8b b3       	in	r24, 0x1b	; 27
- 69a:	87 7f       	andi	r24, 0xF7	; 247
+ 742:	88 23       	and	r24, r24
+ 744:	21 f0       	breq	.+8      	; 0x74e <__vector_16+0xf8>
+ 746:	8b b3       	in	r24, 0x1b	; 27
 		PORTA &= 0xF7;
- 69c:	8b bb       	out	0x1b, r24	; 27
- 69e:	03 c0       	rjmp	.+6      	; 0x6a6 <__vector_16+0xfc>
- 6a0:	8b b3       	in	r24, 0x1b	; 27
- 6a2:	88 60       	ori	r24, 0x08	; 8
+ 748:	87 7f       	andi	r24, 0xF7	; 247
+ 74a:	8b bb       	out	0x1b, r24	; 27
+ 74c:	03 c0       	rjmp	.+6      	; 0x754 <__vector_16+0xfe>
+ 74e:	8b b3       	in	r24, 0x1b	; 27
 		//shk_detected = 0x00;
 	}
 	else {
 		PORTA |= ~0xF7;
- 6a4:	8b bb       	out	0x1b, r24	; 27
- 6a6:	80 91 24 01 	lds	r24, 0x0124	; 0x800124 <fire_sensor_val>
+ 750:	88 60       	ori	r24, 0x08	; 8
+ 752:	8b bb       	out	0x1b, r24	; 27
+ 754:	80 91 27 01 	lds	r24, 0x0127	; 0x800127 <fire_sensor_val>
 	}
 	
 	if (fire_sensor_val > 100) {//-
- 6aa:	90 91 25 01 	lds	r25, 0x0125	; 0x800125 <fire_sensor_val+0x1>
- 6ae:	85 36       	cpi	r24, 0x65	; 101
- 6b0:	91 05       	cpc	r25, r1
- 6b2:	20 f0       	brcs	.+8      	; 0x6bc <__vector_16+0x112>
- 6b4:	8b b3       	in	r24, 0x1b	; 27
- 6b6:	8f 7e       	andi	r24, 0xEF	; 239
+ 758:	90 91 28 01 	lds	r25, 0x0128	; 0x800128 <fire_sensor_val+0x1>
+ 75c:	85 36       	cpi	r24, 0x65	; 101
+ 75e:	91 05       	cpc	r25, r1
+ 760:	20 f0       	brcs	.+8      	; 0x76a <__vector_16+0x114>
+ 762:	8b b3       	in	r24, 0x1b	; 27
 		PORTA &= 0xEF;
- 6b8:	8b bb       	out	0x1b, r24	; 27
- 6ba:	03 c0       	rjmp	.+6      	; 0x6c2 <__vector_16+0x118>
- 6bc:	8b b3       	in	r24, 0x1b	; 27
- 6be:	80 61       	ori	r24, 0x10	; 16
+ 764:	8f 7e       	andi	r24, 0xEF	; 239
+ 766:	8b bb       	out	0x1b, r24	; 27
+ 768:	03 c0       	rjmp	.+6      	; 0x770 <__vector_16+0x11a>
+ 76a:	8b b3       	in	r24, 0x1b	; 27
 	}
 	else {
 		PORTA |= ~0xEF;
- 6c0:	8b bb       	out	0x1b, r24	; 27
- 6c2:	80 91 2b 01 	lds	r24, 0x012B	; 0x80012b <psd_sensor_val>
+ 76c:	80 61       	ori	r24, 0x10	; 16
+ 76e:	8b bb       	out	0x1b, r24	; 27
+ 770:	80 91 2e 01 	lds	r24, 0x012E	; 0x80012e <psd_sensor_val>
 	}
 	
 	
 	if ( (psd_sensor_val> 520)) {
- 6c6:	90 91 2c 01 	lds	r25, 0x012C	; 0x80012c <psd_sensor_val+0x1>
- 6ca:	89 30       	cpi	r24, 0x09	; 9
- 6cc:	92 40       	sbci	r25, 0x02	; 2
- 6ce:	20 f0       	brcs	.+8      	; 0x6d8 <__vector_16+0x12e>
- 6d0:	8b b3       	in	r24, 0x1b	; 27
- 6d2:	8f 7b       	andi	r24, 0xBF	; 191
+ 774:	90 91 2f 01 	lds	r25, 0x012F	; 0x80012f <psd_sensor_val+0x1>
+ 778:	89 30       	cpi	r24, 0x09	; 9
+ 77a:	92 40       	sbci	r25, 0x02	; 2
+ 77c:	20 f0       	brcs	.+8      	; 0x786 <__vector_16+0x130>
+ 77e:	8b b3       	in	r24, 0x1b	; 27
 		
 		PORTA &= 0xBF;
- 6d4:	8b bb       	out	0x1b, r24	; 27
- 6d6:	03 c0       	rjmp	.+6      	; 0x6de <__vector_16+0x134>
- 6d8:	8b b3       	in	r24, 0x1b	; 27
- 6da:	80 64       	ori	r24, 0x40	; 64
+ 780:	8f 7b       	andi	r24, 0xBF	; 191
+ 782:	8b bb       	out	0x1b, r24	; 27
+ 784:	03 c0       	rjmp	.+6      	; 0x78c <__vector_16+0x136>
+ 786:	8b b3       	in	r24, 0x1b	; 27
 	}
 	else {
 		PORTA |= ~0xBF;
- 6dc:	8b bb       	out	0x1b, r24	; 27
- 6de:	ff 91       	pop	r31
- 6e0:	ef 91       	pop	r30
+ 788:	80 64       	ori	r24, 0x40	; 64
+ 78a:	8b bb       	out	0x1b, r24	; 27
+ 78c:	ff 91       	pop	r31
 	//ADC Mux 선택, ADC 시작 시키고 ISR 종료
 	ADMUX = (ADMUX & 0x40) | (idx & 0x0F); //다음 센서 선택
 	//ADCSRA |= (1 << ADSC); // ADC 변환 시작
 	
 	Sensor_show(); //LED A
 }
- 6e2:	bf 91       	pop	r27
- 6e4:	af 91       	pop	r26
- 6e6:	9f 91       	pop	r25
- 6e8:	8f 91       	pop	r24
- 6ea:	7f 91       	pop	r23
- 6ec:	6f 91       	pop	r22
- 6ee:	5f 91       	pop	r21
- 6f0:	4f 91       	pop	r20
- 6f2:	3f 91       	pop	r19
- 6f4:	2f 91       	pop	r18
- 6f6:	0f 90       	pop	r0
- 6f8:	0b be       	out	0x3b, r0	; 59
- 6fa:	0f 90       	pop	r0
- 6fc:	0f be       	out	0x3f, r0	; 63
- 6fe:	0f 90       	pop	r0
- 700:	1f 90       	pop	r1
- 702:	18 95       	reti
+ 78e:	ef 91       	pop	r30
+ 790:	bf 91       	pop	r27
+ 792:	af 91       	pop	r26
+ 794:	9f 91       	pop	r25
+ 796:	8f 91       	pop	r24
+ 798:	7f 91       	pop	r23
+ 79a:	6f 91       	pop	r22
+ 79c:	5f 91       	pop	r21
+ 79e:	4f 91       	pop	r20
+ 7a0:	3f 91       	pop	r19
+ 7a2:	2f 91       	pop	r18
+ 7a4:	0f 90       	pop	r0
+ 7a6:	0b be       	out	0x3b, r0	; 59
+ 7a8:	0f 90       	pop	r0
+ 7aa:	0f be       	out	0x3f, r0	; 63
+ 7ac:	0f 90       	pop	r0
+ 7ae:	1f 90       	pop	r1
+ 7b0:	18 95       	reti
 
-00000704 <Read_CDS>:
- 704:	86 b1       	in	r24, 0x06	; 6
- 706:	80 64       	ori	r24, 0x40	; 64
+000007b2 <Read_CDS>:
+ 7b2:	86 b1       	in	r24, 0x06	; 6
 unsigned short hpf(unsigned short previous_value, unsigned short new_value, float alpha) {
 	return (unsigned short)(alpha * (previous_value + new_value) - previous_value);
 }
 
 inline void Read_CDS(){
 	ADCSRA |= (1 << ADSC); // ADC 변환 시작
- 708:	86 b9       	out	0x06, r24	; 6
+ 7b4:	80 64       	ori	r24, 0x40	; 64
+ 7b6:	86 b9       	out	0x06, r24	; 6
 	while(!(ADCSRA & (1 << ADIF))); // ADC 변환 완료 플래그가 설정될 때까지 기다림
- 70a:	34 9b       	sbis	0x06, 4	; 6
- 70c:	fe cf       	rjmp	.-4      	; 0x70a <Read_CDS+0x6>
+ 7b8:	34 9b       	sbis	0x06, 4	; 6
+ 7ba:	fe cf       	rjmp	.-4      	; 0x7b8 <Read_CDS+0x6>
 	ADCSRA |= (1<< ADIF); // ADC 변환 완료 플래그 클리어
- 70e:	86 b1       	in	r24, 0x06	; 6
- 710:	80 61       	ori	r24, 0x10	; 16
- 712:	86 b9       	out	0x06, r24	; 6
+ 7bc:	86 b1       	in	r24, 0x06	; 6
+ 7be:	80 61       	ori	r24, 0x10	; 16
+ 7c0:	86 b9       	out	0x06, r24	; 6
 	/*static unsigned short previous_value = 0;
 	cds_sensor_val = lpf(previous_value, ADC, 0.1);
 	previous_value = cds_sensor_val;*/
 	cds_sensor_val=ADC;
- 714:	84 b1       	in	r24, 0x04	; 4
- 716:	95 b1       	in	r25, 0x05	; 5
- 718:	90 93 29 01 	sts	0x0129, r25	; 0x800129 <cds_sensor_val+0x1>
- 71c:	80 93 28 01 	sts	0x0128, r24	; 0x800128 <cds_sensor_val>
- 720:	08 95       	ret
+ 7c2:	84 b1       	in	r24, 0x04	; 4
+ 7c4:	95 b1       	in	r25, 0x05	; 5
+ 7c6:	90 93 2c 01 	sts	0x012C, r25	; 0x80012c <cds_sensor_val+0x1>
+ 7ca:	80 93 2b 01 	sts	0x012B, r24	; 0x80012b <cds_sensor_val>
+ 7ce:	08 95       	ret
 
-00000722 <Read_Fire>:
+000007d0 <Read_Fire>:
 	//필터링 해야됨
 }
 
 inline void Read_Fire(){
 	ADCSRA |= (1 << ADSC); // ADC 변환 시작
- 722:	86 b1       	in	r24, 0x06	; 6
- 724:	80 64       	ori	r24, 0x40	; 64
- 726:	86 b9       	out	0x06, r24	; 6
+ 7d0:	86 b1       	in	r24, 0x06	; 6
+ 7d2:	80 64       	ori	r24, 0x40	; 64
+ 7d4:	86 b9       	out	0x06, r24	; 6
 	while(!(ADCSRA & (1 << ADIF))); // ADC 변환 완료 플래그가 설정될 때까지 기다림
- 728:	34 9b       	sbis	0x06, 4	; 6
- 72a:	fe cf       	rjmp	.-4      	; 0x728 <Read_Fire+0x6>
+ 7d6:	34 9b       	sbis	0x06, 4	; 6
+ 7d8:	fe cf       	rjmp	.-4      	; 0x7d6 <Read_Fire+0x6>
 	ADCSRA |= (1 << ADIF); // ADC 변환 완료 플래그 클리어
- 72c:	86 b1       	in	r24, 0x06	; 6
- 72e:	80 61       	ori	r24, 0x10	; 16
- 730:	86 b9       	out	0x06, r24	; 6
+ 7da:	86 b1       	in	r24, 0x06	; 6
+ 7dc:	80 61       	ori	r24, 0x10	; 16
+ 7de:	86 b9       	out	0x06, r24	; 6
 	//static unsigned short previous_value = 0;
 	fire_sensor_val = ADC;//lpf(previous_value, ADC, 0.1);
- 732:	84 b1       	in	r24, 0x04	; 4
- 734:	95 b1       	in	r25, 0x05	; 5
- 736:	90 93 25 01 	sts	0x0125, r25	; 0x800125 <fire_sensor_val+0x1>
- 73a:	80 93 24 01 	sts	0x0124, r24	; 0x800124 <fire_sensor_val>
- 73e:	08 95       	ret
+ 7e0:	84 b1       	in	r24, 0x04	; 4
+ 7e2:	95 b1       	in	r25, 0x05	; 5
+ 7e4:	90 93 28 01 	sts	0x0128, r25	; 0x800128 <fire_sensor_val+0x1>
+ 7e8:	80 93 27 01 	sts	0x0127, r24	; 0x800127 <fire_sensor_val>
+ 7ec:	08 95       	ret
 
-00000740 <Read_PSD>:
+000007ee <Read_PSD>:
 	//previous_value = fire_sensor_val;
 	//필터링 해야됨
 }
 inline void Read_PSD(){
 	ADCSRA |= (1 << ADSC); // ADC 변환 시작
- 740:	86 b1       	in	r24, 0x06	; 6
- 742:	80 64       	ori	r24, 0x40	; 64
- 744:	86 b9       	out	0x06, r24	; 6
+ 7ee:	86 b1       	in	r24, 0x06	; 6
+ 7f0:	80 64       	ori	r24, 0x40	; 64
+ 7f2:	86 b9       	out	0x06, r24	; 6
 	while(!(ADCSRA & (1 << ADIF))); // ADC 변환 완료 플래그가 설정될 때까지 기다림
- 746:	34 9b       	sbis	0x06, 4	; 6
- 748:	fe cf       	rjmp	.-4      	; 0x746 <Read_PSD+0x6>
+ 7f4:	34 9b       	sbis	0x06, 4	; 6
+ 7f6:	fe cf       	rjmp	.-4      	; 0x7f4 <Read_PSD+0x6>
 	ADCSRA |= (1 << ADIF); // ADC 변환 완료 플래그 클리어
- 74a:	86 b1       	in	r24, 0x06	; 6
- 74c:	80 61       	ori	r24, 0x10	; 16
- 74e:	86 b9       	out	0x06, r24	; 6
+ 7f8:	86 b1       	in	r24, 0x06	; 6
+ 7fa:	80 61       	ori	r24, 0x10	; 16
+ 7fc:	86 b9       	out	0x06, r24	; 6
 	//static unsigned short previous_value = 0;
 	psd_sensor_val = ADC;//lpf(previous_value, ADC, 0.1);
- 750:	84 b1       	in	r24, 0x04	; 4
- 752:	95 b1       	in	r25, 0x05	; 5
- 754:	90 93 2c 01 	sts	0x012C, r25	; 0x80012c <psd_sensor_val+0x1>
- 758:	80 93 2b 01 	sts	0x012B, r24	; 0x80012b <psd_sensor_val>
- 75c:	08 95       	ret
+ 7fe:	84 b1       	in	r24, 0x04	; 4
+ 800:	95 b1       	in	r25, 0x05	; 5
+ 802:	90 93 2f 01 	sts	0x012F, r25	; 0x80012f <psd_sensor_val+0x1>
+ 806:	80 93 2e 01 	sts	0x012E, r24	; 0x80012e <psd_sensor_val>
+ 80a:	08 95       	ret
 
-0000075e <Read_Pressure>:
+0000080c <Read_Pressure>:
 	//previous_value = psd_sensor_val;
 	//필터링 해야됨
 }
 
 inline void Read_Pressure(){
 	ADCSRA |= (1 << ADSC); // ADC 변환 시작
- 75e:	86 b1       	in	r24, 0x06	; 6
- 760:	80 64       	ori	r24, 0x40	; 64
- 762:	86 b9       	out	0x06, r24	; 6
+ 80c:	86 b1       	in	r24, 0x06	; 6
+ 80e:	80 64       	ori	r24, 0x40	; 64
+ 810:	86 b9       	out	0x06, r24	; 6
 	while(!(ADCSRA & (1 << ADIF))); // ADC 변환 완료 플래그가 설정될 때까지 기다림
- 764:	34 9b       	sbis	0x06, 4	; 6
- 766:	fe cf       	rjmp	.-4      	; 0x764 <Read_Pressure+0x6>
+ 812:	34 9b       	sbis	0x06, 4	; 6
+ 814:	fe cf       	rjmp	.-4      	; 0x812 <Read_Pressure+0x6>
 	ADCSRA |= (1 << ADIF); // ADC 변환 완료 플래그 클리어
- 768:	86 b1       	in	r24, 0x06	; 6
- 76a:	80 61       	ori	r24, 0x10	; 16
- 76c:	86 b9       	out	0x06, r24	; 6
+ 816:	86 b1       	in	r24, 0x06	; 6
+ 818:	80 61       	ori	r24, 0x10	; 16
+ 81a:	86 b9       	out	0x06, r24	; 6
 	//static uint16_t previous_value = 0;
 	pressure_sensor_val = ADC;//lpf(previous_value, ADC, 1);
- 76e:	84 b1       	in	r24, 0x04	; 4
- 770:	95 b1       	in	r25, 0x05	; 5
- 772:	90 93 2e 01 	sts	0x012E, r25	; 0x80012e <pressure_sensor_val+0x1>
- 776:	80 93 2d 01 	sts	0x012D, r24	; 0x80012d <pressure_sensor_val>
- 77a:	08 95       	ret
+ 81c:	84 b1       	in	r24, 0x04	; 4
+ 81e:	95 b1       	in	r25, 0x05	; 5
+ 820:	90 93 31 01 	sts	0x0131, r25	; 0x800131 <pressure_sensor_val+0x1>
+ 824:	80 93 30 01 	sts	0x0130, r24	; 0x800130 <pressure_sensor_val>
+ 828:	08 95       	ret
 
-0000077c <Read_Thermister>:
+0000082a <Read_Thermister>:
 	//previous_value = pressure_sensor_val;
 	//필터링 해야됨
 }
 
 inline void Read_Thermister(){
 	ADCSRA |= (1 << ADSC); // ADC 변환 시작
- 77c:	86 b1       	in	r24, 0x06	; 6
- 77e:	80 64       	ori	r24, 0x40	; 64
- 780:	86 b9       	out	0x06, r24	; 6
+ 82a:	86 b1       	in	r24, 0x06	; 6
+ 82c:	80 64       	ori	r24, 0x40	; 64
+ 82e:	86 b9       	out	0x06, r24	; 6
 	while(!(ADCSRA & (1 << ADIF))); // ADC 변환 완료 플래그가 설정될 때까지 기다림
- 782:	34 9b       	sbis	0x06, 4	; 6
- 784:	fe cf       	rjmp	.-4      	; 0x782 <Read_Thermister+0x6>
+ 830:	34 9b       	sbis	0x06, 4	; 6
+ 832:	fe cf       	rjmp	.-4      	; 0x830 <Read_Thermister+0x6>
 	ADCSRA |= (1 << ADIF); // ADC 변환 완료 플래그 클리어
- 786:	86 b1       	in	r24, 0x06	; 6
- 788:	80 61       	ori	r24, 0x10	; 16
- 78a:	86 b9       	out	0x06, r24	; 6
+ 834:	86 b1       	in	r24, 0x06	; 6
+ 836:	80 61       	ori	r24, 0x10	; 16
+ 838:	86 b9       	out	0x06, r24	; 6
 	//static unsigned short previous_value = 0;
 	temp_sensor_val = ADC;//lpf(previous_value, ADC, 1);
- 78c:	84 b1       	in	r24, 0x04	; 4
- 78e:	95 b1       	in	r25, 0x05	; 5
- 790:	90 93 23 01 	sts	0x0123, r25	; 0x800123 <temp_sensor_val+0x1>
- 794:	80 93 22 01 	sts	0x0122, r24	; 0x800122 <temp_sensor_val>
- 798:	08 95       	ret
+ 83a:	84 b1       	in	r24, 0x04	; 4
+ 83c:	95 b1       	in	r25, 0x05	; 5
+ 83e:	90 93 26 01 	sts	0x0126, r25	; 0x800126 <temp_sensor_val+0x1>
+ 842:	80 93 25 01 	sts	0x0125, r24	; 0x800125 <temp_sensor_val>
+ 846:	08 95       	ret
 
-0000079a <Read_Shock>:
+00000848 <Read_Shock>:
 	//previous_value = temp_sensor_val;
 	//필터링 해야됨
 }
 
 inline void Read_Shock(){
 	ADCSRA |= (1 << ADSC); // ADC 변환 시작
- 79a:	86 b1       	in	r24, 0x06	; 6
- 79c:	80 64       	ori	r24, 0x40	; 64
- 79e:	86 b9       	out	0x06, r24	; 6
+ 848:	86 b1       	in	r24, 0x06	; 6
+ 84a:	80 64       	ori	r24, 0x40	; 64
+ 84c:	86 b9       	out	0x06, r24	; 6
 	while(!(ADCSRA & (1 << ADIF))); // ADC 변환 완료 플래그가 설정될 때까지 기다림
- 7a0:	34 9b       	sbis	0x06, 4	; 6
- 7a2:	fe cf       	rjmp	.-4      	; 0x7a0 <Read_Shock+0x6>
+ 84e:	34 9b       	sbis	0x06, 4	; 6
+ 850:	fe cf       	rjmp	.-4      	; 0x84e <Read_Shock+0x6>
 	ADCSRA |= (1 << ADIF); // ADC 변환 완료 플래그 클리어
- 7a4:	86 b1       	in	r24, 0x06	; 6
- 7a6:	80 61       	ori	r24, 0x10	; 16
- 7a8:	86 b9       	out	0x06, r24	; 6
+ 852:	86 b1       	in	r24, 0x06	; 6
+ 854:	80 61       	ori	r24, 0x10	; 16
+ 856:	86 b9       	out	0x06, r24	; 6
 	//static unsigned short previous_value = 0;
 	shk_sensor_val = ADC;//hpf(previous_value, ADC, 1);
- 7aa:	84 b1       	in	r24, 0x04	; 4
- 7ac:	95 b1       	in	r25, 0x05	; 5
- 7ae:	90 93 30 01 	sts	0x0130, r25	; 0x800130 <shk_sensor_val+0x1>
- 7b2:	80 93 2f 01 	sts	0x012F, r24	; 0x80012f <shk_sensor_val>
- 7b6:	08 95       	ret
+ 858:	84 b1       	in	r24, 0x04	; 4
+ 85a:	95 b1       	in	r25, 0x05	; 5
+ 85c:	90 93 33 01 	sts	0x0133, r25	; 0x800133 <shk_sensor_val+0x1>
+ 860:	80 93 32 01 	sts	0x0132, r24	; 0x800132 <shk_sensor_val>
+ 864:	08 95       	ret
 
-000007b8 <Reset_sensor_val>:
+00000866 <Reset_sensor_val>:
 	//previous_value = shk_sensor_val;
 	//필터링 해야됨
 }
 
 inline void Reset_sensor_val(){
 	pressure_sensor_val = 0;
- 7b8:	10 92 2e 01 	sts	0x012E, r1	; 0x80012e <pressure_sensor_val+0x1>
- 7bc:	10 92 2d 01 	sts	0x012D, r1	; 0x80012d <pressure_sensor_val>
+ 866:	10 92 31 01 	sts	0x0131, r1	; 0x800131 <pressure_sensor_val+0x1>
+ 86a:	10 92 30 01 	sts	0x0130, r1	; 0x800130 <pressure_sensor_val>
 	cds_sensor_val	= 0;
- 7c0:	10 92 29 01 	sts	0x0129, r1	; 0x800129 <cds_sensor_val+0x1>
- 7c4:	10 92 28 01 	sts	0x0128, r1	; 0x800128 <cds_sensor_val>
+ 86e:	10 92 2c 01 	sts	0x012C, r1	; 0x80012c <cds_sensor_val+0x1>
+ 872:	10 92 2b 01 	sts	0x012B, r1	; 0x80012b <cds_sensor_val>
 	temp_sensor_val = 0;	temp_en = 0;
- 7c8:	10 92 23 01 	sts	0x0123, r1	; 0x800123 <temp_sensor_val+0x1>
- 7cc:	10 92 22 01 	sts	0x0122, r1	; 0x800122 <temp_sensor_val>
- 7d0:	10 92 27 01 	sts	0x0127, r1	; 0x800127 <temp_en+0x1>
- 7d4:	10 92 26 01 	sts	0x0126, r1	; 0x800126 <temp_en>
+ 876:	10 92 26 01 	sts	0x0126, r1	; 0x800126 <temp_sensor_val+0x1>
+ 87a:	10 92 25 01 	sts	0x0125, r1	; 0x800125 <temp_sensor_val>
+ 87e:	10 92 2a 01 	sts	0x012A, r1	; 0x80012a <temp_en+0x1>
+ 882:	10 92 29 01 	sts	0x0129, r1	; 0x800129 <temp_en>
 	shk_sensor_val	= 0;	shk_detected = 0;
- 7d8:	10 92 30 01 	sts	0x0130, r1	; 0x800130 <shk_sensor_val+0x1>
- 7dc:	10 92 2f 01 	sts	0x012F, r1	; 0x80012f <shk_sensor_val>
- 7e0:	10 92 2a 01 	sts	0x012A, r1	; 0x80012a <shk_detected>
+ 886:	10 92 33 01 	sts	0x0133, r1	; 0x800133 <shk_sensor_val+0x1>
+ 88a:	10 92 32 01 	sts	0x0132, r1	; 0x800132 <shk_sensor_val>
+ 88e:	10 92 2d 01 	sts	0x012D, r1	; 0x80012d <shk_detected>
 	psd_sensor_val	= 0;
- 7e4:	10 92 2c 01 	sts	0x012C, r1	; 0x80012c <psd_sensor_val+0x1>
- 7e8:	10 92 2b 01 	sts	0x012B, r1	; 0x80012b <psd_sensor_val>
+ 892:	10 92 2f 01 	sts	0x012F, r1	; 0x80012f <psd_sensor_val+0x1>
+ 896:	10 92 2e 01 	sts	0x012E, r1	; 0x80012e <psd_sensor_val>
 	fire_sensor_val	= 0;
- 7ec:	10 92 25 01 	sts	0x0125, r1	; 0x800125 <fire_sensor_val+0x1>
- 7f0:	10 92 24 01 	sts	0x0124, r1	; 0x800124 <fire_sensor_val>
- 7f4:	08 95       	ret
+ 89a:	10 92 28 01 	sts	0x0128, r1	; 0x800128 <fire_sensor_val+0x1>
+ 89e:	10 92 27 01 	sts	0x0127, r1	; 0x800127 <fire_sensor_val>
+ 8a2:	08 95       	ret
 
-000007f6 <_exit>:
- 7f6:	f8 94       	cli
+000008a4 <_exit>:
+ 8a4:	f8 94       	cli
 
-000007f8 <__stop_program>:
- 7f8:	ff cf       	rjmp	.-2      	; 0x7f8 <__stop_program>
+000008a6 <__stop_program>:
+ 8a6:	ff cf       	rjmp	.-2      	; 0x8a6 <__stop_program>
