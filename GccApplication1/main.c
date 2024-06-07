@@ -530,44 +530,41 @@ ISR(TIMER0_OVF_vect){ //Use Timer0 for collecting sensor value
 	
 	switch(idx){
 		case 0x01:
-		Read_CDS();
-		idx=0x02;
+			Read_CDS();
+			idx=0x02;
 		break;
 		
 		case 0x02:
-		
-		Read_Thermister();
-		
-		//Servo_Set_Speed();
-		idx=0x04;
+			Read_Thermister();
+			//Servo_Set_Speed();
+			idx=0x04;
 		break;
 		
 		case 0x04:
-		
-		Read_Pressure();
-		idx=0x05;
+			Read_Pressure();
+			idx=0x05;
 		break;
 		
 		case 0x05:
 		
-		Read_Shock();
-		If_Shock_Detected(); //Shock Interrupt를 걸까말까
-		idx=0x06;
+			Read_Shock();
+			If_Shock_Detected();
+			idx=0x06;
 		
 		break;
 		
 		case 0x06:
 		
-		Read_Fire();
-		If_Fire_Detected();
-		idx = 0x07;
+			Read_Fire();
+			//If_Fire_Detected();
+			idx = 0x07;
 		break;
 		
 		case 0x07:
 		
-		Read_PSD();
-		If_PSD_Detected();
-		idx = 0x01;
+			Read_PSD();
+			If_PSD_Detected();
+			idx = 0x01;
 		break;
 	}
 	
