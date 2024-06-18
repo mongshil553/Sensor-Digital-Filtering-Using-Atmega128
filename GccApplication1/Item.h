@@ -46,8 +46,12 @@ unsigned short Marble_pos;
 void Calculate_Marble_pos();
 
 //================ LED ===================//
-#define LED_MAX 500
-#define LED_MIN 200
+#define LED_MAX 800.0
+#define LED_MIN 200.0
+#define CDS_MAX 400.0
+#define CDS_MIN 100.0
+#define get_led_val (cds_sensor_val > CDS_MAX)?LED_MAX:(cds_sensor_val<CDS_MIN)?LED_MIN:(LED_MAX-LED_MIN)/(CDS_MAX-CDS_MIN)*cds_sensor_val
+int calc_led();
 void RED_LED_On(unsigned int p);
 void GREEN_LED_On(unsigned int p);
 void BLUE_LED_On(unsigned int p);

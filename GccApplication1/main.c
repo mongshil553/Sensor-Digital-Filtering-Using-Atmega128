@@ -5,7 +5,7 @@
  * Author : kijun
  */ 
 
-#define DEBUG_ 2
+#define DEBUG_ 1
 #define F_CPU 16000000UL
 
 #define ElectroMagnet 7
@@ -184,7 +184,10 @@ int main(void){
 	cli();
 	port_setup();
 	timer1_init();
+	//timer0_init();
 	init_BT();
+	
+	Reset_sensor_val(); //센서 변수 초기화
 	
 	//EIMSK = 0x03; //External Interrupt Enable Mask
 	EIMSK = 0x00;
@@ -215,13 +218,15 @@ int main(void){
 	while(1){
 		_delay_ms(10);
 		
+		GREEN_LED_On(calc_led());
 		
 		switch(PIND & 0x03){
 			case 0x02: //Select Red LED
 
 				//Servo_Quick_Move(SERVO_HOME);
-				//RED_LED_On(500);
-				ElectroMagnet_On();
+				//RED_LED_On((cds_sensor_val > CDS_MAX)?LED_MAX:(cds_sensor_val<CDS_MIN)?LED_MIN:(int)((LED_MAX-LED_MIN)/(CDS_MAX-CDS_MIN)*cds_sensor_val));
+				RED_LED_On(800);
+				//ElectroMagnet_On();
 				//BT_send('1');
 			break;
 			
@@ -230,8 +235,9 @@ int main(void){
 				//Servo_Quick_Move(SERVO_BOX);
 				//Select_Item(ITEM_LED_GREEN);
 				
-				//GREEN_LED_On(500);
-				ElectroMagnet_Off();
+				GREEN_LED_On((cds_sensor_val > CDS_MAX)?LED_MAX:(cds_sensor_val<CDS_MIN)?LED_MIN:(int)((LED_MAX-LED_MIN)/(CDS_MAX-CDS_MIN)*cds_sensor_val));
+				//GREEN_LED_On(800);
+				//ElectroMagnet_Off();
 			break;
 		}
 		
@@ -348,6 +354,24 @@ int main(void)
 					BT_send('0'); //start signal
 					state <<= 1;
 				}
+				
+				switch(PIND & 0x03){
+					case 0x2:
+					//ICR1 = 50;
+					//OCR1A=ICR1/5;
+					ElectroMagnet_On();
+					break;
+					
+					case 0x01:
+					//ICR1 = 70;
+					//OCR1A=ICR1/5;
+					ElectroMagnet_Off();
+					break;
+					
+					default:
+					break;
+				}
+				
 				break;
 				
 			case 0b00000010:	//wait for Marble data to arrive from the server
@@ -421,9 +445,9 @@ int main(void)
 			case 0b00010000:
 				
 				
-				if(marble.color == 0) RED_LED_On(500);
-				else if(marble.color == 2) GREEN_LED_On(500);
-				else if(marble.color == 1) BLUE_LED_On(500);
+				if(marble.color == 0) RED_LED_On(get_led_val);
+				else if(marble.color == 2) GREEN_LED_On(get_led_val);
+				else if(marble.color == 1) BLUE_LED_On(get_led_val);
 				else Select_Item(ITEM_NONE);
 				
 				//LED_Set(); //LED PWM of Marble Color
@@ -447,6 +471,7 @@ ISR(INT7_vect)
 
 void timer0_init(void) {
 	TCCR0 |= (1 << CS02) |(1<<CS01)| (1 << CS00); // 분주비 1024
+	//TCCR0 |= (1<<CS01) | (1 << CS00);
 	TIMSK |= (1 << TOIE0); // 타이머0 오버플로우 인터럽트 허용
 	TCNT0 = 0; // 타이머 카운터 초기화
 }
@@ -596,13 +621,13 @@ ISR(TIMER0_OVF_vect){ //Use Timer0 for collecting sensor value
 
 void ElectroMagnet_On(){
 	//PORTC &= (0 << ElectroMagnet);
-	PORTC = (PORTC & ~(1<<ElectroMagnet)) | (0<<ElectroMagnet);
+	PORTC = (PORTC & ~(1<<ElectroMagnet)) | (1<<ElectroMagnet);
 	//PORTC = 0x7F;
 }
 
 void ElectroMagnet_Off(){
 	//PORTC |=  (1 << ElectroMagnet);
-	PORTC = (PORTC & ~(1<<ElectroMagnet)) | (1<<ElectroMagnet);
+	PORTC = (PORTC & ~(1<<ElectroMagnet)) | (0<<ElectroMagnet);
 	//PORTC = 0xFF;
 }
 
@@ -632,8 +657,9 @@ void If_Fire_Detected(){
 	static char was = 0x00; //was detected
 	
 	if(fire_sensor_val >= 500){
+	//if(1){
 		
-		if(!was){ //was not detected -> turn buzzer on
+		/*if(!was){ //was not detected -> turn buzzer on
 			was = 0x01;
 			switch(s){
 				case 0x00:
@@ -646,6 +672,20 @@ void If_Fire_Detected(){
 		else if(++i >= 20){
 			if(s) s = 0x01;
 			else s = 0x00;
+			
+			switch(s){
+				case 0x00:
+				Buzzer_on(50);
+				break;
+				case 0x01:
+				Buzzer_on(70);
+			}
+		}*/
+		
+		if(++i >= 10){
+			if(s) s = 0x00;
+			else s = 0x01;
+			i = 0;
 			
 			switch(s){
 				case 0x00:

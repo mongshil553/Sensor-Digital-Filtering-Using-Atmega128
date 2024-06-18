@@ -10,6 +10,7 @@
 #include <avr/io.h>
 #include <util/delay.h>
 #include "Item.h"
+#include "Sensors.h"
 
 void Select_Item(char item){
 	PORTC = (PORTC & 0xF0) | item;
@@ -108,6 +109,12 @@ void BLUE_LED_On(unsigned int p){
 	Select_Item(ITEM_LED_BLUE);
 }
 
+int calc_led(){
+	double cds=(4700.0 * 1023)/cds_sensor_val-4700.0;
+	double LUX = pow(10, 1-(log(cds)-log(40000))/0.8);
+	
+	return (LUX > CDS_MAX)?LED_MAX:(LUX<CDS_MIN)?LED_MIN:(LED_MAX-LED_MIN)/(CDS_MAX-CDS_MIN)*LUX;
+}
 //=============== Buzzer =================//
 void Buzzer_on(int key){
 	Select_Item(ITEM_NONE);
