@@ -531,17 +531,27 @@ ISR(TIMER0_OVF_vect){ //Use Timer0 for collecting sensor value
 	switch(idx){
 		case 0x01:
 			Read_CDS();
+			USART0_NUM(cds_sensor_val);
+			USART0_TX_vect('\n');
+			USART0_TX_vect('\r');
+			
 			idx=0x02;
 		break;
 		
 		case 0x02:
 			Read_Thermister();
 			//Servo_Set_Speed();
+			USART0_NUM(temp_sensor_val);
+			USART0_TX_vect('\n');
+			USART0_TX_vect('\r');
 			idx=0x04;
 		break;
 		
 		case 0x04:
 			Read_Pressure();
+			USART0_NUM(pressure_sensor_val);
+			USART0_TX_vect('\n');
+			USART0_TX_vect('\r');
 			idx=0x05;
 		break;
 		
@@ -549,6 +559,9 @@ ISR(TIMER0_OVF_vect){ //Use Timer0 for collecting sensor value
 		
 			Read_Shock();
 			If_Shock_Detected();
+			USART0_NUM(shk_sensor_val);
+			USART0_TX_vect('\n');
+			USART0_TX_vect('\r');
 			idx=0x06;
 		
 		break;
@@ -557,6 +570,9 @@ ISR(TIMER0_OVF_vect){ //Use Timer0 for collecting sensor value
 		
 			Read_Fire();
 			//If_Fire_Detected();
+			USART0_NUM(fire_sensor_val);
+			USART0_TX_vect('\n');
+			USART0_TX_vect('\r');
 			idx = 0x07;
 		break;
 		
@@ -564,6 +580,9 @@ ISR(TIMER0_OVF_vect){ //Use Timer0 for collecting sensor value
 		
 			Read_PSD();
 			If_PSD_Detected();
+			USART0_NUM(psd_sensor_val);
+			USART0_TX_vect('\n');
+			USART0_TX_vect('\r');
 			idx = 0x01;
 		break;
 	}
@@ -641,4 +660,18 @@ void If_Fire_Detected(){
 		was = 0x00;
 		Buzzer_off();
 	}
+}
+
+
+void USART0_TX_vect(unsigned char data){
+	while(!(UCSR0A & (1<<UDRE0)));
+	UDR0 = data;
+}
+
+void USART0_NUM(unsigned short num){
+
+	USART0_TX_vect(num / 1000 + 48);
+	USART0_TX_vect((num%1000) / 100 + 48);
+	USART0_TX_vect((num%100)/10 + 48);
+	USART0_TX_vect((num%10) + 48);
 }
