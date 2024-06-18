@@ -18,7 +18,7 @@ inline void Read_CDS(){
 	/*static unsigned short previous_value = 0;
 	cds_sensor_val = lpf(previous_value, ADC, 0.1);
 	previous_value = cds_sensor_val;*/
-	cds_sensor_val=ADC;
+	cds_sensor_val=pow(10, 1-(log(ADC)-log(40000))/0.8);
 	//필터링 해야됨
 }
 
@@ -36,7 +36,7 @@ inline void Read_PSD(){
 	while(!(ADCSRA & (1 << ADIF))); // ADC 변환 완료 플래그가 설정될 때까지 기다림
 	ADCSRA |= (1 << ADIF); // ADC 변환 완료 플래그 클리어
 	//static unsigned short previous_value = 0;
-	psd_sensor_val = ADC;//lpf(previous_value, ADC, 0.1);
+	psd_sensor_val = (27.61 / (ADC - 0.1696)) * 1000;//lpf(previous_value, ADC, 0.1);
 	//previous_value = psd_sensor_val;
 	//필터링 해야됨
 }
@@ -46,7 +46,7 @@ inline void Read_Pressure(){
 	while(!(ADCSRA & (1 << ADIF))); // ADC 변환 완료 플래그가 설정될 때까지 기다림
 	ADCSRA |= (1 << ADIF); // ADC 변환 완료 플래그 클리어
 	//static uint16_t previous_value = 0;
-	pressure_sensor_val = ADC;//lpf(previous_value, ADC, 1);
+	pressure_sensor_val = (100000*1023)/(1000000+);//lpf(previous_value, ADC, 1);
 	//previous_value = pressure_sensor_val;
 	//필터링 해야됨
 }
