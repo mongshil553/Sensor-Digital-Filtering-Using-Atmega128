@@ -2,6 +2,7 @@
 #include <avr/io.h>
 
 //Read_{센서} 부분에서 필터링 실행
+double tmp1, tmp2;
 
 unsigned short lpf(unsigned short current_value, unsigned short new_value, float alpha) {
 	return (unsigned short)(alpha * new_value + (1 - alpha) * current_value);
@@ -19,6 +20,7 @@ inline void Read_CDS(){
 	cds_sensor_val = lpf(previous_value, ADC, 0.1);
 	previous_value = cds_sensor_val;*/
 	cds_sensor_val=ADC;
+
 	//필터링 해야됨
 }
 
