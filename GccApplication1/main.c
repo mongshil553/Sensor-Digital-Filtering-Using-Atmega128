@@ -216,7 +216,7 @@ int main(void){
 	
 	//Servo_Quick_Move(375);
 	Servo_pos = SERVO_HOME;
-	Servo_Set_Speed(SERVO_MAX_Speed);
+	Servo_Set_Speed(50);
 	Servo_Goto(375);
 	
 	//PORTC &= 0xFB; //0x1111 1110

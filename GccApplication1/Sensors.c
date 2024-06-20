@@ -2,6 +2,7 @@
 #include <avr/io.h>
 
 //Read_{센서} 부분에서 필터링 실행
+double tmp1, tmp2;
 
 unsigned short lpf(unsigned short current_value, unsigned short new_value, float alpha) {
 	return (unsigned short)(alpha * new_value + (1 - alpha) * current_value);
@@ -18,7 +19,8 @@ inline void Read_CDS(){
 	/*static unsigned short previous_value = 0;
 	cds_sensor_val = lpf(previous_value, ADC, 0.1);
 	previous_value = cds_sensor_val;*/
-	cds_sensor_val=pow(10, 1-(log(ADC)-log(40000))/0.8);
+	cds_sensor_val=ADC;
+
 	//필터링 해야됨
 }
 
@@ -35,9 +37,10 @@ inline void Read_PSD(){
 	ADCSRA |= (1 << ADSC); // ADC 변환 시작
 	while(!(ADCSRA & (1 << ADIF))); // ADC 변환 완료 플래그가 설정될 때까지 기다림
 	ADCSRA |= (1 << ADIF); // ADC 변환 완료 플래그 클리어
-	//static unsigned short previous_value = 0;
-	psd_sensor_val = (27.61 / (ADC - 0.1696)) * 1000;//lpf(previous_value, ADC, 0.1);
-	//previous_value = psd_sensor_val;
+	static unsigned short previous_value = 0;
+	//psd_sensor_val = ADC;
+	psd_sensor_val = lpf(psd_sensor_val, ADC, 0.2);
+	//psd_sensor_val = previous_value;
 	//필터링 해야됨
 }
 
@@ -46,7 +49,7 @@ inline void Read_Pressure(){
 	while(!(ADCSRA & (1 << ADIF))); // ADC 변환 완료 플래그가 설정될 때까지 기다림
 	ADCSRA |= (1 << ADIF); // ADC 변환 완료 플래그 클리어
 	//static uint16_t previous_value = 0;
-	pressure_sensor_val = (100000*1023)/(1000000+);//lpf(previous_value, ADC, 1);
+	pressure_sensor_val = ADC;//lpf(previous_value, ADC, 1);
 	//previous_value = pressure_sensor_val;
 	//필터링 해야됨
 }
@@ -77,5 +80,5 @@ inline void Reset_sensor_val(){
 	temp_sensor_val = 0;	temp_en = 0;
 	shk_sensor_val	= 0;	shk_detected = 0;
 	psd_sensor_val	= 0;
-	fire_sensor_val	= 0;
+	fire_sensor_val	= 0;	Fire_Detected = 0;
 }
