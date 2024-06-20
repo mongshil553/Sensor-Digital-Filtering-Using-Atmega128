@@ -160,6 +160,12 @@
     <Compile Include="Overall.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="queue.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="queue.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="Sensors.c">
       <SubType>compile</SubType>
     </Compile>

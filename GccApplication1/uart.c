@@ -4,7 +4,7 @@
  * Created: 2024-06-18 오후 3:40:39
  *  Author: kijun
  */ 
-#include <avr/io.h>;
+#include <avr/io.h>
 #include "uart.h"
 
 #define UBRR 103
@@ -30,13 +30,28 @@ unsigned char USART0_RX(void){
 	return UDR0;
 }
 
-void USART0_NUM(int nNum){
-	USART0_TX_vect(nNum / 10000 + 48);
+void USART0_sNUM(long nNum){
 	USART0_TX_vect((nNum%10000) / 1000 + 48);
-	USART0_TX_vect((nNum%1000)/100 + 48);
-	USART0_TX_vect((nNum%100)/10 + 48);
-	USART0_TX_vect((nNum%10)+48);
-	
+	USART0_TX_vect((nNum%1000) / 100 + 48);
+	USART0_TX_vect((nNum%100) / 10 + 48);
+	USART0_TX_vect((nNum%10) + 48);
+}
+
+void USART0_NUM(long nNum){
+	if(nNum >= 0){
+		USART0_TX_vect(' ');
+		USART0_sNUM(nNum/10000);
+		USART0_sNUM(nNum%10000);
+	}
+	else{
+		USART0_TX_vect('-');
+		USART0_sNUM((-1)*nNum/10000);
+		USART0_sNUM((-1)*nNum%10000);
+	}
+	USART0_ln();
+}
+inline void USART0_ln(){
 	USART0_TX_vect('\n');
 	USART0_TX_vect('\r');
 }
+

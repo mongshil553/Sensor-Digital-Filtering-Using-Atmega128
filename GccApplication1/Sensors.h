@@ -15,22 +15,23 @@ unsigned short pressure_sensor_val;
 //예를 들어, 이전 값 저장하는 변수
 
 //CdS Sensor
-unsigned short cds_sensor_val;
+short cds_sensor_val;
 
 //Temperature sensor
-unsigned short temp_sensor_val;
-unsigned short temp_en;
+short temp_sensor_val;
+short temp_en;
 
 //Shock Sensor
-unsigned short shk_sensor_val;
+short shk_sensor_val;
 char shk_detected;
 
 //PSD Sensor
-unsigned short psd_sensor_val;
+short psd_sensor_val;
 char PSD_detected;
+volatile short psd_dst;
 
 //Fire sensor
-unsigned short fire_sensor_val;
+short fire_sensor_val;
 char Fire_Detected;
 
 void Read_CDS();
@@ -41,5 +42,11 @@ void Read_Thermister();
 void Read_Shock();
 
 void Reset_sensor_val();
+
+int calc_dist();
+int calc_hz();
+int calc_force();
+char calc_speed();
+int calc_led();
 
 #endif /* SENSORS_H_ */

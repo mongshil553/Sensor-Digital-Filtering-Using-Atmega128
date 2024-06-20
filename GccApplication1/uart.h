@@ -11,7 +11,7 @@
 
 //#define UBRR 103
 
-void USART0_NUM(int num);
+void USART0_NUM(long num);
 void USART0_TX_vect(unsigned char data);
 void UART_init();
 
