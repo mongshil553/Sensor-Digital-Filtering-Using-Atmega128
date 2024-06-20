@@ -5,7 +5,7 @@
  * Author : kijun
  */ 
 
-#define DEBUG_ 1
+#define DEBUG_ 0
 #define F_CPU 16000000UL
 
 #define ElectroMagnet 7
@@ -58,11 +58,12 @@ int main(void){
 	adc_init(); // ADC 초기화
 	timer0_init(); // 타이머0 초기화
 	timer1_init();
+	seg_init();
 	
 	Reset_sensor_val(); //센서 변수 초기화
 	
-	UBRR0L = (unsigned char)UBRR;
-	UBRR0H = (unsigned char)(UBRR >> 8);
+	//UBRR0L = (unsigned char)UBRR;
+	//UBRR0H = (unsigned char)(UBRR >> 8);
 
 	
 	UCSR0A = 0x00; //비동기 1배속
@@ -79,7 +80,10 @@ int main(void){
 	Select_Item(ITEM_NONE);
 	port_setup();
 	
+	seg_act();
+	
 	while (1) {
+		
 		// ADC 채널 값을 읽고 필요한 변수에 저장
 		
 		if (cds_sensor_val > 100) { //CDS
@@ -164,18 +168,29 @@ int main(void){
 	
 }
 
-void USART0_TX_vect(unsigned char data){
-	while(!(UCSR0A & (1<<UDRE0)));
-	UDR0 = data;
+
+void seg_init(){
+
+	DDRE=0x2c;// 0,2,3,4 사용 1번 txㅣㅍㄴ
 }
 
-void USART0_NUM(unsigned short num){
 
-	USART0_TX_vect(num / 1000 + 48);
-	USART0_TX_vect((num%1000) / 100 + 48);
-	USART0_TX_vect((num%100)/10 + 48);
-	USART0_TX_vect((num%10) + 48);
+void seg_act(){
+	while(1){
+	PORTE=0x00;
+	_delay_ms(200);
+	PORTE=0x01;
+	_delay_ms(200);
+	PORTE=0x04;
+	_delay_ms(200);
+	PORTE=0x08;
+	_delay_ms(200);
+	PORTE=0x20;
+	_delay_ms(200);
+	}
 }
+
+
 
 
 #elif DEBUG_ == 1
@@ -216,7 +231,7 @@ int main(void){
 	
 	//Servo_Quick_Move(375);
 	Servo_pos = SERVO_HOME;
-	Servo_Set_Speed(50);
+	Servo_Set_Speed(Servo_MIN_Speed);
 	Servo_Goto(375);
 	
 	//PORTC &= 0xFB; //0x1111 1110
@@ -227,7 +242,7 @@ int main(void){
 	char temp = 0x00;
 	int pressure_F = 0;
 	while(1){
-		_delay_ms(2);
+		_delay_ms(200);
 
 		pressure_F = calc_force();
 		//USART0_NUM(pressure_F);
@@ -598,6 +613,9 @@ void If_Shock_Detected(){
 		shk_detected = 0x01;
 
 }
+
+
+
 
 void If_PSD_Detected(){
 	if ( (psd_sensor_val> 520)) {
