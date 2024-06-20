@@ -35,7 +35,7 @@ char BT_Receive(){
 		case 1:
 		if(rdata == '.') {
 			step = 0;
-			BT_send(rdata);
+			BT_send(1);
 			//ElectroMagnet_On();
 			return 0x00;
 		}
@@ -45,7 +45,7 @@ char BT_Receive(){
 		case 2:
 		if(rdata == '.') {
 			step = 0;
-			BT_send(rdata);
+			BT_send(1);
 			//ElectroMagnet_On();
 			return 0x00;
 		}
@@ -55,7 +55,7 @@ char BT_Receive(){
 		case 3:
 		if(rdata == '.') {
 			step = 0;
-			BT_send(rdata);
+			BT_send(1);
 			//ElectroMagnet_Off();
 			return 0x01;
 		}
@@ -76,7 +76,7 @@ char BT_Receive(){
 		step = 3;
 	}
 	
-	BT_send(rdata);
+	BT_send(1);
 
 	return 0x00;
 }

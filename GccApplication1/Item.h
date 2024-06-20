@@ -13,17 +13,19 @@
 #define ITEM_NONE		0x03	//0000 0011
 #define ITEM_SERVO		0x02	//0000 0010
 #define ITEM_SPEAKER	0x0E	//0000 1110
-#define ITEM_LED_RED	0x09	//0000 1001
+#define ITEM_LED_RED	0x05	//0000 0101
 #define ITEM_LED_GREEN	0x0D	//0000 1101
 #define ITEM_LED_BLUE	0x01	//0000 0001
 
 void Select_Item(char item);
 
 //================ Servo ===================//
-#define Servo_MAX 520
-#define Servo_MIN 230
-#define SERVO_HOME 130
-#define SERVO_BOX 620
+#define SERVO_MAX_POS 580
+#define SERVO_MIN_POS 290
+#define SERVO_HOME 620
+#define SERVO_BOX 130
+#define Servo_MAX_Speed 20.0
+#define Servo_MIN_Speed 100.0
 
 //Servo Motor
 volatile unsigned short Servo_target, tmp;
@@ -39,16 +41,21 @@ void Servo_Goto(unsigned short pos);
 void Servo_Act();
 void Servo_Set_Target(unsigned short val);
 void Servo_Set_Speed(char sp);
+
+
+
+char calc_speed();
 //Servo invrement_threshold: 0:Super Fast, 50:Very Slow
 //Servo is using Timer1 for PWM
 
 unsigned short Marble_pos;
 void Calculate_Marble_pos();
+int Calculate_Servo_Rotate_Angle(short pos);
 
 //================ LED ===================//
-#define LED_MAX 800.0
+#define LED_MAX 3000.0
 #define LED_MIN 200.0
-#define CDS_MAX 400.0
+#define CDS_MAX 2000.0
 #define CDS_MIN 100.0
 #define get_led_val (cds_sensor_val > CDS_MAX)?LED_MAX:(cds_sensor_val<CDS_MIN)?LED_MIN:(LED_MAX-LED_MIN)/(CDS_MAX-CDS_MIN)*cds_sensor_val
 int calc_led();
@@ -57,7 +64,20 @@ void GREEN_LED_On(unsigned int p);
 void BLUE_LED_On(unsigned int p);
 
 //================ Buzzer ====================//
+#define Buzzer_MAX 200
+#define Buzzer_MIN 10
 void Buzzer_on(int hz);
 void Buzzer_off();
+int calc_hz();
 
+//================ Thermister ================//
+#define Thermister_MAX 300
+#define Thermister_MIN 0
+
+//================= Pressure ==================//
+int calc_force();
+
+//================= Fire ======================//
+#define Fire_MAX 800
+#define Fire_MIN 0
 #endif /* ITEM_H_ */

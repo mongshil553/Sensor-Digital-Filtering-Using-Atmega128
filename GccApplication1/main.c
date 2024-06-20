@@ -10,18 +10,20 @@
 
 #define ElectroMagnet 7
 
-#define UBRR 103
+//#define UBRR 103
 
 #include <avr/io.h>
 #include <stdbool.h>
 #include <avr/interrupt.h>
 #include <util/delay.h>
 #include <stdlib.h>//
+#include <math.h>
 
 #include "Marble.h"
 #include "Sensors.h"
 #include "Bluetooth.h"
 #include "Item.h"
+#include "uart.h"
 
 void pin_init();
 void port_setup();
@@ -37,6 +39,9 @@ void ElectroMagnet_Off();
 void If_PSD_Detected();
 void If_Shock_Detected();
 void If_Fire_Detected();
+
+//System state
+char state;
 
 
 //**** Debug **************************************************************************************************************************************************//
@@ -71,8 +76,6 @@ int main(void){
 	
 	sei(); // 전역 인터럽트 허용
 
-	
-	
 	Select_Item(ITEM_NONE);
 	port_setup();
 	
@@ -183,20 +186,26 @@ int main(void){
 	
 	cli();
 	port_setup();
+	adc_init();
+	timer0_init();
 	timer1_init();
-	//timer0_init();
-	init_BT();
 	
-	Reset_sensor_val(); //센서 변수 초기화
+	init_BT();
+	UART_init();
+	
+	Reset_sensor_val();
+	
+	//Reset_sensor_val(); //센서 변수 초기화
 	
 	//EIMSK = 0x03; //External Interrupt Enable Mask
-	EIMSK = 0x00;
+	EIMSK = 0x03;
 	EICRA = 0x0F; //External Interrupt Control Register(Edge)
 
 	sei();
 	
 	DDRC = 0xFF;
 	PORTC = 0x00;
+	PORTA = 0xFF;
 	
 	shk_detected = 0x00;
 	
@@ -206,81 +215,48 @@ int main(void){
 	Servo_Allowed = 0x01;
 	
 	//Servo_Quick_Move(375);
+	Servo_pos = SERVO_HOME;
+	Servo_Set_Speed(SERVO_MAX_Speed);
 	Servo_Goto(375);
 	
 	//PORTC &= 0xFB; //0x1111 1110
 	//PORTC &= 0xF3; //0b1111 0010
 	
-	//PORTC = (PORTC & 0xF3) | (0x00 << 2);
-	
 	//0x1111 0011: mask, 
 	
+	char temp = 0x00;
+	int pressure_F = 0;
 	while(1){
-		_delay_ms(10);
+		_delay_ms(2);
+
+		pressure_F = calc_force();
+		//USART0_NUM(pressure_F);
+		if(pressure_F > 300){ //pressure
+			ElectroMagnet_On();
+			PORTA &= 0x7F;
+		}
+		else{
+			PORTA |= 0x80;
+			ElectroMagnet_Off();
+		}
 		
-		GREEN_LED_On(calc_led());
+		if(temp == 0x00){
+			temp=0x01;
+			Servo_Goto(SERVO_MAX_POS);
+		}else{
+			temp=0x00;
+			Servo_Goto(SERVO_MIN_POS);
+		}
 		
 		switch(PIND & 0x03){
-			case 0x02: //Select Red LED
-
-				//Servo_Quick_Move(SERVO_HOME);
-				//RED_LED_On((cds_sensor_val > CDS_MAX)?LED_MAX:(cds_sensor_val<CDS_MIN)?LED_MIN:(int)((LED_MAX-LED_MIN)/(CDS_MAX-CDS_MIN)*cds_sensor_val));
-				RED_LED_On(800);
+			case 0x02: //Red LED On
+				//RED_LED_On(calc_led());
+			break;
+			
+			case 0x01: //ElectroMagnet On
 				//ElectroMagnet_On();
-				//BT_send('1');
-			break;
-			
-			case 0x01: //Select Green LED
-
-				//Servo_Quick_Move(SERVO_BOX);
-				//Select_Item(ITEM_LED_GREEN);
-				
-				GREEN_LED_On((cds_sensor_val > CDS_MAX)?LED_MAX:(cds_sensor_val<CDS_MIN)?LED_MIN:(int)((LED_MAX-LED_MIN)/(CDS_MAX-CDS_MIN)*cds_sensor_val));
-				//GREEN_LED_On(800);
-				//ElectroMagnet_Off();
 			break;
 		}
-		
-		
-		/*
-		if(BT_Receive()){
-			//if(marble.color == 1) Servo_Quick_Move(200);
-			//else if(marble.color == 2) Servo_Quick_Move(500);
-			//else Servo_Quick_Move(375);
-			
-			if(marble.color == 0) RED_LED_On(500);
-			else if(marble.color == 1) GREEN_LED_On(500);
-			else BLUE_LED_On(500);
-			
-			for(iter=0; iter<50; iter++){ //2 second for shock to be detected
-				_delay_ms(100);
-				if(shk_detected==0x01){
-					Servo_Quick_Move(SERVO_BOX);
-					shk_detected = 0x00;
-				}
-				
-			}
-			
-			Servo_Quick_Move(SERVO_HOME);
-		}
-
-		switch(PIND & 0x03){
-			case 0x01:
-				ElectroMagnet_On();
-				//Servo_Go_Home();
-				//Servo_Quick_Move(SERVO_HOME);
-			break;
-			
-			case 0x02:
-				ElectroMagnet_Off();
-				//Servo_Go_Box();
-				//Servo_Quick_Move(SERVO_BOX);
-			break;
-			
-			default:
-			break;
-		}
-		*/
 		
 	}
 	
@@ -288,14 +264,13 @@ int main(void){
 
 ISR(INT1_vect)
 {
-	//BT_send('1');
-
-	//RED_LED_On(500);
+	GREEN_LED_On(calc_led());
 }
 
 ISR(INT0_vect)
 {
-	BT_send('0');
+	RED_LED_On(calc_led());
+	//BT_send('0');
 	//GREEN_LED_On(500);
 }
 
@@ -311,14 +286,16 @@ int main(void)
 	adc_init(); // ADC 초기화
 	timer0_init(); // 타이머0 초기화
 	timer1_init(); //타이머 초기화
+	UART_init();
 	
 	init_BT();	//Bluetooth Setup
 	
-	EIMSK = 0xC0; //1100 0000
+	EIMSK = 0xC3; //1100 0000
 	EICRB = 0xF0; //External Interrupt Control Register(Edge)
-	
+	EICRA = 0x0F;
 	Reset_sensor_val(); //센서 변수 초기화
 	
+	PORTA |= 0x80;
 	ElectroMagnet_Off();
 	
 	marble.color = 0x05;
@@ -329,9 +306,10 @@ int main(void)
 	
 	Servo_Allowed = 0x01;
 	
-	Servo_Set_Speed(20);
+	Servo_Set_Speed(Servo_MIN_Speed);
 	
-	Servo_Goto(375);
+	Servo_pos = SERVO_HOME;
+	Servo_Goto(510);
 	Servo_Go_Home();
 	
 	//Need to Check Connection with Server
@@ -340,38 +318,26 @@ int main(void)
 	//This is for just in case bluetooth fails at presentation
 	
 	//short i;
-	char state = 0x01;
+	
+	
+	state = 0x01;
+	int pressure_F = 0;
 	
     while (1) {
 		switch(state){
 			case 0b00000001:					//not started
 				//if(pressure_sensor_val >= 50)	//pressure threshold is 50(just guessing)
 					//state <<= 1;				//Change state
+				PORTA |= 0x80;
 				
-				if(pressure_sensor_val > 900){ //pressure 
+				pressure_F = calc_force();
+				//pressure_F = pow(2.718, (pressure_sensor_val-0.3456)/0.06935)
+				if(pressure_F > 300){ //pressure 
 					Select_Item(ITEM_NONE);
-					ElectroMagnet_On();
+					PORTA &= 0x7F;
 					BT_send('0'); //start signal
 					state <<= 1;
 				}
-				
-				switch(PIND & 0x03){
-					case 0x2:
-					//ICR1 = 50;
-					//OCR1A=ICR1/5;
-					ElectroMagnet_On();
-					break;
-					
-					case 0x01:
-					//ICR1 = 70;
-					//OCR1A=ICR1/5;
-					ElectroMagnet_Off();
-					break;
-					
-					default:
-					break;
-				}
-				
 				break;
 				
 			case 0b00000010:	//wait for Marble data to arrive from the server
@@ -383,8 +349,12 @@ int main(void)
 				break;
 				
 			case 0b00000100:	//Catch & Drop Marble
+				USART0_NUM(marble.posX);
+				USART0_NUM(marble.posY);
+				USART0_TX_vect('\n');
 				//Servo_Go_Marble(); //Rotate Servo to Marble to catch marble
-				Servo_Goto(375);
+				Servo_Goto(Calculate_Servo_Rotate_Angle(marble.posY));
+				_delay_ms(1000);
 				
 				//Servo Reached Destination				
 				ElectroMagnet_On(); //Turn on ElectroMagnet
@@ -445,33 +415,35 @@ int main(void)
 			case 0b00010000:
 				
 				
-				if(marble.color == 0) RED_LED_On(get_led_val);
-				else if(marble.color == 2) GREEN_LED_On(get_led_val);
-				else if(marble.color == 1) BLUE_LED_On(get_led_val);
+				if(marble.color == 0) RED_LED_On(calc_led());
+				else if(marble.color == 2) GREEN_LED_On(calc_led());
+				else if(marble.color == 1) BLUE_LED_On(calc_led());
 				else Select_Item(ITEM_NONE);
-				
-				//LED_Set(); //LED PWM of Marble Color
-				state = 0x01; //Done, wait for pressure sensor
 				break;
 		}
     }
 }
 
-ISR(INT7_vect)
+ISR(INT0_vect)
 {
 	//BT_send('0');
 	//GREEN_LED_On(500);
 	
 	//Select_Item(ITEM_NONE);
 	//Servo_Allowed = 0x00;
+	
+	fire_sensor_val = 900;
+	If_Fire_Detected();
 }
 
 #endif
 //************************************************************************************************************************************************************//
 
 void timer0_init(void) {
-	TCCR0 |= (1 << CS02) |(1<<CS01)| (1 << CS00); // 분주비 1024
-	//TCCR0 |= (1<<CS01) | (1 << CS00);
+	//TCCR0 |= (1 << CS02) |(1<<CS01)| (1 << CS00); // 분주비 1024
+	
+	TCCR0 |= (1<<CS01) | (1 << CS00);
+	
 	TIMSK |= (1 << TOIE0); // 타이머0 오버플로우 인터럽트 허용
 	TCNT0 = 0; // 타이머 카운터 초기화
 }
@@ -555,38 +527,30 @@ ISR(TIMER0_OVF_vect){ //Use Timer0 for collecting sensor value
 	
 	switch(idx){
 		case 0x01:
-			Read_CDS();
-			USART0_NUM(cds_sensor_val);
-			USART0_TX_vect('\n');
-			USART0_TX_vect('\r');
-			
+			Read_CDS();	
+			//USART0_NUM(cds_sensor_val);
 			idx=0x02;
 		break;
 		
 		case 0x02:
 			Read_Thermister();
-			//Servo_Set_Speed();
-			USART0_NUM(temp_sensor_val);
-			USART0_TX_vect('\n');
-			USART0_TX_vect('\r');
+			//USART0_NUM(temp_sensor_val);
+			Servo_Set_Speed(calc_speed());
 			idx=0x04;
 		break;
 		
 		case 0x04:
 			Read_Pressure();
-			USART0_NUM(pressure_sensor_val);
-			USART0_TX_vect('\n');
-			USART0_TX_vect('\r');
+			//USART0_NUM(pressure_sensor_val);
 			idx=0x05;
 		break;
 		
 		case 0x05:
 		
 			Read_Shock();
+			//if(shk_sensor_val <= 890)
+			//	USART0_NUM(shk_sensor_val);
 			If_Shock_Detected();
-			USART0_NUM(shk_sensor_val);
-			USART0_TX_vect('\n');
-			USART0_TX_vect('\r');
 			idx=0x06;
 		
 		break;
@@ -595,21 +559,19 @@ ISR(TIMER0_OVF_vect){ //Use Timer0 for collecting sensor value
 		
 			Read_Fire();
 			//If_Fire_Detected();
-			USART0_NUM(fire_sensor_val);
-			USART0_TX_vect('\n');
-			USART0_TX_vect('\r');
+			//USART0_NUM(fire_sensor_val);
 			idx = 0x07;
 		break;
 		
 		case 0x07:
 		
 			Read_PSD();
-			If_PSD_Detected();
-			USART0_NUM(psd_sensor_val);
-			USART0_TX_vect('\n');
-			USART0_TX_vect('\r');
+			//USART0_NUM(psd_sensor_val);
+			//If_PSD_Detected();
+
 			idx = 0x01;
 		break;
+		
 	}
 	
 	//ADC Mux 선택, ADC 시작 시키고 ISR 종료
@@ -656,7 +618,7 @@ void If_Fire_Detected(){
 	static char s = 0x00; //state
 	static char was = 0x00; //was detected
 	
-	if(fire_sensor_val >= 500){
+	if(fire_sensor_val <= 500){
 	//if(1){
 		
 		/*if(!was){ //was not detected -> turn buzzer on
@@ -682,19 +644,24 @@ void If_Fire_Detected(){
 			}
 		}*/
 		
-		if(++i >= 10){
+		Fire_Detected = 0x01;
+		state = 0x01;
+		if(++i >= 15){
 			if(s) s = 0x00;
 			else s = 0x01;
 			i = 0;
 			
-			switch(s){
+			/*switch(s){
 				case 0x00:
-				Buzzer_on(50);
+				Buzzer_on(100);
 				break;
 				case 0x01:
-				Buzzer_on(70);
-			}
+				Buzzer_on(200);
+			}*/
+			Buzzer_on(calc_hz());
 		}
+		
+		//Buzzer_on(calc_hz());
 	}
 	else{
 		was = 0x00;
@@ -703,15 +670,3 @@ void If_Fire_Detected(){
 }
 
 
-void USART0_TX_vect(unsigned char data){
-	while(!(UCSR0A & (1<<UDRE0)));
-	UDR0 = data;
-}
-
-void USART0_NUM(unsigned short num){
-
-	USART0_TX_vect(num / 1000 + 48);
-	USART0_TX_vect((num%1000) / 100 + 48);
-	USART0_TX_vect((num%100)/10 + 48);
-	USART0_TX_vect((num%10) + 48);
-}

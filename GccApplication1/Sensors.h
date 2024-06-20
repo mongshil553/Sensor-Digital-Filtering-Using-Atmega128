@@ -31,6 +31,7 @@ char PSD_detected;
 
 //Fire sensor
 unsigned short fire_sensor_val;
+char Fire_Detected;
 
 void Read_CDS();
 void Read_Fire();
