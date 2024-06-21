@@ -16,6 +16,8 @@ short table_y[12] = {14, 19, 28, 48, 58, 77, 81, 94, 100, 114, 122, 133};
 short table_o[12] = {290, 310, 330, 350, 370, 390, 410, 430, 450, 470, 490, 510};
 
 void Select_Item(char item){
+	//next_item = item;
+	//while(cur_item != next_item);
 	PORTC = (PORTC & 0xF0) | item;
 	_delay_ms(100);
 }
@@ -126,6 +128,9 @@ void BLUE_LED_On(unsigned int p){
 	ICR1 = 4999;
 	OCR1A = p;
 	Select_Item(ITEM_LED_BLUE);
+}
+void Set_LED(unsigned int p){
+	OCR1A = p;
 }
 
 

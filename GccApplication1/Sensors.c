@@ -19,8 +19,6 @@ short lpf(unsigned short current_value, unsigned short new_value, float alpha) {
 }
 
 inline void Read_CDS(){
-	//ADCSRA |= (1 << ADSC); // ADC 변환 시작
-	//while(!(ADCSRA & (1 << ADIF))); // ADC 변환 완료 플래그가 설정될 때까지 기다림
 	ADCSRA |= (1<< ADIF); // ADC 변환 완료 플래그 클리어
 	
 	static short iter0 = 0, iter1 = 0;
@@ -50,8 +48,6 @@ inline void Read_CDS(){
 }
 
 inline void Read_Fire(){
-	//ADCSRA |= (1 << ADSC); // ADC 변환 시작
-	//while(!(ADCSRA & (1 << ADIF))); // ADC 변환 완료 플래그가 설정될 때까지 기다림
 	ADCSRA |= (1 << ADIF); // ADC 변환 완료 플래그 클리어
 	
 	static short iter0 = 0, iter1 = 0;
@@ -72,8 +68,6 @@ inline void Read_Fire(){
 	fire_sensor_val = sum/10000;
 }
 inline void Read_PSD(){
-	//ADCSRA |= (1 << ADSC); // ADC 변환 시작
-	//while(!(ADCSRA & (1 << ADIF))); // ADC 변환 완료 플래그가 설정될 때까지 기다림
 	ADCSRA |= (1 << ADIF); // ADC 변환 완료 플래그 클리어
 	
 	static short iter0 = 0, iter1 = 0;
@@ -100,12 +94,9 @@ inline void Read_PSD(){
 	jY = (jY+1)%2;
 	dataY[jY] = sum/10000;
 	psd_sensor_val = dataY[jY];
-	//psd_sensor_val = dataX[jX];
 }
 
 inline void Read_Pressure(){
-	//ADCSRA |= (1 << ADSC); // ADC 변환 시작
-	//while(!(ADCSRA & (1 << ADIF))); // ADC 변환 완료 플래그가 설정될 때까지 기다림
 	ADCSRA |= (1 << ADIF); // ADC 변환 완료 플래그 클리어
 	
 	static short iter0 = 0, iter1 = 0;
@@ -127,17 +118,12 @@ inline void Read_Pressure(){
 }
 
 inline void Read_Thermister(){
-	//ADCSRA |= (1 << ADSC); // ADC 변환 시작
-	//while(!(ADCSRA & (1 << ADIF))); // ADC 변환 완료 플래그가 설정될 때까지 기다림
 	ADCSRA |= (1 << ADIF); // ADC 변환 완료 플래그 클리어
 	
-	//temp_sensor_val = lpf(temp_sensor_val, ADC, 0.181);
 	temp_sensor_val = (1-0.188)*temp_sensor_val + 0.188*ADC;
 }
 
 inline void Read_Shock(){
-	//ADCSRA |= (1 << ADSC); // ADC 변환 시작
-	//while(!(ADCSRA & (1 << ADIF))); // ADC 변환 완료 플래그가 설정될 때까지 기다림
 	ADCSRA |= (1 << ADIF); // ADC 변환 완료 플래그 클리어
 	
 	static short iter0 = 0, iter1 = 0;
@@ -179,7 +165,6 @@ int calc_dist(){
 	return (27.61/(psd_sensor_val*1.0-0.1696))*1000;
 }
 int calc_hz(){
-	//return (fire_sensor_val > Fire_MAX)?Buzzer_MAX:(fire_sensor_val<Fire_MIN)?Buzzer_MIN:(Buzzer_MAX-Buzzer_MIN)/(Fire_MAX-Fire_MIN)*(fire_sensor_val-Fire_MIN)+Buzzer_MIN;
 	if(fire_sensor_val>=500) return 200;
 	if(fire_sensor_val >= 400) return 190;
 	else if(fire_sensor_val >= 350) return 180;
@@ -194,14 +179,8 @@ int calc_force(){
 	return pow(2.718, (pressure_sensor_val*5.0/1024.0-0.3456)/0.6935);
 }
 char calc_speed(){
-	//if(temp_sensor_val < Thermister_MIN){
-	//	return Servo_MIN_Speed;
-	//}
-	//else if(temp_sensor_val > Thermister_MAX){
-	//	return Servo_MAX_Speed;
-	//}
-	//return (Servo_MAX_Speed-Servo_MIN_Speed)/(Thermister_MAX-Thermister_MIN)*(temp_sensor_val-Thermister_MAX)*1.0+Servo_MAX_Speed;
-	return (temp_sensor_val > Thermister_MAX)?Servo_MAX_Speed:(temp_sensor_val<Thermister_MIN)?Servo_MIN_Speed:(Servo_MAX_Speed-Servo_MIN_Speed)/(Thermister_MAX-Thermister_MIN)*(temp_sensor_val-Thermister_MIN)+Servo_MIN_Speed;
+	return (temp_sensor_val > Thermister_MAX)?Servo_MAX_Speed:(temp_sensor_val<Thermister_MIN)?Servo_MIN_Speed:
+	(Servo_MAX_Speed-Servo_MIN_Speed)/(Thermister_MAX-Thermister_MIN)*(temp_sensor_val-Thermister_MIN)+Servo_MIN_Speed;
 }
 int calc_led(){
 	double cds=(4700.0 * 1023)/cds_sensor_val-4700.0;

@@ -10,7 +10,7 @@
 #define ITEM_H_
 
 //Demux
-#define ITEM_NONE		0x03	//0000 0011
+#define ITEM_NONE		0x03	//0000 0111
 #define ITEM_SERVO		0x02	//0000 0010
 #define ITEM_SPEAKER	0x0E	//0000 1110
 #define ITEM_LED_RED	0x05	//0000 1001
@@ -18,6 +18,7 @@
 #define ITEM_LED_BLUE	0x01	//0000 0001
 
 void Select_Item(char item);
+char cur_item, next_item;
 
 //================ Servo ===================//
 #define SERVO_MAX_POS 580
@@ -60,6 +61,7 @@ int Calculate_Servo_Rotate_Angle(short pos);
 void RED_LED_On(unsigned int p);
 void GREEN_LED_On(unsigned int p);
 void BLUE_LED_On(unsigned int p);
+void Set_LED(unsigned int p);
 
 //================ Buzzer ====================//
 #define Buzzer_MAX 200.0

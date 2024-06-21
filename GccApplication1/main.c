@@ -324,16 +324,23 @@ int main(void)
 	
 	Servo_Allowed = 0x01;
 	
-	Servo_Set_Speed(Servo_MAX_Speed);
+	cur_item = ITEM_NONE; next_item = ITEM_NONE;
+	
+	Servo_Set_Speed(50);
 	
 	//temp_en = 0x00;
 	Servo_pos = SERVO_HOME;
 	Servo_Goto(510);
 	Servo_Go_Home();
+	
+//	_delay_ms(100);
+//	Select_Item(ITEM_NONE);
+//	_delay_ms(100);
 
 	state = 0x01;
 	int pressure_F = 0;
-	
+	//Buzzer_on(calc_hz());
+	//while(1);
 	
     while (1) {
 		switch(state){
@@ -352,8 +359,6 @@ int main(void)
 				
 			case 0b00000010:	//wait for Marble data to arrive from the server
 				if(BT_Receive()){
-					//Marble Data has arrived from the server
-					//Calculate_Marble_pos();
 					state <<= 1;
 				}
 				break;
@@ -370,14 +375,13 @@ int main(void)
 
 				//Servo Reached Destination
 				shk_detected = 0x00; //Reset Shock Flag
+				_delay_ms(300);
 				ElectroMagnet_Off(); //Drop Marble
 				
-				_delay_ms(1000); //Wait 2 seconds for Marble to drop and Shock to be detected
+				_delay_ms(800); //Wait 1 seconds for Marble to drop and Shock to be detected
 
 				state <<= 1;
 				
-				//Set LED
-				//Set OCR with Timer for PWM Control
 				break;
 				
 			case 0b00001000: //Marble success or retry
@@ -407,21 +411,26 @@ int main(void)
 					
 					temp_en = 0x01; //temperature sensor controls servo speed
 					
-					Servo_Set_Speed(20);
+					//Servo_Set_Speed();
 					Servo_Go_Home(); //Servo returns home
+					
+					//_delay_ms(100);
+					//Select_Item(ITEM_NONE);
+					//_delay_ms(50);
 					
 					state <<= 1;
 				}
+				
 				break;
 				
 			case 0b00010000:
 				
-				
 				if(marble.color == 0) RED_LED_On(calc_led());
-				else if(marble.color == 2) GREEN_LED_On(calc_led());
-				else if(marble.color == 1) BLUE_LED_On(calc_led());
+				else if(marble.color == 1) GREEN_LED_On(calc_led());
+				else if(marble.color == 2) BLUE_LED_On(calc_led());
 				else Select_Item(ITEM_NONE);
 				break;
+				
 		}
     }
 }
@@ -449,6 +458,7 @@ void timer2_init(void) {
 void timer1_init(){
 	TCCR1A=0x82;
 	TCCR1B=0x1b;
+	//TIMSK |= (1 << TOIE1); //타이머1 오버플로우 인터럽트 허용
 
 	ICR1=4999;     //TOP
 }
@@ -576,6 +586,11 @@ ISR(TIMER2_OVF_vect){
 	if(temp_en)
 		Servo_Set_Speed(calc_speed());
 }
+ISR(TIMER1_OVF_vect){
+	//PORTC = (PORTC & 0xF0) | next_item;
+	cur_item = next_item;
+	//_delay_ms(1);
+}
 
 void ElectroMagnet_On(){
 	PORTB = (PORTB & ~(1<<0)) | (1<<0);
@@ -619,7 +634,6 @@ void If_PSD_Detected(){
 	}
 }
 
-//short fi = 0;
 void If_Fire_Detected(){
 	static volatile short i = 0; //increment
 	
