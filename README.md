@@ -9,7 +9,7 @@ Atmega128 and Python Sever Communicates via Bluetooth(HC-04).
 <hr>
 Following images are Hardware Images <br>
 <img src = "https://github.com/mongshil553/GccApplication1/assets/129606995/a30a8e43-35bf-4413-9689-e635dedbe66d" width="60%" height="60%">
-<img src = "https://github.com/mongshil553/GccApplication1/assets/129606995/f0fe351e-fe2f-460a-aeb0-420fb8e6e8ba" width="35%" height="35%"> <br>
+<img src = "https://github.com/mongshil553/GccApplication1/assets/129606995/f0fe351e-fe2f-460a-aeb0-420fb8e6e8ba" width="37%" height="37%"> <br>
 <img src = "https://github.com/mongshil553/GccApplication1/assets/129606995/da8a83f0-487c-4523-9f41-98ddb99bf2c7" width="24%" height="24%">
 <img src = "https://github.com/mongshil553/GccApplication1/assets/129606995/5153a1b4-eed2-446b-acd7-7093159d24e9" width="24%" height="24%">
 <img src = "https://github.com/mongshil553/GccApplication1/assets/129606995/c22e4d8c-d1f7-498a-9418-22671be9f99d" width="24%" height="24%"> 
