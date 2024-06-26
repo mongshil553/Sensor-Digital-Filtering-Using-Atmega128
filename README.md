@@ -11,6 +11,6 @@ Used 6 sensors with filtering: Pressure Sensor, Thermister Sensor, Cds Sensor, P
 i) Pressure Sensor
 Used IIR Low Filter(Butterworth).
 
-<img src = ![image](https://github.com/mongshil553/GccApplication1/assets/129606995/cfa31110-c6ef-409b-82f7-17083a4fae57)" width="30%" height="30%">
+<img src = ![image](https://github.com/mongshil553/GccApplication1/assets/129606995/cfa31110-c6ef-409b-82f7-17083a4fae57) width="50%" height="50%">
 
 
