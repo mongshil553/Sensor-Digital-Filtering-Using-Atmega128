@@ -26,7 +26,7 @@ i) Pressure Sensor: Used IIR Low Filter(Butterworth). <br>
 
 <br> iv) PSD Sensor: Used IIR Low Filter(Butterworth). <br>
 <img src = "https://github.com/mongshil553/GccApplication1/assets/129606995/a43835b6-928c-400a-a7ae-0591a3ab7312" width="24%" height="24%" title="Matlab Result">
-<img src = "https://github.com/mongshil553/GccApplication1/assets/129606995/d789ec14-7f2e-418d-9eec-7782fe4a93c0" width="37%" height="37%" title="Actual Data Before Filtering"> 
+<img src = "https://github.com/mongshil553/GccApplication1/assets/129606995/349da58d-2a61-4d50-9561-f647ecffbfa7" width="37%" height="37%" title="Actual Data Before Filtering"> 
 <img src = "https://github.com/mongshil553/GccApplication1/assets/129606995/cec50a78-4d11-42de-9d00-a42cf59d0a49" width="37%" height="37%" title="Actual Data After Filtering"> 
 
 <img src = "" width="24%" height="24%" title="Matlab Result">
