@@ -57,3 +57,12 @@ i) Pressure Sensor: Used IIR Low Filter(Butterworth). <br>
 <img src = "https://github.com/mongshil553/GccApplication1/assets/129606995/ac4e1cb8-78ce-4cbc-9667-da3549b94cd2" width="24%" height="24%" title="Matlab Result">
 <img src = "https://github.com/mongshil553/GccApplication1/assets/129606995/e33ddb3e-c5f3-48e2-891e-232034ed7cef" width="32%" height="32%" title="Actual Data Before Filtering"> 
 <img src = "https://github.com/mongshil553/GccApplication1/assets/129606995/056dea6c-5846-40fd-bb9b-f975c278f117" width="32%" height="32%" title="Actual Data After Filtering"> 
+
+<hr>
+<h3>Following are information about Python Server</h3>
+Atmega128 and Python Server Communicates using Bluetooth. On the Server, User need to press "Bluetooth Connect" in order to connect with HC-04. HC-04 setup must be preceded.<br>
+When pressed "Demo", K-Means Clustering Algorithm runs and shows in the far left image placeholder. When Pressed "Camera On", Camera connected to the computer is shown in the far right image place holder.
+When command arrives from Atmega128, System captures image from the camera and finds the marble using Hough Transform with OpenCV2. Then Evaluation of its color is run with K-Means Clustering Algorithm and the results are returned to Atemga128.<br>
+<img src = "https://github.com/mongshil553/GccApplication1/assets/129606995/f3440b44-13ac-4a5e-aa7f-63ae8f3745a3" width="70%" height="70%" title="Data for Clustering Learning"> 
+<img src = "https://github.com/mongshil553/GccApplication1/assets/129606995/e38c9a76-14ce-4401-84ae-870a0ee6e6e7" width="70%" height="70%" title="Server UI"> 
+
