@@ -6,4 +6,10 @@ The Python server is used to locate the marble using Hough Transform and identif
 
 Atmega128 and Python Sever Communicates via Bluetooth(HC-04).
 
-Used 6 sensors: Pressure Sensor, Thermister Sensor, Cds Sensor, PSD Sensor, Fire Detection Sensor, Vibration Detecting Sensor
+Used 6 sensors with filtering: Pressure Sensor, Thermister Sensor, Cds Sensor, PSD Sensor, Fire Detection Sensor, Vibration Detecting Sensor
+
+i) Pressure Sensor
+Used IIR Low Filter(Butterworth).
+
+![image](https://github.com/mongshil553/GccApplication1/assets/129606995/cfa31110-c6ef-409b-82f7-17083a4fae57)
+
