@@ -18,7 +18,11 @@ Atmega128 and Python Sever Communicates via Bluetooth(HC-04).
 <hr>
 <h3>Following images are circuit images</h3>
 Main board with Atmega128 is prepared by the lab so images are not uploaded to this git. <br>
-<img src = "https://github.com/mongshil553/GccApplication1/assets/129606995/2fdb8b02-3d12-43a9-930c-4d58ccc44dfe" width="50%" height="50%">
+<img src = "https://github.com/mongshil553/GccApplication1/assets/129606995/2fdb8b02-3d12-43a9-930c-4d58ccc44dfe" width="40%" height="40%">
+<img src = "https://github.com/mongshil553/GccApplication1/assets/129606995/ebf3f4ed-36fc-4613-8492-7856194834e0" width="35%" height="35%"> <br>
+<img src = "https://github.com/mongshil553/GccApplication1/assets/129606995/6eb4d559-89a6-49b6-938b-fffb06fa233a" width="40%" height="40%">
+<img src = "https://github.com/mongshil553/GccApplication1/assets/129606995/0b9f1389-e79b-4f50-87aa-c9efeeb0c1ec" width="40%" height="40%"> <br>
+<img src = "https://github.com/mongshil553/GccApplication1/assets/129606995/f6a02f39-be46-49dc-9908-de5f209e5433" width="70%" height="70%">
 
 <hr>
 <h3>Following are informations about Sensors</h3>
