@@ -60,7 +60,7 @@ i) Pressure Sensor: Used IIR Low Filter(Butterworth). <br>
 
 <hr>
 <h3>Following are information about Python Server</h3>
-Atmega128 and Python Server Communicates using Bluetooth. On the Server, User need to press "Bluetooth Connect" in order to connect with HC-04. HC-04 setup must be preceded.<br>
+Atmega128 and Python Server Communicates using Bluetooth. On the Server, User need to press "Bluetooth Connect" in order to connect with HC-04. HC-04 setup must be preceded.<br><br>
 When pressed "Demo", K-Means Clustering Algorithm runs and shows in the far left image placeholder. When Pressed "Camera On", Camera connected to the computer is shown in the far right image place holder.
 When command arrives from Atmega128, System captures image from the camera and finds the marble using Hough Transform with OpenCV2. Then Evaluation of its color is run with K-Means Clustering Algorithm and the results are returned to Atemga128.<br>
 <img src = "https://github.com/mongshil553/GccApplication1/assets/129606995/f3440b44-13ac-4a5e-aa7f-63ae8f3745a3" width="70%" height="70%" title="Data for Clustering Learning"> 
