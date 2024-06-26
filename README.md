@@ -9,11 +9,11 @@ Atmega128 and Python Sever Communicates via Bluetooth(HC-04).
 <hr>
 Following images are Hardware Images <br>
 <img src = "https://github.com/mongshil553/GccApplication1/assets/129606995/a30a8e43-35bf-4413-9689-e635dedbe66d" width="80%" height="80%"> <br>
-<img src = "https://github.com/mongshil553/GccApplication1/assets/129606995/da8a83f0-487c-4523-9f41-98ddb99bf2c7" width="40%" height="40%">   
-<img src = "https://github.com/mongshil553/GccApplication1/assets/129606995/5153a1b4-eed2-446b-acd7-7093159d24e9" width="40%" height="40%"> <br>
-<img src = "https://github.com/mongshil553/GccApplication1/assets/129606995/c22e4d8c-d1f7-498a-9418-22671be9f99d" width="40%" height="40%"> 
-<img src = "https://github.com/mongshil553/GccApplication1/assets/129606995/44a12962-f3d4-430a-bc28-6fc79d082e1c" width="40%" height="40%"> <br>
-<img src = "https://github.com/mongshil553/GccApplication1/assets/129606995/f0fe351e-fe2f-460a-aeb0-420fb8e6e8ba" width="40%" height="40%">  
+<img src = "https://github.com/mongshil553/GccApplication1/assets/129606995/da8a83f0-487c-4523-9f41-98ddb99bf2c7" width="20%" height="20%">   
+<img src = "https://github.com/mongshil553/GccApplication1/assets/129606995/5153a1b4-eed2-446b-acd7-7093159d24e9" width="20%" height="20%">
+<img src = "https://github.com/mongshil553/GccApplication1/assets/129606995/c22e4d8c-d1f7-498a-9418-22671be9f99d" width="20%" height="20%"> 
+<img src = "https://github.com/mongshil553/GccApplication1/assets/129606995/44a12962-f3d4-430a-bc28-6fc79d082e1c" width="20%" height="20%"> <br>
+<img src = "https://github.com/mongshil553/GccApplication1/assets/129606995/f0fe351e-fe2f-460a-aeb0-420fb8e6e8ba" width="20%" height="20%">  
 
 <hr>
 Used 6 sensors with filtering: Pressure Sensor, Thermister Sensor, CdS Sensor, PSD Sensor, Fire Detection Sensor, Vibration Detecting Sensor<br><br>
