@@ -7,7 +7,7 @@ The Python server is used to locate the marble using Hough Transform and identif
 Atmega128 and Python Sever Communicates via Bluetooth(HC-04).
 
 <hr>
-<h3>Following images are Hardware Images</h3> <br>
+<h3>Hardware Images</h3> <br>
 <img src = "https://github.com/mongshil553/GccApplication1/assets/129606995/a30a8e43-35bf-4413-9689-e635dedbe66d" width="60%" height="60%">
 <img src = "https://github.com/mongshil553/GccApplication1/assets/129606995/f0fe351e-fe2f-460a-aeb0-420fb8e6e8ba" width="37%" height="37%"> <br>
 <img src = "https://github.com/mongshil553/GccApplication1/assets/129606995/da8a83f0-487c-4523-9f41-98ddb99bf2c7" width="24%" height="24%">
@@ -16,7 +16,7 @@ Atmega128 and Python Sever Communicates via Bluetooth(HC-04).
 <img src = "https://github.com/mongshil553/GccApplication1/assets/129606995/44a12962-f3d4-430a-bc28-6fc79d082e1c" width="24%" height="24%"> <br>
 
 <hr>
-<h3>Following images are circuit images</h3>
+<h3>Circuit Images</h3>
 Main board with Atmega128 is prepared by the lab so images are not uploaded to this git. <br>
 <img src = "https://github.com/mongshil553/GccApplication1/assets/129606995/2fdb8b02-3d12-43a9-930c-4d58ccc44dfe" width="30%" height="30%">
 <img src = "https://github.com/mongshil553/GccApplication1/assets/129606995/ebf3f4ed-36fc-4613-8492-7856194834e0" width="30%" height="30%"> 
@@ -25,7 +25,7 @@ Main board with Atmega128 is prepared by the lab so images are not uploaded to t
 <img src = "https://github.com/mongshil553/GccApplication1/assets/129606995/f6a02f39-be46-49dc-9908-de5f209e5433" width="50%" height="50%">
 
 <hr>
-<h3>Following are informations about Sensors</h3>
+<h3>Information About Sensors</h3>
 Used 6 sensors with filtering: Pressure Sensor, Thermister Sensor, CdS Sensor, PSD Sensor, Fire Detection Sensor, Vibration Detecting Sensor<br><br>
 
 i) Pressure Sensor: Used IIR Low Filter(Butterworth). <br>
@@ -59,7 +59,7 @@ i) Pressure Sensor: Used IIR Low Filter(Butterworth). <br>
 <img src = "https://github.com/mongshil553/GccApplication1/assets/129606995/056dea6c-5846-40fd-bb9b-f975c278f117" width="32%" height="32%" title="Actual Data After Filtering"> 
 
 <hr>
-<h3>Following are information about Python Server</h3>
+<h3>Information About Python Server</h3>
 Atmega128 and Python Server Communicates using Bluetooth. On the Server, User need to press "Bluetooth Connect" in order to connect with HC-04. HC-04 setup must be preceded.<br><br>
 When pressed "Demo", K-Means Clustering Algorithm runs and shows in the far left image placeholder. When Pressed "Camera On", Camera connected to the computer is shown in the far right image place holder.
 When command arrives from Atmega128, System captures image from the camera and finds the marble using Hough Transform with OpenCV2. Then Evaluation of its color is run with K-Means Clustering Algorithm and the results are returned to Atemga128.<br>
