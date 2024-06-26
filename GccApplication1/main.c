@@ -1,10 +1,3 @@
-/*
- * GccApplication1.c
- *
- * Created: 2024-05-04 오전 12:07:19
- * Author : kijun
- */ 
-
 #define DEBUG_ 2
 #define F_CPU 16000000UL
 
@@ -16,7 +9,7 @@
 #include <stdbool.h>
 #include <avr/interrupt.h>
 #include <util/delay.h>
-#include <stdlib.h>//
+#include <stdlib.h>
 #include <math.h>
 
 #include "Marble.h"
@@ -48,247 +41,15 @@ char state;
 //**** Debug **************************************************************************************************************************************************//
 
 #if DEBUG_ == 0
-//현준이 일하는 곳 맨 위에 #define DEBUG_ 부분을 0으로 바꾸기
+// Teammate 0 workspace
 int main(void){
-	
-	volatile unsigned char LED=0xFF;
-	
-	DDRA=0xFF;
-	DDRF=0x00;
-	
-	adc_init(); // ADC 초기화
-	timer0_init(); // 타이머0 초기화
-	timer1_init();
-	seg_init();
-	
-	Reset_sensor_val(); //센서 변수 초기화
-	
-	//UBRR0L = (unsigned char)UBRR;
-	//UBRR0H = (unsigned char)(UBRR >> 8);
-
-	
-	UCSR0A = 0x00; //비동기 1배속
-	UCSR0B = 0x18; //송수신 허가
-	//UCSR0B = (1<<RXCIE0)|(1<<TXCIE0)|(1<<RXEN0)|(1<<TXEN0); //recv complete interrupt enable
-	UCSR0C = 0x87; //비동기, non-parity mode, stop bit:1 bit, data: 8bit
-	
-	shk_detected = 0x00;
-	
-	
-	
-	sei(); // 전역 인터럽트 허용
-
-	Select_Item(ITEM_NONE);
-	port_setup();
-	
-	seg_act();
-	
-	while (1) {
-		
-		// ADC 채널 값을 읽고 필요한 변수에 저장
-		
-		if (cds_sensor_val > 100) { //CDS
-			LED &= 0xFE; //CDS에 해당하는 LED만 켜기 //1111 1110
-		}
-		else {
-			LED |= ~0xFE; //CDS에 해단하는 LED만 끄기
-		}
-		
-		
-		
-		
-		if (temp_sensor_val > 200) {
-			LED &= 0xFD; // 1111 1101
-		}
-		else {
-			LED |= ~0xFD;
-		}
-		
-		
-		
-		if (pressure_sensor_val > 900) {//보류 -
-			LED &= 0xFB; //1111 1011
-		}
-		else {
-			LED |= ~0xFB;
-		}
-		
-		if ( shk_detected) {
-			LED &= 0xF7;
-			//shk_detected = 0x00;
-		}
-		else {
-			LED |= ~0xF7;
-		}
-		
-		if (fire_sensor_val > 100) {//-
-			LED &= 0xEF;
-		}
-		else {
-			LED |= ~0xEF;
-		}
-		
-		if ( (psd_sensor_val> 520)) {
-			LED &= 0xBF;
-		}
-		else {
-			LED |= ~0xBF;
-		}
-		
-		//if(shk_sensor_val <= 979){
-			USART0_NUM(shk_sensor_val);
-			USART0_TX_vect('\n');
-			USART0_TX_vect('\r');
-		//}
-		
-		//---------------- 부저 ---------------//
-		switch(PIND & 0x03){
-			case 0x01:
-			//ICR1 = 50;
-			//OCR1A=ICR1/5;
-			Buzzer_on(50);
-			break;
-			
-			case 0x02:
-			//ICR1 = 70;
-			//OCR1A=ICR1/5;
-			Buzzer_on(70);
-			break;
-			
-			default:
-			break;
-		}
-		//---------------- 부저 ---------------//
-		
-		PORTA=LED;
-		_delay_us(1);
-
-	}
-	
-	return 0;
-	
+	// Deleted
 }
-
-
-void seg_init(){
-
-	DDRE=0x2c;// 0,2,3,4 사용 1번 txㅣㅍㄴ
-}
-
-
-void seg_act(){
-	while(1){
-	PORTE=0x00;
-	_delay_ms(200);
-	PORTE=0x01;
-	_delay_ms(200);
-	PORTE=0x04;
-	_delay_ms(200);
-	PORTE=0x08;
-	_delay_ms(200);
-	PORTE=0x20;
-	_delay_ms(200);
-	}
-}
-
-
-
 
 #elif DEBUG_ == 1
-//기정이 일하는 곳
+// Teammate 1 workspace
 int main(void){
-	//debug
-	char iter = 0;
-	
-	cli();
-	port_setup();
-	adc_init();
-	timer0_init();
-	timer1_init();
-	
-	init_BT();
-	UART_init();
-	
-	Reset_sensor_val();
-	
-	//Reset_sensor_val(); //센서 변수 초기화
-	
-	//EIMSK = 0x03; //External Interrupt Enable Mask
-	EIMSK = 0x03;
-	EICRA = 0x0F; //External Interrupt Control Register(Edge)
-
-	sei();
-	
-	DDRC = 0xFF;
-	PORTC = 0x00;
-	PORTA = 0xFF;
-	
-	shk_detected = 0x00;
-	
-	ElectroMagnet_Off();
-	
-	Servo_increment_threshold = 20;
-	Servo_Allowed = 0x01;
-	
-	//Servo_Quick_Move(375);
-	Servo_pos = SERVO_HOME;
-	Servo_Set_Speed(40);
-	Servo_Goto(375);
-	
-	//PORTC &= 0xFB; //0x1111 1110
-	//PORTC &= 0xF3; //0b1111 0010
-	
-	//0x1111 0011: mask, 
-	
-	char temp = 0x00;
-	int pressure_F = 0;
-	//segment(prox4);
-	while(1){
-		_delay_ms(200);
-
-		pressure_F = calc_force();
-		//USART0_NUM(pressure_F);
-		if(pressure_F > 300){ //pressure
-			ElectroMagnet_On();
-			PORTA &= 0x7F;
-		}
-		else{
-			PORTA |= 0x80;
-			ElectroMagnet_Off();
-		}
-		
-		if(temp == 0x00){
-			temp=0x01;
-			//Servo_Goto(SERVO_MAX_POS);
-		}else{
-			temp=0x00;
-			//Servo_Goto(SERVO_MIN_POS);
-		}
-		
-		switch(PIND & 0x03){
-			case 0x02: //Red LED On
-				//RED_LED_On(calc_led());
-			break;
-			
-			case 0x01: //ElectroMagnet On
-				//ElectroMagnet_On();
-			break;
-		}
-		
-	}
-	
-}
-
-ISR(INT1_vect)
-{
-	GREEN_LED_On(calc_led());
-}
-
-ISR(INT0_vect)
-{
-	RED_LED_On(calc_led());
-	//BT_send('0');
-	//GREEN_LED_On(500);
+	// Deleted
 }
 
 #endif
@@ -328,19 +89,12 @@ int main(void)
 	
 	Servo_Set_Speed(50);
 	
-	//temp_en = 0x00;
 	Servo_pos = SERVO_HOME;
 	Servo_Goto(510);
 	Servo_Go_Home();
-	
-//	_delay_ms(100);
-//	Select_Item(ITEM_NONE);
-//	_delay_ms(100);
 
 	state = 0x01;
 	int pressure_F = 0;
-	//Buzzer_on(calc_hz());
-	//while(1);
 	
     while (1) {
 		switch(state){
@@ -413,10 +167,6 @@ int main(void)
 					
 					//Servo_Set_Speed();
 					Servo_Go_Home(); //Servo returns home
-					
-					//_delay_ms(100);
-					//Select_Item(ITEM_NONE);
-					//_delay_ms(50);
 					
 					state <<= 1;
 				}
@@ -606,7 +356,17 @@ void If_Shock_Detected(){
 
 }
 
+ISR(INT1_vect) //For debugging
+{
+	GREEN_LED_On(calc_led());
+}
 
+ISR(INT0_vect) //For debugging
+{
+	RED_LED_On(calc_led());
+	//BT_send('0');
+	//GREEN_LED_On(500);
+}
 
 
 void If_PSD_Detected(){

@@ -1,19 +1,12 @@
-﻿/*
- * Item.c
- *
- * Created: 2024-05-27 오전 10:21:15
- *  Author: kijun
- */ 
-
-#define F_CPU 16000000UL
+﻿#define F_CPU 16000000UL
 
 #include <avr/io.h>
 #include <util/delay.h>
 #include "Item.h"
 #include "Sensors.h"
 
-short table_y[12] = {14, 19, 28, 48, 58, 77, 81, 94, 100, 114, 122, 133};
-short table_o[12] = {290, 310, 330, 350, 370, 390, 410, 430, 450, 470, 490, 510};
+short table_y[12] = {14, 19, 28, 48, 58, 77, 81, 94, 100, 114, 122, 133}; // marble y position
+short table_o[12] = {290, 310, 330, 350, 370, 390, 410, 430, 450, 470, 490, 510}; //servo rotate OCR values accordingly
 
 void Select_Item(char item){
 	//next_item = item;

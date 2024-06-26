@@ -1,11 +1,4 @@
-﻿/*
- * Bluetooth.c
- *
- * Created: 2024-05-22 오전 1:11:43
- *  Author: kijun
- */ 
-
-#include "Bluetooth.h"
+﻿#include "Bluetooth.h"
 #include "Marble.h"
 #include <avr/io.h>
 
@@ -16,10 +9,6 @@ void init_BT(){
 	
 	UBRR1H = 0x00;
 	UBRR1L = 103;
-	
-	#ifdef USE_BLUETOOTH_INTERRUPT
-	UCSR1B |= 0x80; //Enable Interrupt
-	#endif
 }
 
 char BT_Receive(){

@@ -1,12 +1,4 @@
-﻿/*
- * Item.h
- *
- * Created: 2024-05-27 오전 10:02:12
- *  Author: kijun
- */ 
-
-
-#ifndef ITEM_H_
+﻿#ifndef ITEM_H_
 #define ITEM_H_
 
 //Demux

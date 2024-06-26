@@ -1,18 +1,8 @@
-﻿/*
- * Sensors.h
- *
- * Created: 2024-05-22 오전 1:06:25
- *  Author: kijun
- */ 
-
-
-#ifndef SENSORS_H_
+﻿#ifndef SENSORS_H_
 #define SENSORS_H_
 
 //Pressure Sensor
 unsigned short pressure_sensor_val;
-//외부 변수 써서 고주파를 차단해야되면 LPF, MAF이용
-//예를 들어, 이전 값 저장하는 변수
 
 //CdS Sensor
 short cds_sensor_val;

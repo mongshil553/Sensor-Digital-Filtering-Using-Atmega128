@@ -1,10 +1,4 @@
-﻿/*
- * uart.c
- *
- * Created: 2024-06-18 오후 3:40:39
- *  Author: kijun
- */ 
-#include <avr/io.h>
+﻿#include <avr/io.h>
 #include "uart.h"
 
 #define UBRR 103

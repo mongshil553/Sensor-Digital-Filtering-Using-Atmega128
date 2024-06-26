@@ -1,6 +1,5 @@
 ﻿#include "Sensors.h"
 #include "Item.h"
-#include "queue.h"
 #include "uart.h"
 #include <avr/io.h>
 
@@ -18,7 +17,7 @@ short lpf(unsigned short current_value, unsigned short new_value, float alpha) {
 	return (short)(alpha * new_value + (1 - alpha) * current_value);
 }
 
-inline void Read_CDS(){
+inline void Read_CDS(){ //IIR Low
 	ADCSRA |= (1<< ADIF); // ADC 변환 완료 플래그 클리어
 	
 	static short iter0 = 0, iter1 = 0;
@@ -47,7 +46,7 @@ inline void Read_CDS(){
 	cds_sensor_val = dataY[jY];
 }
 
-inline void Read_Fire(){
+inline void Read_Fire(){ //FIR Low
 	ADCSRA |= (1 << ADIF); // ADC 변환 완료 플래그 클리어
 	
 	static short iter0 = 0, iter1 = 0;
@@ -67,7 +66,7 @@ inline void Read_Fire(){
 
 	fire_sensor_val = sum/10000;
 }
-inline void Read_PSD(){
+inline void Read_PSD(){ //IIR Low
 	ADCSRA |= (1 << ADIF); // ADC 변환 완료 플래그 클리어
 	
 	static short iter0 = 0, iter1 = 0;
@@ -96,7 +95,7 @@ inline void Read_PSD(){
 	psd_sensor_val = dataY[jY];
 }
 
-inline void Read_Pressure(){
+inline void Read_Pressure(){ //FIR Low
 	ADCSRA |= (1 << ADIF); // ADC 변환 완료 플래그 클리어
 	
 	static short iter0 = 0, iter1 = 0;
@@ -117,13 +116,13 @@ inline void Read_Pressure(){
 	pressure_sensor_val = sum/10000;
 }
 
-inline void Read_Thermister(){
+inline void Read_Thermister(){ //LPF
 	ADCSRA |= (1 << ADIF); // ADC 변환 완료 플래그 클리어
 	
 	temp_sensor_val = (1-0.188)*temp_sensor_val + 0.188*ADC;
 }
 
-inline void Read_Shock(){
+inline void Read_Shock(){ //IIR High
 	ADCSRA |= (1 << ADIF); // ADC 변환 완료 플래그 클리어
 	
 	static short iter0 = 0, iter1 = 0;
