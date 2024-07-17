@@ -1,6 +1,6 @@
 <h1>Term Project for Robotics Lab3.</h1>
 
-The main idea is that with using Atmega128 and Python Server, search and locate colored marble and rotate the servo motor, enable Electromagnet so as to catch the marble.
+The main idea is that with using Atmega128 and Python Server, search and locate colored marble using camera and rotate the servo motor, enable Electromagnet so as to catch the marble.
 
 The Python server is used to locate the marble using Hough Transform and identify its color using K-Means Clustering Algorithm.
 
